@@ -1,0 +1,256 @@
+{
+  "name": "入門ハンズオン",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "スプシ作成",
+        "formDescription": "スプレッドシートを新規作成",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "タイトル",
+              "placeholder": "入力してください",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d850611b-2917-49a5-b90b-253ab665d624",
+      "name": "On form submission",
+      "webhookId": "6a80860b-1dd9-4b02-9ea2-2a752100b6ae"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "={{ $json['タイトル'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7191a14b-4777-4568-93ac-eca2c7b12d10",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "XEsV3wBL1zoehBft",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# スプシ作成",
+        "height": 288,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -96
+      ],
+      "id": "be38603f-23bc-45f3-b665-9241e38dcfca",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        416
+      ],
+      "id": "0532e516-490a-4d9b-9c0d-9e6a74895950",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=35.6895&longitude=139.6917&daily=temperature_2m_max,temperature_2m_min&hourly=temperature_2m&forecast_days=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        208,
+        416
+      ],
+      "id": "e924330e-e46a-4151-bd18-92fd22f993bf",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nconst maxTemperature = $input.first().json.daily.temperature_2m_max[0];\nconst minTemperature = $input.first().json.daily.temperature_2m_min[0];\nconst message = `今日の東京の最高気温は${maxTemperature}℃、最低気温は${minTemperature}℃です。`\n\nreturn {\"message\": message};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        416
+      ],
+      "id": "85d2dd03-84f6-4431-a720-551959e5471c",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "gtamu.dip@gmail.com",
+        "subject": "今日の天気",
+        "emailType": "text",
+        "message": "={{ $json.message }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "n8n tutorial"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        592,
+        416
+      ],
+      "id": "d0ed7097-9b1e-41e2-a963-319902628206",
+      "name": "Send a message",
+      "webhookId": "78fc12a6-d15b-44d3-b178-5da620e6c471",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0rkrWYgPk3Idr7LE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "#n8n-tutorial",
+          "mode": "name"
+        },
+        "text": "={{ $('Code in JavaScript').item.json.message }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        768,
+        416
+      ],
+      "id": "93caf993-1157-4efd-b293-90676cd686f2",
+      "name": "Send a message1",
+      "webhookId": "f44a5039-5441-4dc1-8559-bab7bc069c0c",
+      "credentials": {
+        "slackApi": {
+          "id": "ddrerceFHYoxbdGJ",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# 天気予報",
+        "height": 336,
+        "width": 1104
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        304
+      ],
+      "id": "11ce864b-41da-4be0-aaa8-39bb44095c88",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1d48ceb5-ce7b-42a7-b308-7f2850f881ed",
+  "meta": {
+    "instanceId": "0dcf1acc42ddaae1dd372f6e2c5a7783e0b0f51cc4b17b58d1b9af2762ef4d25"
+  },
+  "id": "57SoYJsbWCJoTrSr",
+  "tags": []
+}
