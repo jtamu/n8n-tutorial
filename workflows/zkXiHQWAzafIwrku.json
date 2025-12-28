@@ -1,0 +1,442 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a document": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-11-29T14:07:08.536Z",
+  "id": "zkXiHQWAzafIwrku",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "prompt evaluation workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        192,
+        0
+      ],
+      "id": "41277992-b9a9-4eb0-ba60-849aaf2a9d88",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jQznISUPAOyK8S-X54CkafdRXnKZVIQMaDdzMtiiEco",
+          "mode": "list",
+          "cachedResultName": "第3回_社内研修_個人ワーク_プロンプト集",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jQznISUPAOyK8S-X54CkafdRXnKZVIQMaDdzMtiiEco/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1018308112,
+          "mode": "list",
+          "cachedResultName": "第3回_社内研修_個人ワーク_プロンプト集…_20251129140049_utf8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jQznISUPAOyK8S-X54CkafdRXnKZVIQMaDdzMtiiEco/edit#gid=1018308112"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "7b919c96-e40e-42ae-96f9-0eefa123251d",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HSxvkZ3fCLKQ7gOJ",
+          "name": "Google Sheets account (work)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c2700b07-ddf1-4a80-8ecb-449794c4ddba",
+              "name": "(氏名)",
+              "value": "={{ $json['(氏名)'] }}",
+              "type": "string"
+            },
+            {
+              "id": "79ed2cba-1e9e-44cb-96e0-185a10498b62",
+              "name": "ステータス",
+              "value": "={{ $json['ステータス'] }}",
+              "type": "string"
+            },
+            {
+              "id": "85ea2fef-b760-45ae-a359-2c08451922be",
+              "name": "beforeプロンプト",
+              "value": "={{ $json['beforeプロンプト'] }}",
+              "type": "string"
+            },
+            {
+              "id": "00cd51eb-ac2a-4029-b1b6-2026495f460e",
+              "name": "before回答",
+              "value": "={{ $json['before回答'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e816a8ef-a227-47c8-9710-cda264e3261c",
+              "name": "afterプロンプト",
+              "value": "={{ $json['afterプロンプト'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d397af43-8e33-453d-9c0c-476c6137a6bc",
+              "name": "after回答",
+              "value": "={{ $json['after回答'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "543d641e-eece-4463-81e0-0acc5e34b1bc",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e8638ede-05da-49c0-9a10-e5c67f79c3c2",
+              "leftValue": "={{ $json['ステータス'] }}",
+              "rightValue": "未対応",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "49b7fe2c-c2bb-4728-a072-2466aa6b1764",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "26a13337-ffe0-40e9-b382-c809df34ee77",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=あなたはプロンプトエンジニアリングの専門インストラクターです。\nリファクタリング課題において、研修生がLLMに対して入力した「指示（プロンプト）」そのものの品質を評価してください。\n\n# 評価基準\n研修で学んだプロンプト改善の5原則は次の通りです： \n1. 方向性を示す  \n   - 望ましいスタイルを明確に示す（例：PEP8準拠、特定の人物のスタイルなど）\n2. 出力形式を指定する  \n   - 守るべきフォーマット、出力の構造を具体的に指示する\n3. 例を示す  \n   - 期待する応答の例をプロンプト内に含める\n4. 品質を評価する  \n   - 誤りや不備を指摘するよう指示する、または品質判定を要求する\n5. タスクを分解する  \n   - 1つの複雑なタスクを複数ステップに分解し、順序立てて指示する\n\n# 出力形式\nプロンプト品質評価: [S / A / B / C] の4段階\n\nアドバイス:\nこのプロンプトをより良くするための具体的な修正案を1つ提示してください。\n\n---\n以下が研修生の【入力プロンプト】です:\n\n{{ $('Loop Over Items').item.json[\"afterプロンプト\"] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1520,
+        16
+      ],
+      "id": "dbd23a9a-e702-4f0d-a41e-8c595d44e358",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "folderId": "=14XRkJMsX2S8zyRS_WzLUZTBvByhxbyYe",
+        "title": "=第3回社内研修_プロンプト評価_{{ $('Loop Over Items').item.json['(氏名)'] }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1856,
+        16
+      ],
+      "id": "a646ff8b-7ce7-4076-9b76-1cf1f32358cd",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "jgHsbDtln8i2gool",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "=【beforeプロンプト】\n{{ $('Loop Over Items').item.json[\"beforeプロンプト\"] }}\n\n【before回答】\n{{ $('Loop Over Items').item.json[\"before回答\"] }}\n\n【afterプロンプト】\n{{ $('Loop Over Items').item.json[\"afterプロンプト\"] }}\n\n【after回答】\n{{ $('Loop Over Items').item.json[\"after回答\"] }}\n\n\n\n【評価①：コード品質】\n{{ $('AI Agent1').item.json.output }}\n\n【評価②：プロンプト品質】\n{{ $('AI Agent').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2048,
+        16
+      ],
+      "id": "a570d8d8-8a33-45c4-94ec-e7eb3de7a685",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "jgHsbDtln8i2gool",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -144
+      ],
+      "id": "971fa295-34ac-4616-9a40-a15ff4a3116c",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=あなたはプロフェッショナルなPythonコードレビュアーです。\n以下の【元コード】をリファクタリングした【提出コード】を、指定された【評価ルーブリック】に基づいて厳格に採点してください。\n\n# 1. 元コード (Bad Code)\n\n```python\ndef calc(data):\n    s = 0\n    for i in range(len(data)):\n        try:\n            if data[i]['type'] == 'A':\n                x = data[i]['value'] * 1.1\n                s += x\n            elif data[i]['type'] == 'B':\n                x = data[i]['value'] * 0.9\n                s += x\n            else:\n                s += data[i]['value']\n        except Exception as e:\n            print(e)\n            continue\n\n    if s > 10000:\n        s -= 1000\n\n    return s\n```\n\n# 2. 評価ルーブリック\n\n以下の3つの観点で評価し、合計点を算出してください。\n\n## 観点A: 可読性とPythonicな記述 (Readability)\n\n- 変数名・関数名が具体的か (例: `s`→`total_amount`)\n- `range(len())` ではなくイテレーションを使用しているか\n- 不要な一時変数が排除されているか\n\n## 観点B: 堅牢性とエラーハンドリング (Robustness)\n\n- `except Exception` による握りつぶしを避け、適切な例外処理をしているか\n- 無意味な `print` 副作用がないか\n\n## 観点C: 保守性と設計原則 (Maintainability & Design)\n\n- マジックナンバーの定数化\n- `if/elif` 連鎖の排除（辞書マッピング、Strategyパターン、クラス化など）\n- メソッド分割による責務の分離\n\n**【採点スケール】**\n\n- **1-4点:** 基本的な改善不足、またはバグ・構文エラーがある。\n- **5-7点:** クリーンコード（命名・定数）はOKだが、構造がif文の羅列のまま。\n- **8-9点:** 辞書マッピングや関数分割が行われ、設計レベルで改善されている。\n- **10点:** クラス/Strategyパターン等の適切なデザインパターン適用により、拡張性が完璧である。\n\n# 3. 出力形式\n\n以下の形式で出力してください。\n\n**総合スコア:** [ここに点数] / 10点\n\n寸評:\n\n[良い点と悪い点を簡潔にまとめる]\n\n**改善フィードバック:**\n\n- [具体的にどの行をどう直すべきか]\n- [さらに高得点を狙うためのアドバイス]\n\n---\n\n**以下が【提出コード】です。これを評価してください:**\n\n{{ $json['after回答'] }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1216,
+        16
+      ],
+      "id": "d75e537b-1a7e-4273-a3d4-2d6abe16f0cc",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-opus-4-5-20251101",
+          "mode": "list",
+          "cachedResultName": "Claude Opus 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1216,
+        192
+      ],
+      "id": "deb8b035-720f-4cc2-a3f7-4397762a7bf5",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "pLJzRJKWVcvbANJB",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-opus-4-5-20251101",
+          "mode": "list",
+          "cachedResultName": "Claude Opus 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1520,
+        192
+      ],
+      "id": "8e337ccb-77db-40d7-a3af-8fbbd0bb4672",
+      "name": "Anthropic Chat Model1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "pLJzRJKWVcvbANJB",
+          "name": "Anthropic account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-11-29T14:07:08.538Z",
+      "createdAt": "2025-11-29T14:07:08.538Z",
+      "role": "workflow:owner",
+      "workflowId": "zkXiHQWAzafIwrku",
+      "projectId": "90B8ExeKfCtez8R1"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-13T08:22:57.000Z",
+  "versionId": "3156b509-7a14-41d6-b61d-8981e7a1c86d"
+}
