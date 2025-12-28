@@ -1,0 +1,149 @@
+{
+  "active": false,
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Set Initial Values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Initial Values": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Node A (Increment)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Node A (Increment)": {
+      "main": [
+        [
+          {
+            "node": "Node B (Calculate Sum)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Node B (Calculate Sum)": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-10T14:44:04.366Z",
+  "id": "QnPw9nx5Sh3arj4o",
+  "isArchived": true,
+  "meta": null,
+  "name": "Loop with Previous Result Dependency",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "6ee4b81d-7db8-436c-805e-27b241587223",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "85092bc8-ef90-4d65-8f79-78b4ad1c394c",
+      "name": "Set Initial Values",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e8abefc6-8821-48e4-a2e9-1079373e7692",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "41daa7d8-aaff-4d55-8385-ea7c0c729d4c",
+      "name": "Node A (Increment)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        608,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e3e2ae22-1f15-4305-87a3-f73d33a80300",
+      "name": "Node B (Calculate Sum)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        800,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-10T14:44:04.370Z",
+      "createdAt": "2025-12-10T14:44:04.370Z",
+      "role": "workflow:owner",
+      "workflowId": "QnPw9nx5Sh3arj4o",
+      "projectId": "90B8ExeKfCtez8R1"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-10T15:13:40.000Z",
+  "versionId": "73d68655-3120-4b24-88c0-a3c3740c7127"
+}
