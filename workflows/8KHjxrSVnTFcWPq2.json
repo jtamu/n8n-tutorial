@@ -1,0 +1,1263 @@
+{
+  "active": false,
+  "connections": {
+    "手動トリガー": {
+      "main": [
+        [
+          {
+            "node": "スプレッドシート読込",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "スプレッドシート読込": {
+      "main": [
+        [
+          {
+            "node": "回答済みフィルタリング",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "必要カラム抽出": {
+      "main": [
+        [
+          {
+            "node": "1行ごとに処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "スプレッドシート行追加": {
+      "main": [
+        [
+          {
+            "node": "1行ごとに処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1行ごとに処理": {
+      "main": [
+        [
+          {
+            "node": "完了メール送信",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "リトライ情報初期化",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "スプレッドシート出力用編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out用編集": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "スプレッドシート出力用編集": {
+      "main": [
+        [
+          {
+            "node": "スプレッドシート行追加",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "回答済みフィルタリング": {
+      "main": [
+        [
+          {
+            "node": "必要カラム抽出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "内容検証": {
+      "main": [
+        [
+          {
+            "node": "リトライ判定用編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "目標抽出",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "内容検証",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "内容検証",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "目標抽出",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "目標抽出": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "目標抽出",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "戻り値編集（空）",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "リトライ判定用編集": {
+      "main": [
+        [
+          {
+            "node": "リトライ情報更新",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "リトライ判定": {
+      "main": [
+        [
+          {
+            "node": "戻り値編集",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "リトライ情報取得",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "リトライ情報初期化": {
+      "main": [
+        [
+          {
+            "node": "リトライ情報取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "リトライ情報取得": {
+      "main": [
+        [
+          {
+            "node": "目標抽出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "リトライ情報更新": {
+      "main": [
+        [
+          {
+            "node": "リトライ判定",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "戻り値編集": {
+      "main": [
+        [
+          {
+            "node": "Split Out用編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "戻り値編集（空）": {
+      "main": [
+        [
+          {
+            "node": "Split Out用編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-13T09:56:46.518Z",
+  "id": "8KHjxrSVnTFcWPq2",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "スプレッドシート目標抽出ワークフロー（データテーブル使用）",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c71033fb-8bc9-43e7-9191-f754dc715224",
+      "name": "手動トリガー",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1SvqOhQK-43h-L3BjSm1TplPcarBSQ2aloY5ur6U4WQk",
+          "mode": "list",
+          "cachedResultName": "目標管理シート_20251213161707_utf8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SvqOhQK-43h-L3BjSm1TplPcarBSQ2aloY5ur6U4WQk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1033742185,
+          "mode": "list",
+          "cachedResultName": "目標管理シート_20251213161707_utf8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SvqOhQK-43h-L3BjSm1TplPcarBSQ2aloY5ur6U4WQk/edit#gid=1033742185"
+        },
+        "options": {}
+      },
+      "id": "4c92ff9a-1577-47b0-a983-46e32305aca1",
+      "name": "スプレッドシート読込",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -336,
+        80
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HSxvkZ3fCLKQ7gOJ",
+          "name": "Google Sheets account (work)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2cc8a954-b527-458d-8556-6c455873fa50",
+              "name": "社員番号",
+              "value": "={{ $json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "0b12b862-c350-4989-b6df-e12ed3ae46d0",
+              "name": "(氏名)",
+              "value": "={{ $json[\"(氏名)\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "3d2d08cd-6e92-4204-a250-5766655c88b6",
+              "name": "本人_事前に話したいこと1",
+              "value": "={{ $json[\"本人_事前に話したいこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b762c1b6-553e-4ec0-8c0f-e505d787baec",
+              "name": "フィードバックしたこと1",
+              "value": "={{ $json[\"フィードバックしたこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b18c8aa1-02d5-4b83-9a64-86edc2028eec",
+              "name": "上司メモ1",
+              "value": "={{ $json[\"上司メモ1\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7163cf8a-3473-4d7b-aa9f-7012fa25118d",
+      "name": "必要カラム抽出",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        64,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "目標管理",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "領域（A/B/C）": "={{ $('目標抽出').item.json.output.json[0][\"領域（A/B/C）\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "社員番号",
+              "displayName": "社員番号",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "氏名",
+              "displayName": "氏名",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "対象年",
+              "displayName": "対象年",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "対象期",
+              "displayName": "対象期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "領域（A/B/C）",
+              "displayName": "領域（A/B/C）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "現状グレード",
+              "displayName": "現状グレード",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標グレード",
+              "displayName": "目標グレード",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標内容（アクション分類・測定可能なアクション）",
+              "displayName": "目標内容（アクション分類・測定可能なアクション）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標フィードバック（上長）",
+              "displayName": "目標フィードバック（上長）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標フィードバック（営業）",
+              "displayName": "目標フィードバック（営業）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "自己評価（達成度%）",
+              "displayName": "自己評価（達成度%）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "自己コメント（取り組んだ内容・成果・学び）",
+              "displayName": "自己コメント（取り組んだ内容・成果・学び）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7e8ef339-8bfe-407c-a4f3-6de888e398bc",
+      "name": "スプレッドシート行追加",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        848,
+        1456
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HSxvkZ3fCLKQ7gOJ",
+          "name": "Google Sheets account (work)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "c9c9f46e-2d94-48cb-b256-fedc4c8d1b6f",
+      "name": "1行ごとに処理",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        288,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        400,
+        1440
+      ],
+      "id": "91c431de-7019-44a3-9752-57d419a4cf42",
+      "name": "Split Out",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "sendTo": "gtamu.work@gmail.com",
+        "subject": "目標変換処理が完了しました",
+        "message": "=目標変換処理が完了しました",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        496,
+        -32
+      ],
+      "id": "9cb6f5e1-d559-4753-8399-6976bdaac8dc",
+      "name": "完了メール送信",
+      "webhookId": "ea7e974b-1a5d-4db5-b78c-9f880d696a7c",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "o2ENQtlUu5lgyLGp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dace7977-751c-44c9-94b6-72fb7d38b392",
+              "name": "社員番号",
+              "value": "={{ $('1行ごとに処理').item.json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "bbee05a1-0e68-4aab-99f2-411b318d662c",
+              "name": "氏名",
+              "value": "={{ $('1行ごとに処理').item.json[\"(氏名)\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "a1a43501-562e-4ad6-8478-89f4fcb58a9a",
+              "name": "対象年",
+              "value": 2025,
+              "type": "number"
+            },
+            {
+              "id": "36a0e6cf-9ca6-4884-aacc-4d2f3c28d015",
+              "name": "対象期",
+              "value": "下期",
+              "type": "string"
+            },
+            {
+              "id": "4ef96aa1-3905-4952-8904-fe034b773c69",
+              "name": "フィードバックしたこと1",
+              "value": "={{ $('1行ごとに処理').item.json[\"フィードバックしたこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "dc78cfe9-382c-49c0-a0a1-7c5d9cfc3eef",
+              "name": "上司メモ1",
+              "value": "={{ $('1行ごとに処理').item.json[\"上司メモ1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "f60a704a-48a2-4706-9f66-dca4334c99a1",
+              "name": "output",
+              "value": "={{ $('目標抽出').item.json.output }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        1440
+      ],
+      "id": "dcb295bc-3e3a-47e4-b78f-6fbaab9b37b9",
+      "name": "Split Out用編集"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25798dad-2411-43ba-9280-0dc8fda09afa",
+              "name": "社員番号",
+              "value": "={{ $json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6cf22acf-b193-47e1-83ee-bcd55a08a69d",
+              "name": "氏名",
+              "value": "={{ $json[\"氏名\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "afe01ea4-d420-4b0f-aaed-496ad617bc8a",
+              "name": "対象年",
+              "value": "={{ $json[\"対象年\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "4509a47f-a76b-4a53-bfe7-dcb908f09290",
+              "name": "対象期",
+              "value": "={{ $json[\"対象期\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "3b78d295-9267-46d7-883e-0589cef0ecbe",
+              "name": "領域（A/B/C）",
+              "value": "={{ $json.output[\"領域（A/B/C）\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "8b16fbc7-33e3-4a56-af8d-daaec4f871c7",
+              "name": "目標グレード",
+              "value": "={{ $json.output[\"目標グレード\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "782ba947-18a1-49ac-bbd6-11b6b5f6305f",
+              "name": "目標内容（アクション分類・測定可能なアクション）",
+              "value": "={{ $json.output[\"目標内容（アクション分類・測定可能なアクション）\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "70086835-8804-440e-b4fe-da7257ce402f",
+              "name": "目標フィードバック（上長）",
+              "value": "={{ $json[\"フィードバックしたこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "f27d55aa-dbd5-4e32-aa62-9284bae42883",
+              "name": "目標フィードバック（営業）",
+              "value": "={{ $json[\"上司メモ1\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        608,
+        1440
+      ],
+      "id": "df74f085-f2c2-40b2-aee7-9f7b4319af65",
+      "name": "スプレッドシート出力用編集"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "80e03bed-acba-49d9-a3aa-6241bcf41cba",
+              "leftValue": "={{ $json[\"本人_事前に話したいこと1\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -144,
+        80
+      ],
+      "id": "eca7757c-7ea3-4667-8731-e31d01475cdc",
+      "name": "回答済みフィルタリング"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=以下の元テキストと抽出結果を比較し、内容に変化がないかを確認してください。\n\n【元テキスト】\n{{ $('1行ごとに処理').item.json[\"本人_事前に話したいこと1\"] }}\n\n【抽出結果】\n{{ $json.content }}\n\n内容に変化がない場合は \\\"OK\\\" とだけ回答してください。\n内容に変化がある場合は \\\"NG: 変化内容の説明\\\" という形式で回答してください。",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        432,
+        720
+      ],
+      "id": "f3c4ef5c-e807-4211-bf50-42a99b79017f",
+      "name": "内容検証"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -256,
+        944
+      ],
+      "id": "9fc8b962-77a7-4592-bdac-e1e2a6e02bc6",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0NqRMR42W2D52ZCC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        928
+      ],
+      "id": "fc5e8e01-5e01-46c1-8b2c-5aa4aa53af98",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "0NqRMR42W2D52ZCC",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "let retStr = \"\";\n\nfor (const [i, item] of $input.first().json.output.entries()) {\n  const area = item[\"領域（A/B/C）\"];\n  const grade = item[\"目標グレード\"];\n  const content = item[\"目標内容（アクション分類・測定可能なアクション）\"];\n  retStr += `\\n# 領域${i+1}\\n${area}\\n`\n  retStr += `\\n# 目標グレード${i+1}\\n${grade}\\n`\n  retStr += `\\n# 目標内容${i+1}\\n${content}\\n`\n}\n\nreturn {json: {content: [retStr]}};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        720
+      ],
+      "id": "645693b8-ec1b-436a-8eaa-b48e4c4226d6",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -128,
+        944
+      ],
+      "id": "ca5b3cf0-a5ff-485b-b161-7407ff779caf",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=あなたは目標データの抽出エキスパートです。以下の入力テキストから、領域（A/B/C）、目標グレード、目標内容を抽出してください。\n前回のフィードバックがある場合は、それも踏まえて改善してください\n\n注意事項:\n- 元のテキストを出力形式だけ変え、内容はそのまま出力すること\n- 目標内容は必ず指定されたフォーマットに従うこと\n- JSON以外の文字列を出力しないこと\n- 複数のスキルについて言及がある場合は、スキルごとに別々のオブジェクトに内容を格納した配列を返すこと\n- 出力配列はスキル領域単位でユニークであること\n  - 同じスキルに対して目標内容が複数ある場合は、複数のアクションを一つの文字列内に含めてよい\n\n入力テキスト:\n{{ $('1行ごとに処理').item.json[\"本人_事前に話したいこと1\"] }}\n\nフィードバック：\n{{ $json['feedback'] }}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        736
+      ],
+      "id": "17df6ca4-a73d-4d43-a00a-08a6f43168ce",
+      "name": "目標抽出",
+      "retryOnFail": false,
+      "executeOnce": false,
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"array\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"領域（A/B/C）\": {\n        \"type\": \"string\",\n        \"enum\": [\n          \"A(テクニカルスキル)\",\n          \"B(ビジネススキル)\",\n          \"C(リーダーシップ/マネジメント)\"\n        ],\n        \"description\": \"スキルの領域分類\"\n      },\n      \"目標グレード\": {\n        \"type\": \"string\",\n        \"description\": \"抽出したグレード\"\n      },\n      \"目標内容（アクション分類・測定可能なアクション）\": {\n        \"type\": \"string\",\n        \"description\": \"アクション分類と測定可能なアクションを含む目標内容。フォーマット: 【アクション分類】\\\\n〇〇\\\\n\\\\n【測定可能なアクション】\\\\n✕✕\",\n        \"pattern\": \"^【アクション分類】\\\\n[\\\\s\\\\S]+\\\\n\\\\n【測定可能なアクション】\\\\n[\\\\s\\\\S]+$\"\n      }\n    },\n    \"required\": [\"領域\", \"目標グレード\", \"目標内容\"],\n    \"additionalProperties\": false\n  },\n  \"minItems\": 1,\n  \"maxItems\": 3\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        944
+      ],
+      "id": "19f5457c-3253-4c20-8eb3-65d39010b87f",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "sendTo": "gtamu.work@gmail.com",
+        "subject": "目標変換処理の検証に失敗しました",
+        "message": "={{ $('1行ごとに処理').item.json[\"(氏名)\"] }}さんの目標変換処理の検証に失敗しました",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1648,
+        976
+      ],
+      "id": "81df9837-c548-4551-bfa3-156bd5a650f9",
+      "name": "Send a message",
+      "webhookId": "46aa5888-01a6-448e-b590-72b03b714931",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "o2ENQtlUu5lgyLGp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a02cd4b5-dc65-48e7-bec9-d9c22335793a",
+              "name": "retryCount",
+              "value": "={{ $('リトライ情報取得').item.json.retryCount + 1 }}",
+              "type": "number"
+            },
+            {
+              "id": "8fe3ac91-a01e-4c41-a0d5-f42335568578",
+              "name": "feedback",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        720
+      ],
+      "id": "acfb402d-3bbf-4989-aa94-1c243ffbdc50",
+      "name": "リトライ判定用編集"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.feedback }}",
+                    "rightValue": "OK",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "83fd6cf2-2671-47ce-b3cd-0026f1d96465"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "11d44f12-70c2-4606-be77-e6e5e9ebf44a",
+                    "leftValue": "={{ $json.feedback != \"OK\" && $json.retryCount < $('リトライ情報取得').item.json.maxRetry }}",
+                    "rightValue": "OK",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        1328,
+        720
+      ],
+      "id": "a4b395da-a2fe-45a7-84ed-82e050f7a0cf",
+      "name": "リトライ判定"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sLRIHIHmCnn6CNf7",
+          "mode": "list",
+          "cachedResultName": "目標抽出フィードバック",
+          "cachedResultUrl": "/projects/90B8ExeKfCtez8R1/datatables/sLRIHIHmCnn6CNf7"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "1"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "retryCount": 0,
+            "feedback": "={{ null }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "maxRetry",
+              "displayName": "maxRetry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "retryCount",
+              "displayName": "retryCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "feedback",
+              "displayName": "feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "dryRun": false
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        736
+      ],
+      "id": "c14ee3a6-51fb-4761-a4c4-29dfa3998dba",
+      "name": "リトライ情報初期化"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sLRIHIHmCnn6CNf7",
+          "mode": "list",
+          "cachedResultName": "目標抽出フィードバック",
+          "cachedResultUrl": "/projects/90B8ExeKfCtez8R1/datatables/sLRIHIHmCnn6CNf7"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        736
+      ],
+      "id": "e5131d20-a641-4cb1-87c8-8d7450114517",
+      "name": "リトライ情報取得"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sLRIHIHmCnn6CNf7",
+          "mode": "list",
+          "cachedResultName": "目標抽出フィードバック",
+          "cachedResultUrl": "/projects/90B8ExeKfCtez8R1/datatables/sLRIHIHmCnn6CNf7"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "1"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "maxRetry",
+              "displayName": "maxRetry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "retryCount",
+              "displayName": "retryCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "feedback",
+              "displayName": "feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        720
+      ],
+      "id": "3be94af2-a9bd-4e6c-a884-e40496216806",
+      "name": "リトライ情報更新"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"output\": [\n    {\n      \"領域（A/B/C）\": \"A(テクニカルスキル)\",\n      \"目標グレード\": \"\",\n      \"目標内容（アクション分類・測定可能なアクション）\": \"\"\n    },\n    {\n      \"領域（A/B/C）\": \"B(ビジネススキル)\",\n      \"目標グレード\": \"\",\n      \"目標内容（アクション分類・測定可能なアクション）\": \"\"\n    },\n    {\n      \"領域（A/B/C）\": \"C(リーダーシップ/マネジメント)\",\n      \"目標グレード\": \"\",\n      \"目標内容（アクション分類・測定可能なアクション）\": \"\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1856,
+        976
+      ],
+      "id": "023b7bfc-669e-4176-8463-7685f630adea",
+      "name": "戻り値編集（空）"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c21bdd6c-9ac0-4297-bc00-bfff94d6fb0d",
+              "name": "output",
+              "value": "={{ $('目標抽出').item.json.output }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        704
+      ],
+      "id": "d7c87c75-c82f-4bae-8d99-9364d2f538ee",
+      "name": "戻り値編集"
+    },
+    {
+      "parameters": {
+        "content": "# 目標抽出",
+        "height": 544,
+        "width": 2640
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -608,
+        640
+      ],
+      "typeVersion": 1,
+      "id": "aca9ba41-ab31-404a-a51c-66251bd86a07",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# 結果出力",
+        "height": 352,
+        "width": 1344
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -128,
+        1376
+      ],
+      "typeVersion": 1,
+      "id": "8863880a-1755-489e-9521-0dc37fa6d18b",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-13T09:56:46.522Z",
+      "createdAt": "2025-12-13T09:56:46.522Z",
+      "role": "workflow:owner",
+      "workflowId": "8KHjxrSVnTFcWPq2",
+      "projectId": "90B8ExeKfCtez8R1"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-13T10:47:23.000Z",
+  "versionId": "fe9fd480-8daa-4c30-9717-73536921f2db"
+}
