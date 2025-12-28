@@ -1,0 +1,654 @@
+{
+  "active": false,
+  "connections": {
+    "手動トリガー": {
+      "main": [
+        [
+          {
+            "node": "スプレッドシート読込",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "スプレッドシート読込": {
+      "main": [
+        [
+          {
+            "node": "回答済みフィルタリング",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "必要カラム抽出": {
+      "main": [
+        [
+          {
+            "node": "1行ごとに処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "スプレッドシート行追加": {
+      "main": [
+        [
+          {
+            "node": "1行ごとに処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1行ごとに処理": {
+      "main": [
+        [
+          {
+            "node": "完了メール送信",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "変換処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "スプレッドシート出力用編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "変換処理": {
+      "main": [
+        [
+          {
+            "node": "Split Out用編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out用編集": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "スプレッドシート出力用編集": {
+      "main": [
+        [
+          {
+            "node": "スプレッドシート行追加",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "回答済みフィルタリング": {
+      "main": [
+        [
+          {
+            "node": "必要カラム抽出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-07T12:49:52.455Z",
+  "id": "K8aDnQgo1kXCz3sN",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "スプレッドシート目標抽出ワークフロー",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9a478aed-b2b6-429d-8720-615f8255b7f8",
+      "name": "手動トリガー",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1SvqOhQK-43h-L3BjSm1TplPcarBSQ2aloY5ur6U4WQk",
+          "mode": "list",
+          "cachedResultName": "目標管理シート_20251213161707_utf8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SvqOhQK-43h-L3BjSm1TplPcarBSQ2aloY5ur6U4WQk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1033742185,
+          "mode": "list",
+          "cachedResultName": "目標管理シート_20251213161707_utf8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SvqOhQK-43h-L3BjSm1TplPcarBSQ2aloY5ur6U4WQk/edit#gid=1033742185"
+        },
+        "options": {}
+      },
+      "id": "170fde11-7a40-4131-aa0e-1cbc0f0069c6",
+      "name": "スプレッドシート読込",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -528,
+        80
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HSxvkZ3fCLKQ7gOJ",
+          "name": "Google Sheets account (work)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2cc8a954-b527-458d-8556-6c455873fa50",
+              "name": "社員番号",
+              "value": "={{ $json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "0b12b862-c350-4989-b6df-e12ed3ae46d0",
+              "name": "(氏名)",
+              "value": "={{ $json[\"(氏名)\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "3d2d08cd-6e92-4204-a250-5766655c88b6",
+              "name": "本人_事前に話したいこと1",
+              "value": "={{ $json[\"本人_事前に話したいこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b762c1b6-553e-4ec0-8c0f-e505d787baec",
+              "name": "フィードバックしたこと1",
+              "value": "={{ $json[\"フィードバックしたこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b18c8aa1-02d5-4b83-9a64-86edc2028eec",
+              "name": "上司メモ1",
+              "value": "={{ $json[\"上司メモ1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "411548c9-d197-40a9-95ca-53d7cc0d4696",
+              "name": "retryCount",
+              "value": 0,
+              "type": "number"
+            },
+            {
+              "id": "527d4d12-7624-4be5-9679-255d77edaa82",
+              "name": "feedback",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "37e4b090-12a1-48d7-a439-b8beb1773eec",
+      "name": "必要カラム抽出",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -112,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "目標管理",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "領域（A/B/C）": "={{ $('目標抽出').item.json.output.json[0][\"領域（A/B/C）\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "社員番号",
+              "displayName": "社員番号",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "氏名",
+              "displayName": "氏名",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "対象年",
+              "displayName": "対象年",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "対象期",
+              "displayName": "対象期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "領域（A/B/C）",
+              "displayName": "領域（A/B/C）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "現状グレード",
+              "displayName": "現状グレード",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標グレード",
+              "displayName": "目標グレード",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標内容（アクション分類・測定可能なアクション）",
+              "displayName": "目標内容（アクション分類・測定可能なアクション）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標フィードバック（上長）",
+              "displayName": "目標フィードバック（上長）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標フィードバック（営業）",
+              "displayName": "目標フィードバック（営業）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "自己評価（達成度%）",
+              "displayName": "自己評価（達成度%）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "自己コメント（取り組んだ内容・成果・学び）",
+              "displayName": "自己コメント（取り組んだ内容・成果・学び）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "3cf3a418-ea12-4d63-87f4-9fe1eb094565",
+      "name": "スプレッドシート行追加",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1216,
+        192
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HSxvkZ3fCLKQ7gOJ",
+          "name": "Google Sheets account (work)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "id": "976f0573-18d0-4962-ba0e-7557fd0fe4ec",
+      "name": "1行ごとに処理",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        80,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        768,
+        176
+      ],
+      "id": "e1c184f5-1400-42c9-9bff-2056fc54d130",
+      "name": "Split Out",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "p9jI6e5FxJiEIbhY",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/p9jI6e5FxJiEIbhY",
+          "cachedResultName": "スプレッドシート目標抽出サブワークフロー"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        176
+      ],
+      "id": "53144674-4c99-4d2f-beb5-64443ab6f90d",
+      "name": "変換処理"
+    },
+    {
+      "parameters": {
+        "sendTo": "gtamu.work@gmail.com",
+        "subject": "目標変換処理が完了しました",
+        "message": "=目標変換処理が完了しました",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        288,
+        -32
+      ],
+      "id": "bbad72f5-3130-457e-a530-a7a2e06f9765",
+      "name": "完了メール送信",
+      "webhookId": "46aa5888-01a6-448e-b590-72b03b714931",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "o2ENQtlUu5lgyLGp",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dace7977-751c-44c9-94b6-72fb7d38b392",
+              "name": "社員番号",
+              "value": "={{ $('1行ごとに処理').item.json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "bbee05a1-0e68-4aab-99f2-411b318d662c",
+              "name": "氏名",
+              "value": "={{ $('1行ごとに処理').item.json[\"(氏名)\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "a1a43501-562e-4ad6-8478-89f4fcb58a9a",
+              "name": "対象年",
+              "value": 2025,
+              "type": "number"
+            },
+            {
+              "id": "36a0e6cf-9ca6-4884-aacc-4d2f3c28d015",
+              "name": "対象期",
+              "value": "下期",
+              "type": "string"
+            },
+            {
+              "id": "4ef96aa1-3905-4952-8904-fe034b773c69",
+              "name": "フィードバックしたこと1",
+              "value": "={{ $('1行ごとに処理').item.json[\"フィードバックしたこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "dc78cfe9-382c-49c0-a0a1-7c5d9cfc3eef",
+              "name": "上司メモ1",
+              "value": "={{ $('1行ごとに処理').item.json[\"上司メモ1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "f60a704a-48a2-4706-9f66-dca4334c99a1",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        176
+      ],
+      "id": "457ee346-8c56-4408-9923-789930c53dd3",
+      "name": "Split Out用編集"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "25798dad-2411-43ba-9280-0dc8fda09afa",
+              "name": "社員番号",
+              "value": "={{ $json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6cf22acf-b193-47e1-83ee-bcd55a08a69d",
+              "name": "氏名",
+              "value": "={{ $json[\"氏名\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "afe01ea4-d420-4b0f-aaed-496ad617bc8a",
+              "name": "対象年",
+              "value": "={{ $json[\"対象年\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "4509a47f-a76b-4a53-bfe7-dcb908f09290",
+              "name": "対象期",
+              "value": "={{ $json[\"対象期\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "3b78d295-9267-46d7-883e-0589cef0ecbe",
+              "name": "領域（A/B/C）",
+              "value": "={{ $json.output[\"領域（A/B/C）\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "8b16fbc7-33e3-4a56-af8d-daaec4f871c7",
+              "name": "目標グレード",
+              "value": "={{ $json.output[\"目標グレード\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "782ba947-18a1-49ac-bbd6-11b6b5f6305f",
+              "name": "目標内容（アクション分類・測定可能なアクション）",
+              "value": "={{ $json.output[\"目標内容（アクション分類・測定可能なアクション）\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "70086835-8804-440e-b4fe-da7257ce402f",
+              "name": "目標フィードバック（上長）",
+              "value": "={{ $json[\"フィードバックしたこと1\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "f27d55aa-dbd5-4e32-aa62-9284bae42883",
+              "name": "目標フィードバック（営業）",
+              "value": "={{ $json[\"上司メモ1\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        976,
+        176
+      ],
+      "id": "6e86afea-c280-4f90-b72d-4314ea11b55e",
+      "name": "スプレッドシート出力用編集"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "80e03bed-acba-49d9-a3aa-6241bcf41cba",
+              "leftValue": "={{ $json[\"本人_事前に話したいこと1\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -320,
+        80
+      ],
+      "id": "2c34e44c-0100-4b95-bc38-1bd8d6f61c1d",
+      "name": "回答済みフィルタリング"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-07T12:49:52.490Z",
+      "createdAt": "2025-12-07T12:49:52.490Z",
+      "role": "workflow:owner",
+      "workflowId": "K8aDnQgo1kXCz3sN",
+      "projectId": "90B8ExeKfCtez8R1"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-13T08:09:19.000Z",
+  "versionId": "ba8e6a10-0bb9-42e2-8553-155ff7a3d816"
+}
