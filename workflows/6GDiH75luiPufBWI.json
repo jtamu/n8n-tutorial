@@ -1,0 +1,651 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many workflows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "List files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many workflows": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List files": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-28T13:08:31.017Z",
+  "id": "6GDiH75luiPufBWI",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "n8nワークフロー管理ワークフロー",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "886a2e28-e187-4e34-80e1-32baf272a5c9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8d58506f-21f5-47f3-b201-b3e76e52c5af",
+      "name": "Get many workflows",
+      "credentials": {
+        "n8nApi": {
+          "id": "lI6pBOFUktazZHkL",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "value": "jtamu",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-tutorial",
+          "mode": "list",
+          "cachedResultName": "n8n-tutorial",
+          "cachedResultUrl": "https://github.com/jtamu/n8n-tutorial"
+        },
+        "filePath": "workflows"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        224
+      ],
+      "id": "9b6509cd-0f33-4331-b460-a93c1ff2e861",
+      "name": "List files",
+      "webhookId": "9f13b461-f028-4b5d-9cf7-c0a35217a041",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "xejSopfZX98sbwZn",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bdc6f03a-906b-4093-a0f8-11125f83661b",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "826d8c75-f886-4a95-846e-40ccd1f84c74",
+              "name": "path",
+              "value": "={{ $json.path }}",
+              "type": "string"
+            },
+            {
+              "id": "021202c9-63db-4ae5-94f5-86156b9fd3ea",
+              "name": "sha",
+              "value": "={{ $json.sha }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        224
+      ],
+      "id": "29eb229b-214c-44ce-8fbf-fdba5dcaca02",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        624,
+        224
+      ],
+      "id": "e6772d0a-eb25-4161-b35e-11942c22d81c",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "fileName",
+              "field2": "name"
+            }
+          ]
+        },
+        "joinMode": "enrichInput1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1504,
+        112
+      ],
+      "id": "35c52cbe-5d66-4797-9cda-e98a52dcae06",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "21245b22-6e50-4ccd-bf03-9ad6367bc778",
+              "name": "fileName",
+              "value": "={{ $json.name + \".json\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1184,
+        0
+      ],
+      "id": "1777859b-a160-4f61-86fd-1a9b3734d9ee",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e3c1b287-b7f6-4fb6-862c-acd80c50dae9",
+              "leftValue": "={{ $json.sha }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1712,
+        112
+      ],
+      "id": "f4bd56de-4f68-4bc4-a41f-3c6efdc538c3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "jtamu",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n-tutorial",
+          "mode": "list",
+          "cachedResultName": "n8n-tutorial",
+          "cachedResultUrl": "https://github.com/jtamu/n8n-tutorial"
+        },
+        "filePath": "={{ $json.path }}",
+        "binaryData": true
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2096,
+        32
+      ],
+      "id": "60ceee8c-00c5-4d40-ae3b-12fe1d7402c0",
+      "name": "Edit a file",
+      "webhookId": "fda36ea4-5a3a-4b5e-97b5-a07d53f8cc16",
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "xejSopfZX98sbwZn",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true,
+          "encoding": "utf8",
+          "fileName": "={{ $json.name + \".json\" }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "1cb127e8-4eb4-46b1-99f5-b825458196ae",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {
+    "List files": [
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      },
+      {
+        "json": {
+          "name": "入門ハンズオン.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "size": 6215,
+          "url": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+          "html_url": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json",
+          "git_url": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+          "download_url": "https://raw.githubusercontent.com/jtamu/n8n-tutorial/main/workflows/入門ハンズオン.json",
+          "type": "file",
+          "_links": {
+            "self": "https://api.github.com/repos/jtamu/n8n-tutorial/contents/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json?ref=main",
+            "git": "https://api.github.com/repos/jtamu/n8n-tutorial/git/blobs/0100c99d22a5a0c3119d83c32be5b1da01be4ad7",
+            "html": "https://github.com/jtamu/n8n-tutorial/blob/main/workflows/%E5%85%A5%E9%96%80%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3.json"
+          }
+        }
+      }
+    ],
+    "Remove Duplicates": [
+      {
+        "json": {
+          "name": "Simple ChatBot.json",
+          "path": "workflows/入門ハンズオン.json",
+          "sha": "0100c99d22a5a0c3119d83c32be5b1da01be4ad7"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-28T13:08:31.024Z",
+      "createdAt": "2025-12-28T13:08:31.024Z",
+      "role": "workflow:owner",
+      "workflowId": "6GDiH75luiPufBWI",
+      "projectId": "90B8ExeKfCtez8R1"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-28T14:38:53.000Z",
+  "versionId": "b91765ff-db78-4403-9858-2759166b7d40"
+}
