@@ -1,0 +1,401 @@
+{
+  "active": false,
+  "connections": {
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Copy file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Chat": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-13T09:18:01.051Z",
+  "id": "PXcE54KHGmG2CFlB",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "人事ドライブ分配",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json.chatInput }}",
+        "returnAll": true,
+        "filter": {
+          "whatToSearch": "files",
+          "includeTrashed": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b355d61a-5650-4557-8723-f05750abaf37",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1NilOfPGyHGT5w36",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I",
+          "mode": "list",
+          "cachedResultName": "社員基本情報",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "シート1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        624,
+        192
+      ],
+      "id": "0598e3f0-a085-4f90-9e59-017e31b94481",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HSxvkZ3fCLKQ7gOJ",
+          "name": "Google Sheets account (work)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "99e16aed-be1d-4488-83a4-9fa3aab7ae72",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "8c954168-6879-43ad-9ff6-01d2808c64d3",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "1a7aa2a6-a548-4111-a579-62a600828886",
+              "name": "personName",
+              "value": "={{ $json.name.substring($json.name.lastIndexOf(\"_\") + 1) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "a4215532-2fb6-4e55-a694-641e596af4b2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "personName",
+              "field2": "氏名"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1216,
+        0
+      ],
+      "id": "1dee4bc5-7201-4393-8bea-7eecd71d3a95",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c8748953-b6fe-4fd5-87fe-24d3bdcc14cb",
+              "leftValue": "={{ $json[\"人事フォルダID\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1424,
+        0
+      ],
+      "id": "4d99b7b2-3d87-44ba-a600-f99a7f12a8cc",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "name": "={{ $json.name }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "value": "0ALfrP71k0cUSUk9PVA",
+          "mode": "list",
+          "cachedResultName": "012_人事",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/0ALfrP71k0cUSUk9PVA"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json[\"人事フォルダID\"] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1648,
+        0
+      ],
+      "id": "2e7b32e4-0de6-4112-bf3b-572b8346688c",
+      "name": "Copy file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1NilOfPGyHGT5w36",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.response }}",
+        "options": {
+          "memoryConnection": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        848,
+        0
+      ],
+      "id": "6b574538-b425-4b93-98ed-57f424588bdf",
+      "name": "Respond to Chat"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "name"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "529c075a-8239-44e8-a283-9de9723f5887",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseMode": "responseNodes"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "87741f9c-25dc-4a02-945d-72b77fc62245",
+      "name": "When chat message received",
+      "webhookId": "88edf42c-ee1a-48fd-9fa9-a72ee79b5867"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "527c5d2c-baf1-4f13-99cd-41b61dbdc2d5",
+              "name": "response",
+              "value": "=以下を配布します。よろしいですか？\n\n{{ $json.name.join('\\n\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "b5c63adb-b7b1-4a08-826f-7e1ef571879d",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-13T09:18:01.054Z",
+      "createdAt": "2025-12-13T09:18:01.054Z",
+      "role": "workflow:owner",
+      "workflowId": "PXcE54KHGmG2CFlB",
+      "projectId": "90B8ExeKfCtez8R1"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-17T15:01:23.000Z",
+  "versionId": "91721192-af0b-4c4e-bfc7-752bcbaa6105"
+}
