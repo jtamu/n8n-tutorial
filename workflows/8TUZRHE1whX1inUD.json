@@ -1,0 +1,399 @@
+{
+  "active": false,
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-12-30T08:01:32.580Z",
+  "id": "8TUZRHE1whX1inUD",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "カオナビ1on1データ移行",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c8d852db-9f02-4167-a1df-6a4b3eb92270",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1l-ptOdKLzogescp1eorCaXbIw7hcgRjW3ZbkG0SSKyk",
+          "mode": "list",
+          "cachedResultName": "1on1_エンジニア",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1l-ptOdKLzogescp1eorCaXbIw7hcgRjW3ZbkG0SSKyk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 410040783,
+          "mode": "list",
+          "cachedResultName": "1on1_エンジニア__20251129140401_utf8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1l-ptOdKLzogescp1eorCaXbIw7hcgRjW3ZbkG0SSKyk/edit#gid=410040783"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "8ca68cde-6ce5-4640-92bc-4b60e2a8431c",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nlet $result = [];\n\nfor (const item of $input.all()) {\n  for (const $i of [1,2,3,4,5,6]) {\n    let $row = {};\n    $row[\"社員番号\"] = item.json[\"社員番号\"];\n    $row[\"(氏名)\"] = item.json[\"(氏名)\"];\n    $row[\"実施日\"] = item.json[\"実施日\" + $i];\n    $row[\"テーマ、話したこと\"] = item.json[\"テーマ、話したこと\" + $i];\n    $row[\"フィードバックしたこと\"] = item.json[\"フィードバックしたこと\" + $i];\n    $row[\"次のアクション\"] = item.json[\"次のアクション\" + $i];\n    $row[\"ステータス\"] = item.json[\"ステータス\" + $i];\n    $result.push($row);\n  }\n}\n\nreturn $result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        16
+      ],
+      "id": "26529378-a9fb-4162-9632-116b38f1fd5b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1bRoEwg4W9IRhlSxoEzqY73OfSGfS87MmDmmlDzdg0qM",
+          "mode": "list",
+          "cachedResultName": "1on1_エンジニア__2周目",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bRoEwg4W9IRhlSxoEzqY73OfSGfS87MmDmmlDzdg0qM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 279381905,
+          "mode": "list",
+          "cachedResultName": "1on1_エンジニア__2周目_20251129140308_utf8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bRoEwg4W9IRhlSxoEzqY73OfSGfS87MmDmmlDzdg0qM/edit#gid=279381905"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        208
+      ],
+      "id": "84dba577-9eae-462e-85b9-02e9e1f2e081",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "84f794a0-287e-4024-8be0-f2983774bd4d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c62bda1a-18ae-4426-8bb8-e6286e8004d5",
+              "leftValue": "={{ $json[\"実施日\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        816,
+        16
+      ],
+      "id": "1a70dad3-a816-4a6a-ad43-f41fd711c21b",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dc29d43a-b043-41a5-a7e1-89d291aeb2ea",
+              "name": "実施日",
+              "value": "={{ $json[\"実施日\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "dacc80f2-69cc-49f0-95bc-2cae5f1593b8",
+              "name": "氏名",
+              "value": "={{ $json[\"(氏名)\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "dc4d9955-be19-4b6c-a444-50e025ac1b38",
+              "name": "アジェンダ",
+              "value": "={{ $json[\"テーマ、話したこと\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "e9a55992-b93a-4994-aeb1-dce2ee4770df",
+              "name": "ヒアリング結果",
+              "value": "={{ $json[\"フィードバックしたこと\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "a18dadb1-c9b6-4d5f-b9d2-1738ee529571",
+              "name": "フィードバック",
+              "value": "={{ $json[\"次のアクション\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "0320195e-0b53-4e9a-b346-9589710c1289",
+              "name": "要観察",
+              "value": "={{ $json[\"ステータス\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        16
+      ],
+      "id": "cd228a03-b2de-4f81-a978-3f6d8a08c583",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1tbGoQnFSu6Rsg7CfzTI7XhIHuQh6cWMfW-8wx6Tp0Ac",
+          "mode": "list",
+          "cachedResultName": "現場状況ヒアリング",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tbGoQnFSu6Rsg7CfzTI7XhIHuQh6cWMfW-8wx6Tp0Ac/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "シート1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1tbGoQnFSu6Rsg7CfzTI7XhIHuQh6cWMfW-8wx6Tp0Ac/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "実施日",
+              "displayName": "実施日",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "氏名",
+              "displayName": "氏名",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "アジェンダ",
+              "displayName": "アジェンダ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ヒアリング結果",
+              "displayName": "ヒアリング結果",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "フィードバック",
+              "displayName": "フィードバック",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "要観察",
+              "displayName": "要観察",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1232,
+        16
+      ],
+      "id": "ca687979-9806-4ec2-a690-76018b6fb59b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-30T08:01:32.586Z",
+      "createdAt": "2025-12-30T08:01:32.586Z",
+      "role": "workflow:owner",
+      "workflowId": "8TUZRHE1whX1inUD",
+      "projectId": "rmPJf98OnVhEXTB7"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-30T08:55:51.000Z",
+  "versionId": "c028c583-7348-4866-b304-f97a6d6f2cd1"
+}
