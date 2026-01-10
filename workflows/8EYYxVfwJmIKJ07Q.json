@@ -1,0 +1,28 @@
+{
+  "active": false,
+  "connections": {},
+  "createdAt": "2025-12-30T07:52:50.093Z",
+  "id": "8EYYxVfwJmIKJ07Q",
+  "isArchived": true,
+  "meta": null,
+  "name": "カオナビ1on1データ移行",
+  "nodes": [],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-12-30T07:52:50.095Z",
+      "createdAt": "2025-12-30T07:52:50.095Z",
+      "role": "workflow:owner",
+      "workflowId": "8EYYxVfwJmIKJ07Q",
+      "projectId": "rmPJf98OnVhEXTB7"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-12-30T07:56:05.000Z",
+  "versionId": "f5967e1d-8367-418e-8796-f5d2d188f62b"
+}
