@@ -1,0 +1,1728 @@
+{
+  "active": false,
+  "connections": {
+    "フォーム提出": {
+      "main": [
+        [
+          {
+            "node": "社員基本情報取得",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "実施回編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "実施回編集": {
+      "main": [
+        [
+          {
+            "node": "アンケート回答データ取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "アンケート回答データ取得": {
+      "main": [
+        [
+          {
+            "node": "実施回を回答データに含める",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員基本情報取得": {
+      "main": [
+        [
+          {
+            "node": "必要項目抽出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "必要項目抽出": {
+      "main": [
+        [
+          {
+            "node": "内部結合",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "内部結合": {
+      "main": [
+        [
+          {
+            "node": "人事管理対象社員のみ絞り込み",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "人事管理対象社員のみ絞り込み": {
+      "main": [
+        [
+          {
+            "node": "社員ごとにループ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員ごとにループ": {
+      "main": [
+        [
+          {
+            "node": "完了通知",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call '現場状況アンケート回答分配'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "既存のアンケート回答ファイルが存在するか検索": {
+      "main": [
+        [
+          {
+            "node": "既存ファイルあり？",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "実施回を回答データに含める": {
+      "main": [
+        [
+          {
+            "node": "内部結合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "既存の社員回答データ取得": {
+      "main": [
+        [
+          {
+            "node": "既存レコードあり？",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "既存ファイルあり？": {
+      "main": [
+        [
+          {
+            "node": "既存の社員回答データ取得",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "社員回答ファイル作成",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "既存レコードあり？": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ファイルID・ファイル名のみに整形1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員回答ファイル作成": {
+      "main": [
+        [
+          {
+            "node": "社員の人事フォルダに移動",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員の人事フォルダに移動": {
+      "main": [
+        [
+          {
+            "node": "ファイルID・ファイル名のみに整形",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ファイルID・ファイル名のみに整形": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ファイルID・ファイル名のみに整形1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "行追加": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "既存のアンケート回答ファイルが存在するか検索",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call '現場状況アンケート回答分配'": {
+      "main": [
+        [
+          {
+            "node": "社員ごとにループ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "行追加",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-10T06:15:43.992Z",
+  "id": "0FtDXHLXvdEgqr2F",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "現場状況アンケート回答分配",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "現場状況アンケート分配",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "第何回？",
+              "fieldType": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ba345c7c-3454-4ad7-b513-aeef66885c3b",
+      "name": "フォーム提出",
+      "webhookId": "dde3cbf0-a654-444c-adf7-54ac9a6c9b64"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8efbefa6-2a7d-4807-a961-58b4c8ff8ccf",
+              "name": "実施回",
+              "value": "=第{{ $json[\"第何回？\"] }}回",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "3c1b01ce-5c61-4079-ab00-9bc81cc8e776",
+      "name": "実施回編集"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1DiX98Z-t_WF5rk52jg9fdS2knR3G2h_75rsdSshEPaA",
+          "mode": "list",
+          "cachedResultName": "エンジニア 現場状況アンケート（回答）",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DiX98Z-t_WF5rk52jg9fdS2knR3G2h_75rsdSshEPaA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json[\"実施回\"] }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        0
+      ],
+      "id": "1c71a280-286f-4b4d-be83-41b797ef3548",
+      "name": "アンケート回答データ取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I",
+          "mode": "list",
+          "cachedResultName": "社員基本情報",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "シート1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        224
+      ],
+      "id": "5d01d0b7-8b70-4417-bee2-7d5208f0cb32",
+      "name": "社員基本情報取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3b3ca6e8-0dcf-4b50-90b2-6f88342625c2",
+              "name": "社員番号",
+              "value": "={{ $json['社員番号'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2d615111-b02e-44e9-96dd-1c8e2530ae61",
+              "name": "氏名",
+              "value": "={{ $json['氏名'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4d2d93ef-6862-449e-b456-95f1750c4641",
+              "name": "人事フォルダID",
+              "value": "={{ $json['人事フォルダID'] }}",
+              "type": "string"
+            },
+            {
+              "id": "bb0647f7-1a12-4368-b6f6-ddde00af2a45",
+              "name": "現場状況アンケートファイル名",
+              "value": "=現場状況アンケート回答_{{ $json['氏名'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        224
+      ],
+      "id": "5d05a2cb-9469-4bf3-bfc9-dac40dcd3d0c",
+      "name": "必要項目抽出"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "社員番号",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1136,
+        64
+      ],
+      "id": "f79755ce-f198-4256-9540-d501bab30bb7",
+      "name": "内部結合"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5585e32d-0d1c-4b2c-aa59-5760fd98a6b5",
+              "leftValue": "={{ $json['人事フォルダID'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        64
+      ],
+      "id": "be637a49-88f0-4956-8acf-830589cc2daa",
+      "name": "人事管理対象社員のみ絞り込み"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1552,
+        64
+      ],
+      "id": "291a6580-86be-464e-8a2c-65faa4ed798f",
+      "name": "社員ごとにループ"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "={{ $json[\"現場状況アンケートファイル名\"] }}",
+        "filter": {
+          "driveId": {
+            "__rl": true,
+            "value": "0ALfrP71k0cUSUk9PVA",
+            "mode": "list",
+            "cachedResultName": "012_人事",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/0ALfrP71k0cUSUk9PVA"
+          },
+          "whatToSearch": "files",
+          "includeTrashed": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        512,
+        720
+      ],
+      "id": "84d38fee-43c1-485a-ae7a-5c62ba1b334f",
+      "name": "既存のアンケート回答ファイルが存在するか検索",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "iDGCXgg6V0DgY2Q2",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7655fa16-0e5f-41a8-8b09-30a6871318a1",
+              "name": "実施回",
+              "value": "={{ $('実施回編集').item.json[\"実施回\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "1e15df98-87b4-40d9-96e0-d55ae7eb02b4",
+      "name": "実施回を回答データに含める"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('When Executed by Another Workflow').item.json[\"現場状況アンケートファイル名\"] }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        624
+      ],
+      "id": "5ea85317-2537-4f3b-8817-0c394dd15f80",
+      "name": "既存の社員回答データ取得",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "167423fd-089d-4982-a4c6-92f40addba58",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        720
+      ],
+      "id": "3481101a-5226-47ee-a6a6-3295fba2888a",
+      "name": "既存ファイルあり？"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f7e6664c-9fad-41d6-83ac-e5bc8d24fd36",
+              "leftValue": "={{ $json['タイムスタンプ'] }}",
+              "rightValue": "={{ $('When Executed by Another Workflow').item.json[\"タイムスタンプ\"] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1136,
+        624
+      ],
+      "id": "cc4a7266-ad7d-4f63-88fe-74242a188e67",
+      "name": "既存レコードあり？"
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "={{ $('When Executed by Another Workflow').item.json['現場状況アンケートファイル名'] }}",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "title": "={{ $('When Executed by Another Workflow').item.json['現場状況アンケートファイル名'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        928,
+        816
+      ],
+      "id": "2f4c3102-15e5-4a70-b3a4-068f5ecd5d70",
+      "name": "社員回答ファイル作成",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "driveId": {
+          "__rl": true,
+          "value": "=",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('When Executed by Another Workflow').item.json['人事フォルダID'] }}",
+          "mode": "id"
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1136,
+        816
+      ],
+      "id": "25fa9bef-c7bc-426d-a844-c3da73cfcad1",
+      "name": "社員の人事フォルダに移動",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "iDGCXgg6V0DgY2Q2",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d00f05ba-7f08-484a-8629-50e02b80e0bf",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "5a13da70-286a-43c5-b69d-24e6ccedd3f5",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        816
+      ],
+      "id": "38cc18e7-153e-404c-a6eb-d085ebf19c6d",
+      "name": "ファイルID・ファイル名のみに整形"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84591d5f-392b-4ad7-b003-5e1434618037",
+              "name": "id",
+              "value": "={{ $('既存のアンケート回答ファイルが存在するか検索').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "13c855a9-c081-48d9-91f5-640d6b98b9f4",
+              "name": "name",
+              "value": "={{ $('既存のアンケート回答ファイルが存在するか検索').item.json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        688
+      ],
+      "id": "4a82d4f4-fef5-4879-9c72-83d37bb9eaba",
+      "name": "ファイルID・ファイル名のみに整形1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('When Executed by Another Workflow').item.json['現場状況アンケートファイル名'] }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "タイムスタンプ",
+              "displayName": "タイムスタンプ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "メールアドレス",
+              "displayName": "メールアドレス",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "社員番号",
+              "displayName": "社員番号",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "参画中のプロジェクト名またはクライアント名を教えてください。（自由記述）",
+              "displayName": "参画中のプロジェクト名またはクライアント名を教えてください。（自由記述）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現在のチーム体制を教えてください。（複数選択可）",
+              "displayName": "現在のチーム体制を教えてください。（複数選択可）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "チームの人数構成を教えてください。（自由記述）",
+              "displayName": "チームの人数構成を教えてください。（自由記述）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "チームのリーダー（PM、TLなど）は誰ですか？（自由記述）",
+              "displayName": "チームのリーダー（PM、TLなど）は誰ですか？（自由記述）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "プロジェクトのマイルストーンやリリース予定は把握していますか？",
+              "displayName": "プロジェクトのマイルストーンやリリース予定は把握していますか？",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "把握している場合、今後の重要なスケジュールを教えてください。（自由記述）",
+              "displayName": "把握している場合、今後の重要なスケジュールを教えてください。（自由記述）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "スケジュールに対する進捗状況はどうですか？",
+              "displayName": "スケジュールに対する進捗状況はどうですか？",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現在の現場の稼働状況を教えてください。\n[回答例]\n- 1人月 (1日8時間の全ての時間を現場の作業に充てなければタスクがこなせない状況)\n- 0.5人月 (1日8時間のうち4時間を現場の作業に充てればタスクがこなせる状況)\n- 1.5人月 (1日8時間では現場のタスクがこなせず、毎日4時間残業しなければ消化できない状況)",
+              "displayName": "現在の現場の稼働状況を教えてください。\n[回答例]\n- 1人月 (1日8時間の全ての時間を現場の作業に充てなければタスクがこなせない状況)\n- 0.5人月 (1日8時間のうち4時間を現場の作業に充てればタスクがこなせる状況)\n- 1.5人月 (1日8時間では現場のタスクがこなせず、毎日4時間残業しなければ消化できない状況)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現場の人員増減のトレンドは以下のどれに当てはまりますか？",
+              "displayName": "現場の人員増減のトレンドは以下のどれに当てはまりますか？",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現場の人員増減トレンドが増加もしくは減少傾向にある場合、差し支えなければ詳細な状況を教えてください",
+              "displayName": "現場の人員増減トレンドが増加もしくは減少傾向にある場合、差し支えなければ詳細な状況を教えてください",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現在携わっている副業（現場以外の案件）はありますか？ある場合は、副業の作業工数(人月)を教えて下さい。",
+              "displayName": "現在携わっている副業（現場以外の案件）はありますか？ある場合は、副業の作業工数(人月)を教えて下さい。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現場で感じている課題や問題はありますか？（複数選択可）",
+              "displayName": "現場で感じている課題や問題はありますか？（複数選択可）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "具体的にどのような課題があるか教えてください。（自由記述）\n[回答例]\n- 設計書がほとんどなく、仕様の把握に時間がかかる\n- コードレビューのフローが整備されておらず、品質にばらつきがある\n- 〇〇という技術について、チーム全体の理解が不足している",
+              "displayName": "具体的にどのような課題があるか教えてください。（自由記述）\n[回答例]\n- 設計書がほとんどなく、仕様の把握に時間がかかる\n- コードレビューのフローが整備されておらず、品質にばらつきがある\n- 〇〇という技術について、チーム全体の理解が不足している",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "上記の課題について、あなた自身の取り組みで改善できることを教えてください。",
+              "displayName": "上記の課題について、あなた自身の取り組みで改善できることを教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現場での業務内容に満足していますか？",
+              "displayName": "現場での業務内容に満足していますか？",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "今の業務を続ける上での不安や悩みはありますか？（自由記述）\n[回答例]\n- 技術的にチャレンジできる機会が少ない\n- 期待されている役割がはっきりしない\n- 〇〇のスキルを伸ばしたいが、現場での機会が少ない",
+              "displayName": "今の業務を続ける上での不安や悩みはありますか？（自由記述）\n[回答例]\n- 技術的にチャレンジできる機会が少ない\n- 期待されている役割がはっきりしない\n- 〇〇のスキルを伸ばしたいが、現場での機会が少ない",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "上記の不安や悩みについて、あなた自身の取り組みで改善できることを教えてください。",
+              "displayName": "上記の不安や悩みについて、あなた自身の取り組みで改善できることを教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "組織の志向性：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "組織の志向性：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "組織の志向性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "組織の志向性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ソフト・言語・ツール等の導入に対する姿勢：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "ソフト・言語・ツール等の導入に対する姿勢：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ソフト・言語・ツール等の導入に対する姿勢：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "ソフト・言語・ツール等の導入に対する姿勢：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ソフト・言語・ツール等の選定基準：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "ソフト・言語・ツール等の選定基準：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ソフト・言語・ツール等の選定基準：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "ソフト・言語・ツール等の選定基準：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "コミュニケーションスタイル：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "コミュニケーションスタイル：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "コミュニケーションスタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "コミュニケーションスタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "組織のプレースタイル：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "組織のプレースタイル：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "組織のプレースタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "組織のプレースタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "社風：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "社風：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "社風：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "社風：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "働く人の価値観：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "働く人の価値観：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "働く人の価値観：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "働く人の価値観：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "勤務スタイル(時間/場所/デスク環境等)：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "勤務スタイル(時間/場所/デスク環境等)：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "勤務スタイル(時間/場所/デスク環境等)：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "勤務スタイル(時間/場所/デスク環境等)：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "業務の限定性：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "業務の限定性：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "業務の限定性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "業務の限定性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "人間関係：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "人間関係：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "人間関係：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "人間関係：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "業務の忙しさ：現在の環境に当てはまるものにチェックを入れてください。",
+              "displayName": "業務の忙しさ：現在の環境に当てはまるものにチェックを入れてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "業務の忙しさ：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "displayName": "業務の忙しさ：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "今後のキャリアや希望する業務について、何か要望がありますか？（自由記述）\n[回答例]\n- フルスタックの経験を積みたいので、バックエンドのタスクにも関わりたい\n- 今後リーダーポジションを経験してみたい\n- 新しい技術を学べる案件に参画したい",
+              "displayName": "今後のキャリアや希望する業務について、何か要望がありますか？（自由記述）\n[回答例]\n- フルスタックの経験を積みたいので、バックエンドのタスクにも関わりたい\n- 今後リーダーポジションを経験してみたい\n- 新しい技術を学べる案件に参画したい",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "今後のキャリアや希望する業務を実現するために、今取り組んでいること、もしくはこれから取り組もうと思っていることを教えてください。",
+              "displayName": "今後のキャリアや希望する業務を実現するために、今取り組んでいること、もしくはこれから取り組もうと思っていることを教えてください。",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "その他、現場の状況や会社への要望があればご自由に記入してください。（自由記述）\n[回答例]\n- 現場のリモートワークのルールについて、もう少し明確にしてほしい\n- 〇〇というツールの導入を検討してほしい",
+              "displayName": "その他、現場の状況や会社への要望があればご自由に記入してください。（自由記述）\n[回答例]\n- 現場のリモートワークのルールについて、もう少し明確にしてほしい\n- 〇〇というツールの導入を検討してほしい",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "個別のヒアリング実施を希望しますか？",
+              "displayName": "個別のヒアリング実施を希望しますか？",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "実施回",
+              "displayName": "実施回",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "氏名",
+              "displayName": "氏名",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "人事フォルダID",
+              "displayName": "人事フォルダID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "現場状況アンケートファイル名",
+              "displayName": "現場状況アンケートファイル名",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1792,
+        496
+      ],
+      "id": "db9a57ae-d238-4833-97b7-0799a672829e",
+      "name": "行追加",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "w19CX4xDiNhlcBmk",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        720
+      ],
+      "id": "3e3445e1-9e1d-4199-942d-c0f74696384b",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "0FtDXHLXvdEgqr2F",
+          "cachedResultName": "現場状況アンケート回答分配"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "mode": "each",
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1760,
+        176
+      ],
+      "id": "3678b745-5ad9-4672-b409-3a533658d2c2",
+      "name": "Call '現場状況アンケート回答分配'"
+    },
+    {
+      "parameters": {
+        "sendTo": "tamura@yoku.co.jp",
+        "subject": "現場状況アンケート回答分配処理が完了しました",
+        "message": "現場状況アンケート回答分配処理が完了しました",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2176,
+        -32
+      ],
+      "id": "d9869ed8-3320-4ada-9290-5238a369fc3a",
+      "name": "完了通知",
+      "webhookId": "8250da37-9ed8-44d2-8833-bb45321a88ec",
+      "executeOnce": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "MuY0xdkfnz6P83w8",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "89bec242-fef4-4d6c-b3b5-cc2d0d02fac5",
+              "name": "done",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1968,
+        656
+      ],
+      "id": "778362d7-296d-4db9-ba61-0e25da712845",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fc4d11c3-2bb1-427d-9f53-20f5369fb66a",
+              "name": "実施回",
+              "value": "={{ $('When Executed by Another Workflow').item.json['実施回'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f3912456-d58f-420c-a28b-d096cf050aec",
+              "name": "タイムスタンプ",
+              "value": "={{ $('When Executed by Another Workflow').item.json['タイムスタンプ'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6c3ea8f6-66ab-4ecb-9eda-6d20be5fef35",
+              "name": "参画中のプロジェクト名またはクライアント名を教えてください。（自由記述）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['参画中のプロジェクト名またはクライアント名を教えてください。（自由記述）'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2f50aa82-bbd4-4ebc-9de3-1bf6220442f8",
+              "name": "現在のチーム体制を教えてください。（複数選択可）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['現在のチーム体制を教えてください。（複数選択可）'] }}",
+              "type": "string"
+            },
+            {
+              "id": "72c8bfcf-de47-424c-a59d-c163fe964ffb",
+              "name": "チームの人数構成を教えてください。（自由記述）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['チームの人数構成を教えてください。（自由記述）'] }}",
+              "type": "string"
+            },
+            {
+              "id": "60f54f30-ebb5-45bf-9741-be1d22eb6a10",
+              "name": "チームのリーダー（PM、TLなど）は誰ですか？（自由記述）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['チームのリーダー（PM、TLなど）は誰ですか？（自由記述）'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ee5418d0-95e9-4a64-b3bf-f1d423479421",
+              "name": "プロジェクトのマイルストーンやリリース予定は把握していますか？",
+              "value": "={{ $('When Executed by Another Workflow').item.json['プロジェクトのマイルストーンやリリース予定は把握していますか？'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ef0aa149-24a0-4042-8103-094d1b285f11",
+              "name": "把握している場合、今後の重要なスケジュールを教えてください。（自由記述）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['把握している場合、今後の重要なスケジュールを教えてください。（自由記述）'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1396373d-590c-4164-abaf-2b84bcfb864e",
+              "name": "スケジュールに対する進捗状況はどうですか？",
+              "value": "={{ $('When Executed by Another Workflow').item.json['スケジュールに対する進捗状況はどうですか？'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e53f5b70-fb80-48f5-9d86-92ab1333224b",
+              "name": "現在の現場の稼働状況を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['現在の現場の稼働状況を教えてください。\\n[回答例]\\n- 1人月 (1日8時間の全ての時間を現場の作業に充てなければタスクがこなせない状況)\\n- 0.5人月 (1日8時間のうち4時間を現場の作業に充てればタスクがこなせる状況)\\n- 1.5人月 (1日8時間では現場のタスクがこなせず、毎日4時間残業しなければ消化できない状況)'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a93fb37d-699b-44b4-9bd6-cc3dab404353",
+              "name": "現場の人員増減のトレンドは以下のどれに当てはまりますか？",
+              "value": "={{ $('When Executed by Another Workflow').item.json['現場の人員増減のトレンドは以下のどれに当てはまりますか？'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2f67f8e6-dcec-4cd8-832f-77b07c098126",
+              "name": "現場の人員増減トレンドが増加もしくは減少傾向にある場合、差し支えなければ詳細な状況を教えてください",
+              "value": "={{ $('When Executed by Another Workflow').item.json['現場の人員増減トレンドが増加もしくは減少傾向にある場合、差し支えなければ詳細な状況を教えてください'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2b20648f-8fd7-4e78-ae15-ee32ea772340",
+              "name": "現在携わっている副業（現場以外の案件）はありますか？ある場合は、副業の作業工数(人月)を教えて下さい。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['現在携わっている副業（現場以外の案件）はありますか？ある場合は、副業の作業工数(人月)を教えて下さい。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a60b1350-e442-4522-9335-11bb000af3c0",
+              "name": "現場で感じている課題や問題はありますか？（複数選択可）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['現場で感じている課題や問題はありますか？（複数選択可）'] }}",
+              "type": "string"
+            },
+            {
+              "id": "27684eb1-cc06-4a9c-ae4e-ec8397ba95bf",
+              "name": "具体的にどのような課題があるか教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['具体的にどのような課題があるか教えてください。（自由記述）\\n[回答例]\\n- 設計書がほとんどなく、仕様の把握に時間がかかる\\n- コードレビューのフローが整備されておらず、品質にばらつきがある\\n- 〇〇という技術について、チーム全体の理解が不足している'] }}",
+              "type": "string"
+            },
+            {
+              "id": "1ffaadee-3da2-47d3-ae58-e32cc3d042cf",
+              "name": "上記の課題について、あなた自身の取り組みで改善できることを教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['上記の課題について、あなた自身の取り組みで改善できることを教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "752a2164-2f59-4a58-80d0-ee6d378e6f0a",
+              "name": "現場での業務内容に満足していますか？",
+              "value": "={{ $('When Executed by Another Workflow').item.json['現場での業務内容に満足していますか？'] }}",
+              "type": "string"
+            },
+            {
+              "id": "94058e0d-6afd-476c-9be2-36e9a7e5f1b5",
+              "name": "今の業務を続ける上での不安や悩みはありますか？（自由記述）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['今の業務を続ける上での不安や悩みはありますか？（自由記述）\\n[回答例]\\n- 技術的にチャレンジできる機会が少ない\\n- 期待されている役割がはっきりしない\\n- 〇〇のスキルを伸ばしたいが、現場での機会が少ない'] }}",
+              "type": "string"
+            },
+            {
+              "id": "4cf07aad-b0f9-4c2f-a8b9-ee1f82582cea",
+              "name": "上記の不安や悩みについて、あなた自身の取り組みで改善できることを教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['上記の不安や悩みについて、あなた自身の取り組みで改善できることを教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "acfc4262-c313-4d04-a054-8df50137f78f",
+              "name": "組織の志向性：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['組織の志向性：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "de24bd75-6a49-47a1-937e-7ceef8fd49bd",
+              "name": "組織の志向性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['組織の志向性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "369513f4-8522-4616-8f86-c352b99a15df",
+              "name": "ソフト・言語・ツール等の導入に対する姿勢：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['ソフト・言語・ツール等の導入に対する姿勢：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "48c4200a-d649-440c-af92-5eea2b1df477",
+              "name": "ソフト・言語・ツール等の導入に対する姿勢：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['ソフト・言語・ツール等の導入に対する姿勢：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "7e2ecfae-c649-4c73-9151-4f483c21f525",
+              "name": "ソフト・言語・ツール等の選定基準：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['ソフト・言語・ツール等の選定基準：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "77b6d938-b630-413e-be7f-0a891997f8d5",
+              "name": "ソフト・言語・ツール等の選定基準：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['ソフト・言語・ツール等の選定基準：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0df0c105-4345-400e-98db-7315b4fe2bf2",
+              "name": "コミュニケーションスタイル：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['コミュニケーションスタイル：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "876e1ad7-73a6-4656-8db9-6d0dc04e980f",
+              "name": "コミュニケーションスタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['コミュニケーションスタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "db2e4c4c-8555-4941-880f-6bca9ec312be",
+              "name": "組織のプレースタイル：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['組織のプレースタイル：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f2232b94-b293-420d-ac4a-6e47a5127653",
+              "name": "組織のプレースタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['組織のプレースタイル：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e05f0917-0979-4c6c-8e25-4309a1141108",
+              "name": "社風：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['社風：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d79607eb-5dbb-4153-bb08-a28b309b59b6",
+              "name": "社風：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['社風：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "7e544844-490e-47af-a9b6-aca6936551f2",
+              "name": "働く人の価値観：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['働く人の価値観：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eabf2543-d45c-4760-8fdb-e859ad6fab0d",
+              "name": "働く人の価値観：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['働く人の価値観：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "adf6c9d7-0bce-4744-af27-513bf4e89521",
+              "name": "勤務スタイル(時間/場所/デスク環境等)：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['勤務スタイル(時間/場所/デスク環境等)：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "5350bcec-cc1f-4f1f-8f0c-73e9f6fa1b49",
+              "name": "勤務スタイル(時間/場所/デスク環境等)：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['勤務スタイル(時間/場所/デスク環境等)：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e7413f00-e260-40dd-9e4c-860f22e37529",
+              "name": "業務の限定性：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['業務の限定性：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "96c7e8bb-1c54-46d8-987e-d2bd4695b467",
+              "name": "業務の限定性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['業務の限定性：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "0810d47e-20d6-4e8e-869e-c7f41c7a550a",
+              "name": "人間関係：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['人間関係：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "71e187e5-939c-4d5a-8671-bf7740076481",
+              "name": "人間関係：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['人間関係：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "86e8fed6-4e5d-42c7-9044-9ebd0a5df243",
+              "name": "業務の忙しさ：現在の環境に当てはまるものにチェックを入れてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['業務の忙しさ：現在の環境に当てはまるものにチェックを入れてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "6c3bc2bf-bd85-4b98-a7c4-81e912d2a58d",
+              "name": "業務の忙しさ：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['業務の忙しさ：現在の環境は自分にあっていますか？あっていない場合、理想的な環境を教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eb67041b-2ce9-4734-9737-2f9657c323de",
+              "name": "今後のキャリアや希望する業務について、何か要望がありますか？（自由記述）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['今後のキャリアや希望する業務について、何か要望がありますか？（自由記述）\\n[回答例]\\n- フルスタックの経験を積みたいので、バックエンドのタスクにも関わりたい\\n- 今後リーダーポジションを経験してみたい\\n- 新しい技術を学べる案件に参画したい'] }}",
+              "type": "string"
+            },
+            {
+              "id": "30cb0fa3-d496-4f1c-82a5-353278a7791d",
+              "name": "今後のキャリアや希望する業務を実現するために、今取り組んでいること、もしくはこれから取り組もうと思っていることを教えてください。",
+              "value": "={{ $('When Executed by Another Workflow').item.json['今後のキャリアや希望する業務を実現するために、今取り組んでいること、もしくはこれから取り組もうと思っていることを教えてください。'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f52f92ae-1063-4a77-9ddb-3cfcf9fc1267",
+              "name": "その他、現場の状況や会社への要望があればご自由に記入してください。（自由記述）",
+              "value": "={{ $('When Executed by Another Workflow').item.json['その他、現場の状況や会社への要望があればご自由に記入してください。（自由記述）\\n[回答例]\\n- 現場のリモートワークのルールについて、もう少し明確にしてほしい\\n- 〇〇というツールの導入を検討してほしい'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c23c50-69a8-4545-80cc-865be5aee2ed",
+              "name": "個別のヒアリング実施を希望しますか？",
+              "value": "={{ $('When Executed by Another Workflow').item.json['個別のヒアリング実施を希望しますか？'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        496
+      ],
+      "id": "6f814a76-e2d1-4347-83bb-00cf5f64fbdc",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {
+    "フォーム提出": [
+      {
+        "json": {
+          "第何回？": 12,
+          "submittedAt": "2026-01-10T15:21:24.747+09:00",
+          "formMode": "test"
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-10T06:15:43.996Z",
+      "createdAt": "2026-01-10T06:15:43.996Z",
+      "role": "workflow:owner",
+      "workflowId": "0FtDXHLXvdEgqr2F",
+      "projectId": "rmPJf98OnVhEXTB7"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-10T10:56:10.000Z",
+  "versionId": "68798402-2a7a-41eb-a3b3-a0e42fb50916"
+}
