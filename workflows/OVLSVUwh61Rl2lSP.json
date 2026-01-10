@@ -1,0 +1,315 @@
+{
+  "active": false,
+  "connections": {
+    "Query Data Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Insert Data to Store",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Query Data Tool",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Insert Data to Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload your file here": {
+      "main": [
+        [
+          {
+            "node": "Insert Data to Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-11-15T07:31:05.707Z",
+  "id": "OVLSVUwh61Rl2lSP",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "RAG tutorial workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Upload your data to test RAG",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload your file(s)",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf, .csv",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "241fce88-21a7-47ca-a4d5-f1a2ead9761d",
+      "name": "Upload your file here",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        640,
+        -128
+      ],
+      "webhookId": "82848bc4-5ea2-4e5a-8bb6-3c09b94a8c5d",
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c7b416fc-84d4-4805-8e81-0b8599016ac4",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        1280,
+        352
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "yxJunv0algHDKftz",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "id": "3d103eae-7c0b-4f48-b3c0-220eb0a25ff8",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        1088,
+        32
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "content": "### Readme\nLoad your data into a vector database with the 📚 **Load Data** flow, and then use your data as chat context with the 🐕 **Retriever** flow.\n\n**Quick start**\n1. Click on the `Execute Workflow` button to run the 📚 **Load Data** flow.\n2. Click on `Open Chat` button to run the 🐕 **Retriever** flow. Then ask a question about content from your document(s)\n\n\nFor more info, check our [docs on RAG in n8n](https://docs.n8n.io/advanced-ai/rag-in-n8n/)",
+        "height": 300,
+        "width": 440,
+        "color": 4
+      },
+      "id": "105ea79c-ed69-44e6-8d9c-329668a8801c",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        96,
+        -192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 📚 Load Data Flow",
+        "height": 460,
+        "width": 700,
+        "color": 7
+      },
+      "id": "55dc8b63-42f4-469d-89fa-96cff6b3ac68",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        576,
+        -192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key",
+          "cachedResultName": "vector_store_key"
+        }
+      },
+      "id": "b80ea211-f1a8-4715-a673-5de09089bda9",
+      "name": "Insert Data to Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        816,
+        -128
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "knowledge_base",
+        "toolDescription": "Use this knowledge base to answer questions from the user",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        }
+      },
+      "id": "7e443bf7-f877-40f2-992a-47b1f601730c",
+      "name": "Query Data Tool",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "position": [
+        1696,
+        80
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "966b7f3a-017f-4773-babe-b2eac565f8b2",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1696,
+        -160
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "7759b9c3-4d57-442a-908b-1f2260a39505",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        1488,
+        -160
+      ],
+      "webhookId": "4091fa09-fb9a-4039-9411-7104d213f601",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "258c5c60-2a41-4395-87e8-e3b16df2e946",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1488,
+        80
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "yxJunv0algHDKftz",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### 🐕 2. Retriever Flow",
+        "height": 460,
+        "width": 680,
+        "color": 7
+      },
+      "id": "56ba9f9a-a4ec-4685-9d60-ef47c54bc860",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1360,
+        -192
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Embeddings\n\nThe Insert and Retrieve operation use the same embedding node.\n\nThis is to ensure that they are using the **exact same embeddings and settings**.\n\nDifferent embeddings might not work at all, or have unintended consequences.\n",
+        "height": 240,
+        "width": 320,
+        "color": 4
+      },
+      "id": "b692dcdb-1ca9-449d-a801-9b55a100feb1",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1424,
+        320
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "shared": [
+    {
+      "updatedAt": "2025-11-15T07:31:05.709Z",
+      "createdAt": "2025-11-15T07:31:05.709Z",
+      "role": "workflow:owner",
+      "workflowId": "OVLSVUwh61Rl2lSP",
+      "projectId": "rmPJf98OnVhEXTB7"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-15T07:56:07.000Z",
+  "versionId": "104dfa2e-8224-4771-aafd-44d52a10b374"
+}
