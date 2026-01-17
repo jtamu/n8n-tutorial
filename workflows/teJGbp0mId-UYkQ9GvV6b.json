@@ -330,12 +330,12 @@
   "nodes": [
     {
       "parameters": {},
-      "id": "06c7f95f-97c9-4cf2-a7ce-a78fb92659a1",
+      "id": "2c75ba5b-d167-4335-839c-d80a9b977729",
       "name": "On clicking 'execute'",
       "type": "n8n-nodes-base.manualTrigger",
       "position": [
-        448,
-        256
+        2096,
+        768
       ],
       "typeVersion": 1
     },
@@ -346,12 +346,12 @@
         "width": 2547,
         "color": 6
       },
-      "id": "1260b4fc-648a-4814-964a-aaef1bcd8578",
+      "id": "3121c441-a543-4409-8005-8b1647759fbd",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        0,
-        640
+        1648,
+        1152
       ],
       "typeVersion": 1
     },
@@ -360,12 +360,12 @@
         "filters": {},
         "requestOptions": {}
       },
-      "id": "a05d8a98-ea4c-4b1b-994a-394027a62478",
+      "id": "f411e583-a4d5-463a-b8c3-5b60e7a1ece5",
       "name": "n8n",
       "type": "n8n-nodes-base.n8n",
       "position": [
-        704,
-        352
+        2352,
+        864
       ],
       "typeVersion": 1,
       "credentials": {
@@ -389,12 +389,12 @@
         },
         "options": {}
       },
-      "id": "f9d0ea83-8269-4bf3-a542-eb2710a90b5c",
+      "id": "687e6e61-e323-4dcd-a5a9-72bc62c00faf",
       "name": "Return",
       "type": "n8n-nodes-base.set",
       "position": [
-        2976,
-        848
+        4624,
+        1360
       ],
       "typeVersion": 3.3
     },
@@ -403,12 +403,12 @@
         "url": "={{ $json.download_url }}",
         "options": {}
       },
-      "id": "cc56242b-689e-4f8c-acdc-972b7c105a19",
+      "id": "512cadde-3852-4609-8c3c-078f5a13a9de",
       "name": "Get File",
       "type": "n8n-nodes-base.httpRequest",
       "position": [
-        1440,
-        720
+        3088,
+        1232
       ],
       "typeVersion": 4.2
     },
@@ -447,23 +447,23 @@
         },
         "options": {}
       },
-      "id": "e4d04406-9774-4a64-97af-394ee7f96a57",
+      "id": "b4d8632a-18e0-4281-8013-f6629d994b0d",
       "name": "If file too large",
       "type": "n8n-nodes-base.if",
       "position": [
-        1248,
-        752
+        2896,
+        1264
       ],
       "typeVersion": 2
     },
     {
       "parameters": {},
-      "id": "66c831a3-9e31-4700-bd99-fef2fdc1f3ac",
+      "id": "ca4e4bd7-cc4a-4b87-b879-ce662719db4e",
       "name": "Merge Items",
       "type": "n8n-nodes-base.merge",
       "position": [
-        1248,
-        1008
+        2896,
+        1520
       ],
       "typeVersion": 2
     },
@@ -471,12 +471,12 @@
       "parameters": {
         "jsCode": "const orderJsonKeys = (jsonObj) => {\n  const ordered = {};\n  Object.keys(jsonObj).sort().forEach(key => {\n    ordered[key] = jsonObj[key];\n  });\n  return ordered;\n}\n\n// Check if file returned with content\nif (Object.keys($input.all()[0].json).includes(\"content\")) {\n  // Decode base64 content and parse JSON\n  const origWorkflow = JSON.parse(Buffer.from($input.all()[0].json.content, 'base64').toString());\n  const n8nWorkflow = $input.all()[1].json;\n  \n  // Order JSON objects\n  const orderedOriginal = orderJsonKeys(origWorkflow);\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n\n  // Determine difference\n  if (JSON.stringify(orderedOriginal) === JSON.stringify(orderedActual)) {\n    $input.all()[0].json.github_status = \"same\";\n  } else {\n    $input.all()[0].json.github_status = \"different\";\n    $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n  }\n  $input.all()[0].json.content_decoded = orderedOriginal;\n// No file returned / new workflow\n} else if (Object.keys($input.all()[0].json).includes(\"data\")) {\n  const origWorkflow = JSON.parse($input.all()[0].json.data);\n  const n8nWorkflow = $input.all()[1].json;\n  \n  // Order JSON objects\n  const orderedOriginal = orderJsonKeys(origWorkflow);\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n\n  // Determine difference\n  if (JSON.stringify(orderedOriginal) === JSON.stringify(orderedActual)) {\n    $input.all()[0].json.github_status = \"same\";\n  } else {\n    $input.all()[0].json.github_status = \"different\";\n    $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n  }\n  $input.all()[0].json.content_decoded = orderedOriginal;\n\n} else {\n  // Order JSON object\n  const n8nWorkflow = $input.all()[1].json;\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n  \n  // Proper formatting\n  $input.all()[0].json.github_status = \"new\";\n  $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n}\n\n// Return items\nreturn $input.all();"
       },
-      "id": "a278e271-2f7a-499e-b069-a940134154f3",
+      "id": "80c842c8-09eb-43c4-9bac-726a6b46bfbc",
       "name": "isDiffOrNew",
       "type": "n8n-nodes-base.code",
       "position": [
-        1440,
-        1008
+        3088,
+        1520
       ],
       "typeVersion": 1
     },
@@ -500,45 +500,45 @@
           ]
         }
       },
-      "id": "26200ce0-c234-4190-8f4b-3d027e18c93b",
+      "id": "56a10aa6-b4b1-4a37-9e20-c9b4fda0989d",
       "name": "Check Status",
       "type": "n8n-nodes-base.switch",
       "position": [
-        2384,
-        976
+        4032,
+        1488
       ],
       "typeVersion": 1
     },
     {
       "parameters": {},
-      "id": "ce5737ff-0bb7-4b7e-92ab-3a2475f54c05",
+      "id": "0fb016c7-7447-4b1c-b569-301da89b64d0",
       "name": "Same file - Do nothing",
       "type": "n8n-nodes-base.noOp",
       "position": [
-        2608,
-        816
+        4256,
+        1328
       ],
       "typeVersion": 1
     },
     {
       "parameters": {},
-      "id": "0c0ecd99-3b78-4299-9238-cd7ff89dea60",
+      "id": "4d4ad000-dd39-4470-8aaf-42d2fe648c10",
       "name": "File is different",
       "type": "n8n-nodes-base.noOp",
       "position": [
-        2608,
-        976
+        4256,
+        1488
       ],
       "typeVersion": 1
     },
     {
       "parameters": {},
-      "id": "2de8c415-f636-405b-817a-7feb90f5d8b4",
+      "id": "a064cc1c-d1a1-406f-9ed0-6bb202cea497",
       "name": "File is new",
       "type": "n8n-nodes-base.noOp",
       "position": [
-        2608,
-        1136
+        4256,
+        1648
       ],
       "typeVersion": 1
     },
@@ -560,12 +560,12 @@
         "fileContent": "={{$('isDiffOrNew').item.json[\"n8n_data_stringy\"]}}",
         "commitMessage": "={{$('Execute Workflow Trigger').first().json.name}} ({{ $('isDiffOrNew').item.json.github_status }})"
       },
-      "id": "4703024e-4a3f-4834-99ce-027d9ae096b7",
+      "id": "84b5af83-c63b-405d-ba34-d63f8e34c69e",
       "name": "Create new file",
       "type": "n8n-nodes-base.github",
       "position": [
-        2832,
-        1136
+        4480,
+        1648
       ],
       "typeVersion": 1,
       "webhookId": "5dfc6a51-9a64-4283-ae0a-5324ae2447f5",
@@ -595,12 +595,12 @@
         "fileContent": "={{$('isDiffOrNew').item.json[\"n8n_data_stringy\"]}}",
         "commitMessage": "={{$('Execute Workflow Trigger').first().json.name}} ({{ $('isDiffOrNew').item.json.github_status }})"
       },
-      "id": "3b615571-4de9-488e-9820-dd1d94cecb57",
+      "id": "8210c0db-6617-4abc-a7b5-747a9ceb03cb",
       "name": "Edit existing file",
       "type": "n8n-nodes-base.github",
       "position": [
-        2832,
-        960
+        4480,
+        1472
       ],
       "typeVersion": 1,
       "webhookId": "fef23458-5891-4d93-b51e-928d51e46369",
@@ -615,12 +615,12 @@
       "parameters": {
         "options": {}
       },
-      "id": "78c17865-76d7-4abf-a600-270e92e44c9e",
+      "id": "73d530ad-e205-48a7-a5f4-ec2acf955637",
       "name": "Loop Over Items",
       "type": "n8n-nodes-base.splitInBatches",
       "position": [
-        912,
-        352
+        2560,
+        864
       ],
       "typeVersion": 3
     },
@@ -634,12 +634,12 @@
           ]
         }
       },
-      "id": "fcd24e6c-e6ea-41c5-9117-c1d35b1cb04f",
+      "id": "6017bca5-75ee-489d-ad85-b154ec38e5fb",
       "name": "Schedule Trigger",
       "type": "n8n-nodes-base.scheduleTrigger",
       "position": [
-        448,
-        448
+        2096,
+        960
       ],
       "typeVersion": 1.2
     },
@@ -650,12 +650,12 @@
         "width": 371.1995072042308,
         "color": 4
       },
-      "id": "d2b26e13-91b2-4c63-8ce3-c1a601a39b16",
+      "id": "00b0afc4-8328-4534-afd8-26009bea6de9",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        0,
-        0
+        1648,
+        512
       ],
       "typeVersion": 1
     },
@@ -666,12 +666,12 @@
         "width": 886.4410237965205,
         "color": 7
       },
-      "id": "5b08652e-8836-4209-ad33-fb07ff24d954",
+      "id": "7422794c-b38a-414d-b6b3-001f25ffe6e9",
       "name": "Sticky Note2",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        400,
-        176
+        2048,
+        688
       ],
       "typeVersion": 1
     },
@@ -694,12 +694,12 @@
         "asBinaryProperty": false,
         "additionalParameters": {}
       },
-      "id": "288624f0-b18f-488e-add7-5945e68cea49",
+      "id": "ddcbe524-cef0-4aac-b7b2-9435a6b2c5b4",
       "name": "Get file data",
       "type": "n8n-nodes-base.github",
       "position": [
-        1040,
-        752
+        2688,
+        1264
       ],
       "typeVersion": 1,
       "alwaysOutputData": true,
@@ -738,12 +738,12 @@
         },
         "options": {}
       },
-      "id": "9a8b87e2-93c7-4c0c-acaa-72e5c28b8717",
+      "id": "0152a54d-1602-414f-b7b7-7dc7c58ebb15",
       "name": "Globals",
       "type": "n8n-nodes-base.set",
       "position": [
-        832,
-        912
+        2480,
+        1424
       ],
       "typeVersion": 3.4
     },
@@ -754,12 +754,12 @@
         "width": 150,
         "color": 4
       },
-      "id": "6c59ef70-87f9-4210-a79a-9e53f988eaaa",
+      "id": "e88bd55b-9929-4641-ba2c-7c90436806cf",
       "name": "Sticky Note3",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        800,
-        784
+        2448,
+        1296
       ],
       "typeVersion": 1
     },
@@ -767,12 +767,12 @@
       "parameters": {
         "inputSource": "passthrough"
       },
-      "id": "35b0901c-1fb7-4d7d-bc4f-40368d97e894",
+      "id": "6b651441-0c77-43cf-8a49-1271ee664634",
       "name": "Execute Workflow Trigger",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        112,
-        1088
+        1760,
+        1600
       ],
       "typeVersion": 1.1
     },
@@ -794,12 +794,12 @@
         "mode": "each",
         "options": {}
       },
-      "id": "0a28b425-35fa-4733-8b83-714c8090a921",
+      "id": "b3cca1e5-b710-4bd4-8d74-ac270618f8f9",
       "name": "Execute Workflow",
       "type": "n8n-nodes-base.executeWorkflow",
       "position": [
-        1120,
-        352
+        2768,
+        864
       ],
       "typeVersion": 1.2
     },
@@ -817,12 +817,12 @@
         },
         "options": {}
       },
-      "id": "be1fa025-e156-40d8-a8ec-a40b53584b81",
+      "id": "3130c618-a0f7-46d7-a5cc-f019d71290a2",
       "name": "/",
       "type": "n8n-nodes-base.set",
       "position": [
-        592,
-        800
+        2240,
+        1312
       ],
       "typeVersion": 3.4
     },
@@ -883,12 +883,12 @@
         },
         "options": {}
       },
-      "id": "7bedf0cb-0b45-4b2f-b574-744f20af8c02",
+      "id": "cbbc7829-c3bf-4676-96c6-8787177aabf2",
       "name": "tag?",
       "type": "n8n-nodes-base.switch",
       "position": [
-        352,
-        912
+        2000,
+        1424
       ],
       "typeVersion": 3.2
     },
@@ -901,10 +901,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        1808,
-        1008
+        3456,
+        1520
       ],
-      "id": "c375ffd1-d89c-483d-b177-adcb622a87ec",
+      "id": "ead3aff3-6049-420c-8164-2ba9ccdefb14",
       "name": "AI Agent",
       "retryOnFail": false,
       "waitBetweenTries": 5000,
@@ -925,10 +925,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        1728,
-        1216
+        3376,
+        1728
       ],
-      "id": "1802d247-2fa2-4dd1-8f9e-0e2b16463a1f",
+      "id": "dcecbc91-2de7-4b16-a7f8-6bec270c0336",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
@@ -965,10 +965,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2160,
-        1008
+        3808,
+        1520
       ],
-      "id": "b48221ed-9a80-491a-be0f-d183fe54cf27",
+      "id": "cae8e1fb-1012-4fc5-b694-09e9bc30324d",
       "name": "If"
     },
     {
@@ -982,10 +982,10 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        2416,
-        1376
+        4064,
+        1888
       ],
-      "id": "211f7ff7-591a-4c54-8765-e2e652e167d6",
+      "id": "a7644f2e-9d10-4c14-b9fb-f75fa2a3fee5",
       "name": "Send a message",
       "webhookId": "619b55b9-e130-402a-9d72-ed588091c15f",
       "credentials": {
@@ -1002,10 +1002,10 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1648,
-        1008
+        3296,
+        1520
       ],
-      "id": "e6358f22-7cf6-44c6-b070-5ef52887304f",
+      "id": "abe26c91-a4fa-4825-b758-15efd5def639",
       "name": "Wait",
       "webhookId": "407779e3-15cf-44d6-891a-80784b56085e",
       "executeOnce": true
@@ -1028,6 +1028,6 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-01-17T09:47:37.758Z",
-  "versionId": "d747bbc6-8f17-4a59-bf22-de2f6bad7569"
+  "updatedAt": "2026-01-17T14:11:35.200Z",
+  "versionId": "30d47947-98a8-4ebd-b59d-56539083ae9b"
 }
