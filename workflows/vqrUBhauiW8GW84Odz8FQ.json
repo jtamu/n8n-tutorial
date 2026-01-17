@@ -1,0 +1,412 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-01-16T17:38:57.724Z",
+  "id": "vqrUBhauiW8GW84Odz8FQ",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "自己評価反映",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 787223974,
+          "mode": "list",
+          "cachedResultName": "自己評価入力フォームの回答",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=787223974"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        64
+      ],
+      "id": "9df2b86a-f1df-44b9-a896-8eee8fde1644",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "moqEzan4n5a3Ke1g",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\n\nconst outputData = [];\n\nconst SKILLS_MAP = {\n  \"A（テクニカルスキル）\": \"A(テクニカルスキル)\",\n  \"B（ビジネススキル）\": \"B(ビジネススキル)\",\n  \"C（リーダーシップ/マネジメント）\": \"C(リーダーシップ/マネジメント)\"\n}\n\nfor (const item of $input.all()) {\nfor (const [key, value] of Object.entries(SKILLS_MAP)) {\n    const outputJson = {\n      社員番号: item.json['社員番号'],\n      対象年: item.json['評価の対象年を入力してください'],\n      対象期: item.json['評価の対象期を入力してください']\n    };\n    \n    outputJson[\"領域（A/B/C）\"] = value;\n\n    outputJson[\"自己評価（達成度%）\"] = item.json[`${key}：自己評価（達成度%）を入力してください`] / 100;\n    \n    const initiatives = item.json[`${key}：取り組んだ内容を入力してください`];\n    const results = item.json[`${key}：具体的な成果があれば、ファクトベースで入力してください`];\n    const learnings = item.json[`${key}：取り組みによって学んだことがあれば入力してください`];\n    const initiativesTxt = initiatives ? \"【取り組んだ内容】\\n\" + initiatives : \"\";\n    const resultsTxt = results ? \"\\n\\n【成果】\\n\" + results : \"\";\n    const learningsTxt = learnings ? \"\\n\\n【学び】\\n\" + learnings : \"\";\n    outputJson[\"自己コメント（取り組んだ内容・成果・学び）\"] = initiativesTxt + resultsTxt + learningsTxt;\n\n    outputData.push({json: outputJson});\n  }\n}\n\nreturn outputData;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -336,
+        64
+      ],
+      "id": "6de2becd-e2ee-48b1-a4b9-becba943940d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "目標管理",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -336,
+        240
+      ],
+      "id": "2bfebc55-b909-4cd0-8d65-3e173aa503af",
+      "name": "Get row(s) in sheet",
+      "executeOnce": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oexYBZO5dI51RhKU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "[\"社員番号\"], [\"対象年\"], [\"対象期\"], [\"領域（A/B/C）\"]",
+        "joinMode": "enrichInput2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        80,
+        64
+      ],
+      "id": "b906b2d1-8381-478a-af5b-1f16984b593b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "目標管理",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "社員番号",
+              "displayName": "社員番号",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "氏名",
+              "displayName": "氏名",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "対象年",
+              "displayName": "対象年",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "対象期",
+              "displayName": "対象期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "領域（A/B/C）",
+              "displayName": "領域（A/B/C）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "現状グレード",
+              "displayName": "現状グレード",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標グレード",
+              "displayName": "目標グレード",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標内容（アクション分類・測定可能なアクション）",
+              "displayName": "目標内容（アクション分類・測定可能なアクション）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "目標フィードバック（上長）",
+              "displayName": "目標フィードバック（上長）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "目標フィードバック（営業）",
+              "displayName": "目標フィードバック（営業）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "自己評価（達成度%）",
+              "displayName": "自己評価（達成度%）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "自己コメント（取り組んだ内容・成果・学び）",
+              "displayName": "自己コメント（取り組んだ内容・成果・学び）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        64
+      ],
+      "id": "a5974ad1-59bd-4954-a669-1532d1ee6d18",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oexYBZO5dI51RhKU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1647286-1a87-4c63-8daa-bd2673de666e",
+              "name": "row_number",
+              "value": "={{ $json.row_number }}",
+              "type": "number"
+            },
+            {
+              "id": "c472b0f3-e132-4714-99f1-bce20a6dffbf",
+              "name": "社員番号",
+              "value": "={{ $json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "74a3ec2f-0e5d-42cb-916a-d1353c31b113",
+              "name": "対象年",
+              "value": "={{ $json[\"対象年\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "c119d437-1c3b-44ce-85e1-8c982d8610ff",
+              "name": "対象期",
+              "value": "={{ $json[\"対象期\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "c094d72c-6439-4275-8093-b16e20025a48",
+              "name": "領域（A/B/C）",
+              "value": "={{ $json[\"領域（A/B/C）\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -128,
+        240
+      ],
+      "id": "3590110a-d000-455f-9585-27da09e5e444",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-01-16T17:38:57.726Z",
+      "createdAt": "2026-01-16T17:38:57.726Z",
+      "role": "workflow:owner",
+      "workflowId": "vqrUBhauiW8GW84Odz8FQ",
+      "projectId": "HM43VJ1kdxEjn4Js"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-01-17T06:53:37.349Z",
+  "versionId": "57687962-7b8b-4033-82e0-1c1f7be623eb"
+}
