@@ -1,0 +1,328 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "手動実行": {
+      "main": [
+        [
+          {
+            "node": "社員基本情報を取得",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "目標・評価を取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員基本情報を取得": {
+      "main": [
+        [
+          {
+            "node": "社員番号で結合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "目標・評価を取得": {
+      "main": [
+        [
+          {
+            "node": "社員番号で結合",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "社員番号で結合": {
+      "main": [
+        [
+          {
+            "node": "各社員を処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "各社員を処理": {
+      "main": [
+        [
+          {
+            "node": "個人用シート作成",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "個人用シート作成": {
+      "main": [
+        [
+          {
+            "node": "人事フォルダに移動",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "人事フォルダに移動": {
+      "main": [
+        [
+          {
+            "node": "評価データを書込",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "評価データを書込": {
+      "main": [
+        [
+          {
+            "node": "各社員を処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-22T06:46:37.789Z",
+  "id": "VuHXY1erwQdDuePq",
+  "isArchived": true,
+  "meta": null,
+  "name": "エンジニア評価配布ワークフロー",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger",
+      "name": "手動実行",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "=",
+          "__regex": "https:\\/\\/(?:drive|docs)\\.google\\.com(?:\\/.*|)\\/d\\/([0-9a-zA-Z\\-_]+)(?:\\/.*|)"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "url",
+          "value": "=",
+          "__regex": "https:\\/\\/docs\\.google\\.com\\/spreadsheets\\/d\\/[0-9a-zA-Z\\-_]+.*\\#gid=([0-9]+)"
+        },
+        "options": {}
+      },
+      "id": "read_employee_info",
+      "name": "社員基本情報を取得",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oexYBZO5dI51RhKU",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "社員番号、氏名、人事ドライブIDなどを取得"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "mode": "id",
+          "value": "=【目標・評価管理シートのスプレッドシートIDを設定】"
+        },
+        "sheetName": {
+          "mode": "name",
+          "value": "=【シート名を設定】"
+        },
+        "options": {}
+      },
+      "id": "read_evaluation",
+      "name": "目標・評価を取得",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        208
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": ""
+        }
+      },
+      "notes": "社員番号、評価内容などを取得"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "options": {}
+      },
+      "id": "merge_data",
+      "name": "社員番号で結合",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        512,
+        112
+      ],
+      "notes": "社員基本情報と評価データを社員番号で結合"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "loop_employees",
+      "name": "各社員を処理",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        720,
+        112
+      ],
+      "notes": "1人ずつ処理"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "title": "={{ $json['氏名'] }}_評価シート_{{ $now.format('yyyy-MM') }}",
+        "options": {}
+      },
+      "id": "create_sheet",
+      "name": "個人用シート作成",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        944,
+        112
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": ""
+        }
+      },
+      "notes": "各社員用の評価スプレッドシートを新規作成"
+    },
+    {
+      "parameters": {
+        "operation": "move",
+        "fileId": {
+          "mode": "id",
+          "value": "={{ $json.spreadsheetId }}"
+        },
+        "driveId": {
+          "mode": "id",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "mode": "id",
+          "value": "={{ $('各社員を処理').item.json['人事ドライブID'] }}"
+        }
+      },
+      "id": "move_to_folder",
+      "name": "人事フォルダに移動",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1168,
+        112
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "",
+          "name": ""
+        }
+      },
+      "notes": "社員基本情報の人事ドライブIDカラムの値を使用"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "mode": "id",
+          "value": "={{ $('個人用シート作成').item.json.spreadsheetId }}"
+        },
+        "sheetName": {
+          "mode": "name",
+          "value": "シート1"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "社員番号": "={{ $('各社員を処理').item.json['社員番号'] }}",
+            "氏名": "={{ $('各社員を処理').item.json['氏名'] }}",
+            "評価期間": "={{ $('各社員を処理').item.json['評価期間'] }}",
+            "目標": "={{ $('各社員を処理').item.json['目標'] }}",
+            "達成度": "={{ $('各社員を処理').item.json['達成度'] }}",
+            "評価": "={{ $('各社員を処理').item.json['評価'] }}",
+            "コメント": "={{ $('各社員を処理').item.json['コメント'] }}"
+          },
+          "matchingColumns": []
+        },
+        "options": {}
+      },
+      "id": "write_evaluation",
+      "name": "評価データを書込",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1392,
+        112
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "",
+          "name": ""
+        }
+      },
+      "notes": "評価データのカラム名は実際のシートに合わせて調整してください"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-22T06:46:37.792Z",
+      "createdAt": "2026-02-22T06:46:37.792Z",
+      "role": "workflow:owner",
+      "workflowId": "VuHXY1erwQdDuePq",
+      "projectId": "HM43VJ1kdxEjn4Js"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-22T11:08:06.000Z",
+  "versionId": "c4dd7e6d-5d9f-4042-83d0-5a24117d8691"
+}
