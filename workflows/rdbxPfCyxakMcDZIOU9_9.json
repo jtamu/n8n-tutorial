@@ -1,0 +1,549 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "社員基本情報取得": {
+      "main": [
+        [
+          {
+            "node": "社員情報抽出",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "社員別グループ化",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員情報抽出": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "メタ情報設定",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "メタ情報設定": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "データ整形",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "データ整形": {
+      "main": [
+        [
+          {
+            "node": "JSON to PDF変換",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Driveに保存": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員別グループ化": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "社員別グループ化",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "対象期間入力": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "社員基本情報取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON to PDF変換": {
+      "0": [
+        [
+          {
+            "node": "Google Driveに保存",
+            "type": "0",
+            "index": 0
+          }
+        ]
+      ],
+      "main": [
+        [
+          {
+            "node": "Google Driveに保存",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-22T11:19:30.071Z",
+  "id": "rdbxPfCyxakMcDZIOU9_9",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "エンジニア一人あたり生産性配布ワークフロー",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1iSW3j5bccmDiojaexa6_AFxq8nPZT7O1rRNyATXwlKI",
+          "mode": "list",
+          "cachedResultName": "【経営企画】数値管理",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iSW3j5bccmDiojaexa6_AFxq8nPZT7O1rRNyATXwlKI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2099052599,
+          "mode": "list",
+          "cachedResultName": "一人当たり生産性(最新版)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1iSW3j5bccmDiojaexa6_AFxq8nPZT7O1rRNyATXwlKI/edit#gid=2099052599"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "61472b88-41bb-449a-b9f2-3eb2cb0555af",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oexYBZO5dI51RhKU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I",
+          "mode": "list",
+          "cachedResultName": "社員基本情報",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "シート1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "node-emp-info",
+      "name": "社員基本情報取得",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        240
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oexYBZO5dI51RhKU",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "氏名",
+              "value": "={{ $json['氏名'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a2",
+              "name": "人事フォルダID",
+              "value": "={{ $json['人事フォルダID'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-extract-emp",
+      "name": "社員情報抽出",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond1",
+              "leftValue": "={{ $json['人事フォルダID'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-filter",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "advanced": true,
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "氏名",
+              "field2": "employeeName"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-merge",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        832,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "m1",
+              "name": "meta.filename",
+              "value": "={{ $json['氏名'] }}_{{ $('対象期間入力').first().json['対象年'] }}年{{ $('対象期間入力').first().json['対象期'] }}_一人あたり生産性.pdf",
+              "type": "string"
+            },
+            {
+              "id": "m2",
+              "name": "meta.folderId",
+              "value": "={{ $json['人事フォルダID'] }}",
+              "type": "string"
+            },
+            {
+              "id": "m3",
+              "name": "meta.year",
+              "value": "={{ $('対象期間入力').first().json['対象年'] }}",
+              "type": "string"
+            },
+            {
+              "id": "m4",
+              "name": "meta.period",
+              "value": "={{ $('対象期間入力').first().json['対象期'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "node-edit-meta",
+      "name": "メタ情報設定",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "node-loop",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1248,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "node-splitout",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 入力データのすべてのフィールドをそのまま出力\n// row_numberは除外\nconst items = $input.all();\nconst result = [];\n\nfor (const item of items) {\n  const row = item.json;\n  const output = {};\n  \n  for (const key of Object.keys(row)) {\n    if (key !== 'row_number') {\n      output[key] = row[key];\n    }\n  }\n  \n  result.push({ json: output });\n}\n\nreturn result;"
+      },
+      "id": "node-edit-pdf",
+      "name": "データ整形",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1664,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "OJDbY4ZuxtOm1S3G",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/OJDbY4ZuxtOm1S3G",
+          "cachedResultName": "JSON to PDF変換"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "node-pdf",
+      "name": "JSON to PDF変換",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1872,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Loop Over Items').item.json.meta.filename }}",
+        "driveId": {
+          "__rl": true,
+          "value": "0ALfrP71k0cUSUk9PVA",
+          "mode": "list",
+          "cachedResultName": "012_人事",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/0ALfrP71k0cUSUk9PVA"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Loop Over Items').item.json.meta.folderId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "node-gdrive",
+      "name": "Google Driveに保存",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2080,
+        176
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "TaUx0BJqqRNew0e9",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 社員基本情報から氏名リストを取得し、生産性データをグループ化\nconst employeeInfo = $('社員基本情報取得').all();\nconst productivityData = $('Get row(s) in sheet').all();\nconst formInput = $('対象期間入力').first().json;\n\nconst targetYear = String(formInput['対象年']);\nconst targetPeriod = formInput['対象期'];\n\n// 対象期間の月を計算\n// 上期: 2月～7月 (例: 2025年上期 = 2025/02～2025/07)\n// 下期: 8月～翌年1月 (例: 2025年下期 = 2025/08～2026/01)\nlet targetMonths = [];\nif (targetPeriod === '上期') {\n  for (let m = 2; m <= 7; m++) {\n    targetMonths.push(`${targetYear}/${String(m).padStart(2, '0')}`);\n  }\n} else {\n  // 下期: 8月～12月\n  for (let m = 8; m <= 12; m++) {\n    targetMonths.push(`${targetYear}/${String(m).padStart(2, '0')}`);\n  }\n  // 翌年1月\n  const nextYear = Number(targetYear) + 1;\n  targetMonths.push(`${nextYear}/01`);\n}\nconst targetMonthSet = new Set(targetMonths);\n\n// 社員名のセットを作成\nconst employeeNames = new Set();\nfor (const emp of employeeInfo) {\n  const name = emp.json['氏名'];\n  if (name) {\n    employeeNames.add(name.trim());\n  }\n}\n\nfunction toStr(val) {\n  if (val === null || val === undefined) return '';\n  return String(val).trim();\n}\n\n// 数値を3桁区切りでフォーマット（円マーク付き）\nfunction formatCurrency(val) {\n  if (val === null || val === undefined || val === '') return '';\n  const num = Number(val);\n  if (isNaN(num)) return val;\n  return '¥' + num.toLocaleString('ja-JP');\n}\n\n// パーセント表記にフォーマット\nfunction formatPercent(val) {\n  if (val === null || val === undefined || val === '') return '';\n  const num = Number(val);\n  if (isNaN(num)) return val;\n  return (num * 100).toFixed(1) + '%';\n}\n\n// 行が比率系（％表記）かどうか判定\nfunction isRatioRow(row) {\n  const col1 = toStr(row.col_1);\n  const col2 = toStr(row.col_2);\n  const col3 = toStr(row.col_3);\n  const col4 = toStr(row.col_4);\n  const col5 = toStr(row.col_5);\n  const allCols = col1 + col2 + col3 + col4 + col5;\n  \n  // 「目標労務比率との差分」は金額なので比率ではない\n  if (allCols.includes('目標労務比率との差分')) {\n    return false;\n  }\n  \n  // 「売上対比」は％表記\n  if (allCols.includes('売上対比')) {\n    return true;\n  }\n  \n  // その他の「比率」を含む行は％表記\n  return allCols.includes('比率');\n}\n\n// 行データの数値フィールドをフォーマット（対象期間のみ）\nfunction formatRow(row) {\n  const formatted = {};\n  const isRatio = isRatioRow(row);\n  \n  for (const key of Object.keys(row)) {\n    // row_numberはスキップ\n    if (key === 'row_number') {\n      continue;\n    }\n    if (/^\\d{4}\\/\\d{2}$/.test(key)) {\n      if (targetMonthSet.has(key)) {\n        if (isRatio) {\n          formatted[key] = formatPercent(row[key]);\n        } else {\n          formatted[key] = formatCurrency(row[key]);\n        }\n      }\n    } else if (key === '累計' || /\\d期目/.test(key)) {\n      // 累計や期目はスキップ\n    } else {\n      formatted[key] = row[key];\n    }\n  }\n  return formatted;\n}\n\nconst result = [];\nlet currentEmployee = null;\nlet currentData = [];\nlet skipRest = false;\n\nfor (const item of productivityData) {\n  const col1 = toStr(item.json.col_1);\n  const col2 = toStr(item.json.col_2);\n  \n  if (employeeNames.has(col1)) {\n    if (currentEmployee && currentData.length > 0) {\n      result.push({\n        json: {\n          employeeName: currentEmployee,\n          data: currentData\n        }\n      });\n    }\n    currentEmployee = col1;\n    currentData = [formatRow(item.json)];\n    skipRest = false;\n  } else if (currentEmployee && !skipRest) {\n    currentData.push(formatRow(item.json));\n    if (col2 === '労務比率') {\n      skipRest = true;\n    }\n  }\n}\n\nif (currentEmployee && currentData.length > 0) {\n  result.push({\n    json: {\n      employeeName: currentEmployee,\n      data: currentData\n    }\n  });\n}\n\nreturn result;"
+      },
+      "id": "node-group-code-new",
+      "name": "社員別グループ化",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "一人あたり生産性配布",
+        "formDescription": "対象となる年と期を選択してください",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "対象年",
+              "fieldType": "number",
+              "placeholder": "2025",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "対象期",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "上期"
+                  },
+                  {
+                    "option": "下期"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "node-form-trigger",
+      "name": "対象期間入力",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "5ad933da-d36a-4fb3-8069-d1d8f5ccd638"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-22T11:19:30.073Z",
+      "createdAt": "2026-02-22T11:19:30.073Z",
+      "role": "workflow:owner",
+      "workflowId": "rdbxPfCyxakMcDZIOU9_9",
+      "projectId": "HM43VJ1kdxEjn4Js"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-22T12:47:11.712Z",
+  "versionId": "34ab08ca-b1f0-4ec6-9ec6-f2d0faffdb80"
+}
