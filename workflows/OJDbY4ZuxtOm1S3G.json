@@ -1,0 +1,110 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "HTMLテーブル生成": {
+      "main": [
+        [
+          {
+            "node": "Convert HTML to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ワークフロー呼び出しトリガー": {
+      "main": [
+        [
+          {
+            "node": "HTMLテーブル生成",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-02-22T07:58:10.109Z",
+  "id": "OJDbY4ZuxtOm1S3G",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "JSON to PDF変換",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// スプレッドシートから取得したデータをHTMLテーブルに変換（PDF横長複数ページ対応）\nconst items = $input.all();\n\nif (items.length === 0) {\n  return [{ json: { html: '<p>データがありません</p>' } }];\n}\n\n// ヘッダー（最初のアイテムのキーを使用）\nconst headers = Object.keys(items[0].json);\n\n// HTMLテーブルを構築（横長PDF複数ページ用）\nlet html = `\n<!DOCTYPE html>\n<html lang=\"ja\">\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    @page {\n      size: A4 landscape;\n      margin: 15mm;\n    }\n    \n    * {\n      box-sizing: border-box;\n    }\n    \n    html, body {\n      margin: 0;\n      padding: 0;\n      font-family: 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;\n      background-color: #ffffff;\n      font-size: 10px;\n    }\n    \n    .container {\n      width: 100%;\n      padding: 10px;\n    }\n    \n    h1 {\n      margin: 0 0 15px 0;\n      font-size: 18px;\n      color: #000;\n      text-align: center;\n    }\n    \n    table {\n      width: 100%;\n      border-collapse: collapse;\n      background-color: white;\n      font-size: 9px;\n      table-layout: auto;\n      border: 1px solid #000;\n    }\n    \n    thead {\n      display: table-header-group;\n    }\n    \n    th {\n      background-color: #f0f0f0;\n      color: #000;\n      padding: 8px 6px;\n      text-align: left;\n      font-weight: 600;\n      font-size: 9px;\n      vertical-align: middle;\n      border: 1px solid #000;\n      white-space: nowrap;\n    }\n    \n    tbody tr {\n      page-break-inside: avoid;\n    }\n    \n    td {\n      padding: 6px;\n      color: #000;\n      vertical-align: top;\n      word-wrap: break-word;\n      overflow-wrap: break-word;\n      line-height: 1.3;\n      border: 1px solid #000;\n    }\n    \n    .footer {\n      margin-top: 15px;\n      text-align: right;\n      font-size: 8px;\n      color: #666;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <table>\n      <thead>\n        <tr>\n`;\n\n// ヘッダー行を追加\nfor (const header of headers) {\n  html += `          <th>${escapeHtml(header)}</th>\\n`;\n}\n\nhtml += `        </tr>\n      </thead>\n      <tbody>\n`;\n\n// データ行を追加\nitems.forEach((item, index) => {\n  html += `        <tr>\\n`;\n  for (const header of headers) {\n    const value = item.json[header] ?? '';\n    html += `          <td>${escapeHtml(String(value))}</td>\\n`;\n  }\n  html += `        </tr>\\n`;\n});\n\nhtml += `      </tbody>\n    </table>\n    <div class=\"footer\">生成日時: ${new Date().toLocaleString('ja-JP')} / 全${items.length}件</div>\n  </div>\n</body>\n</html>`;\n\n// HTMLエスケープ関数\nfunction escapeHtml(text) {\n  const map = {\n    '&': '&amp;',\n    '<': '&lt;',\n    '>': '&gt;',\n    '\"': '&quot;',\n    \"'\": '&#039;'\n  };\n  return text.replace(/[&<>\"']/g, m => map[m]);\n}\n\nreturn [{ json: { html } }];"
+      },
+      "id": "code",
+      "name": "HTMLテーブル生成",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "html_content": "={{ $json.html }}",
+        "viewPortWidth": 1920,
+        "viewPortHeight": 1080,
+        "output_format": "file"
+      },
+      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
+      "typeVersion": 1,
+      "position": [
+        688,
+        0
+      ],
+      "id": "081bc3e8-0ccf-4642-917b-216a054fb918",
+      "name": "Convert HTML to PDF",
+      "credentials": {
+        "htmlcsstopdfApi": {
+          "id": "AmpJVi49YILDriMN",
+          "name": "HTML to PDF account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "exec-trigger",
+      "name": "ワークフロー呼び出しトリガー",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-02-22T07:58:10.111Z",
+      "createdAt": "2026-02-22T07:58:10.111Z",
+      "role": "workflow:owner",
+      "workflowId": "OJDbY4ZuxtOm1S3G",
+      "projectId": "HM43VJ1kdxEjn4Js"
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-02-22T10:40:11.722Z",
+  "versionId": "e9994663-46a8-4854-9741-b4aec7c7b22e"
+}
