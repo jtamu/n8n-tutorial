@@ -1,0 +1,658 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "グレードテーブル取得",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "評価管理取得",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "新旧グレード対応表取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "グレードテーブル取得": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "評価管理取得": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "新旧グレード対応表取得": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "データ準備",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "データ準備": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "出力整形",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "出力整形": {
+      "main": [
+        [
+          {
+            "node": "評価管理更新",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-06T09:56:15.986Z",
+  "description": null,
+  "id": "GFzhbw1Ah99vjs6wfTnJC",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "評価結果新制度移行",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        208
+      ],
+      "id": "04681fd7-b33b-40fd-b374-8d0509856486",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 213216567,
+          "mode": "list",
+          "cachedResultName": "グレードテーブル_ver1.1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=213216567"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        0
+      ],
+      "id": "b45fd5fc-271f-459e-9a4f-7d9680c50392",
+      "name": "グレードテーブル取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Roh2wafXPcJSAnQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 404530097,
+          "mode": "list",
+          "cachedResultName": "評価管理",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=404530097"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        208
+      ],
+      "id": "882537ce-c8fb-4544-bdc2-d15b89732033",
+      "name": "評価管理取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Roh2wafXPcJSAnQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 29907496,
+          "mode": "list",
+          "cachedResultName": "新旧グレード対応表",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=29907496"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        400
+      ],
+      "id": "bafe9da6-d049-4a82-a309-a864bf5c646e",
+      "name": "新旧グレード対応表取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Roh2wafXPcJSAnQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        512,
+        112
+      ],
+      "id": "a1b2c3d4-0001-4000-b000-000000000001",
+      "name": "Merge"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        720,
+        256
+      ],
+      "id": "a1b2c3d4-0002-4000-b000-000000000002",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 3つのデータソースを取得\nconst gradeTable = $('グレードテーブル取得').all();\nconst evalData = $('評価管理取得').all();\nconst mappingTable = $('新旧グレード対応表取得').all();\n\n// 旧→新グレードマッピング構築\nconst gradeMapping = {};\nfor (const row of mappingTable) {\n  gradeMapping[row.json['旧制度']] = {\n    newGrade: row.json['新制度'],\n    reason: row.json['スキルが見合っていると判断した理由']\n  };\n}\n\n// グレードテーブルをMarkdown化\nconst gtLines = [\n  '| グレード | スキルレベル | ロール | 主な役割 | リレーション | ビジネス | エンジニアリング |',\n  '|---|---|---|---|---|---|---|'\n];\nfor (const row of gradeTable) {\n  const d = row.json;\n  if (!d['グレード']) continue;\n  const c = (v) => String(v || '').replace(/\\n/g, '<br>');\n  gtLines.push(`| ${c(d['グレード'])} | ${c(d['スキルレベル'])} | ${c(d['ロール(現場)'])} | ${c(d['主な役割（要約）'])} | ${c(d['リレーションスキル（ポータブル）'])} | ${c(d['ビジネススキル（ポータブル）'])} | ${c(d['エンジニアリングスキル（ポータブル）'])} |`);\n}\nconst gradeTableMd = gtLines.join('\\n');\n\n// 新旧グレード対応表をMarkdown化\nconst mapLines = [\n  '| 旧制度 | 新制度 | 理由 |',\n  '|---|---|---|'\n];\nfor (const row of mappingTable) {\n  const d = row.json;\n  const c = (v) => String(v || '').replace(/\\n/g, '<br>');\n  mapLines.push(`| ${c(d['旧制度'])} | ${c(d['新制度'])} | ${c(d['スキルが見合っていると判断した理由'])} |`);\n}\nconst mappingTableMd = mapLines.join('\\n');\n\n// 評価データを社員×期間でグループ化\nconst groups = {};\nfor (const row of evalData) {\n  const d = row.json;\n  const key = `${d['氏名']}_${d['対象年']}_${d['対象期']}`;\n  if (!groups[key]) groups[key] = [];\n  groups[key].push(d);\n}\n\n// 社員ごとにchatInputを生成\nconst results = [];\nfor (const [key, rows] of Object.entries(groups)) {\n  const first = rows[0];\n  const name = first['氏名'];\n  const year = first['対象年'];\n  const period = first['対象期'];\n  const currentGrade = first['現状グレード・ランク'];\n\n  const mapping = gradeMapping[currentGrade] || { newGrade: '不明', reason: 'マッピングなし' };\n\n  // 旧制度評価データ構築\n  const evalSections = [];\n  for (const row of rows) {\n    const lines = [];\n    if (row['現場評価（単価・顧客FB）'] && row['現場評価（単価・顧客FB）'] !== '（現場側入力）') {\n      lines.push(`- 現場評価: ${row['現場評価（単価・顧客FB）']}`);\n    }\n    if (row['上長評価（グレード・ランク）（旧）'] && row['上長評価（グレード・ランク）（旧）'] !== '（上長記入）') {\n      lines.push(`- 上長評価（旧）: ${row['上長評価（グレード・ランク）（旧）']}`);\n    }\n    if (row['上長コメント（フィードバック）（旧）'] && row['上長コメント（フィードバック）（旧）'] !== '（上長記入）') {\n      lines.push(`- 上長コメント（旧）: ${row['上長コメント（フィードバック）（旧）']}`);\n    }\n    if (row['次期課題（旧）'] && row['次期課題（旧）'] !== '（上長記入）') {\n      lines.push(`- 次期課題（旧）: ${row['次期課題（旧）']}`);\n    }\n    if (lines.length > 0) {\n      evalSections.push(`### ${row['評価対象']}\\n${lines.join('\\n')}`);\n    }\n  }\n\n  const chatInput = [\n    `以下の情報を基に、${name}さんの新制度における評価結果（上長評価グレード・ランク、上長コメント、次期課題）を評価対象ごとに生成してください。`,\n    '',\n    '## 基本情報',\n    `- 氏名: ${name}`,\n    `- 対象期間: ${year}年${period}`,\n    `- 現状グレード（旧制度）: ${currentGrade}`,\n    `- 新制度での対応グレード: ${mapping.newGrade}`,\n    `- マッピング理由: ${mapping.reason}`,\n    '',\n    '## 旧制度での評価データ',\n    evalSections.length > 0 ? evalSections.join('\\n\\n') : '（旧制度の評価データなし。新旧グレード対応表に基づき新グレードを設定し、グレードテーブルの要件を参考に一般的なコメント・課題を記述すること）',\n    '',\n    '## 新旧グレード対応表',\n    mappingTableMd,\n    '',\n    '## 新制度グレードテーブル',\n    gradeTableMd,\n  ].join('\\n');\n\n  // 更新対象の行情報を記録（ID列を含む）\n  const rowInfo = rows.map(r => ({\n    ID: r['ID'],\n    評価対象: r['評価対象']\n  }));\n\n  results.push({\n    json: {\n      chatInput,\n      _name: name,\n      _year: year,\n      _period: period,\n      _currentGrade: currentGrade,\n      _newGrade: mapping.newGrade,\n      _rowInfo: JSON.stringify(rowInfo)\n    }\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        256
+      ],
+      "id": "a1b2c3d4-0003-4000-b000-000000000003",
+      "name": "データ準備"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "あなたはエンジニア評価の新制度移行エキスパートです。\n旧制度の評価データを新制度のフォーマットに変換してください。\n\n## 出力する項目\n評価対象（総合、A：テクニカルスキル、B：ビジネススキル、C：リーダーシップ/マネジメント）ごとに以下の3項目を出力してください：\n\n1. **上長評価（グレード・ランク）**: 新制度のグレード（例: G3 - Tech）。新旧グレード対応表に基づいて決定する。全ての評価対象で同じグレードを設定すること。\n2. **上長コメント（フィードバック）**: 新制度のグレードテーブルのスキル要件に照らし合わせた評価コメント。旧制度の評価内容を新制度の観点（リレーション/ビジネス/エンジニアリング）で再解釈して記述する。2〜4文程度で具体的に記述する。\n3. **次期課題**: 新制度のグレードテーブルで次のグレードに求められるスキルを踏まえた次期の課題。1〜3項目の箇条書き（「- 」で始める）で記述する。\n\n## スキルカテゴリの対応関係\n- 旧制度A（テクニカルスキル）→ 新制度のエンジニアリングスキル観点で評価\n- 旧制度B（ビジネススキル）→ 新制度のビジネススキル観点で評価\n- 旧制度C（リーダーシップ/マネジメント）→ 新制度のリレーションスキル観点で評価\n- 総合 → 全体を総括して評価\n\n## 注意事項\n- 旧制度の評価データが「（上長記入）」や空欄の場合は、新旧グレード対応表のマッピングに基づいて新グレードを設定し、コメントと課題はグレードテーブルの要件を参考に一般的な内容を記述する\n- である調で記述する\n- 評価対象は必ず「総合」「A：テクニカルスキル」「B：ビジネススキル」「C：リーダーシップ/マネジメント」の4つを出力する\n- 出力は必ず指定されたJSONフォーマットに従うこと。余計なテキストや説明を付けず、JSONのみを返すこと",
+          "maxIterations": 3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        256
+      ],
+      "id": "a1b2c3d4-0004-4000-b000-000000000004",
+      "name": "AI Agent",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        480
+      ],
+      "id": "a1b2c3d4-0005-4000-b000-000000000005",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0bhIfCXhsrbRbYXD",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"evaluations\": [\n    {\n      \"評価対象\": \"総合\",\n      \"上長評価（グレード・ランク）\": \"G3 - Tech\",\n      \"上長コメント（フィードバック）\": \"コメント内容\",\n      \"次期課題\": \"- 課題1\\n- 課題2\"\n    },\n    {\n      \"評価対象\": \"A：テクニカルスキル\",\n      \"上長評価（グレード・ランク）\": \"G3 - Tech\",\n      \"上長コメント（フィードバック）\": \"コメント内容\",\n      \"次期課題\": \"- 課題1\\n- 課題2\"\n    },\n    {\n      \"評価対象\": \"B：ビジネススキル\",\n      \"上長評価（グレード・ランク）\": \"G3 - Tech\",\n      \"上長コメント（フィードバック）\": \"コメント内容\",\n      \"次期課題\": \"- 課題1\\n- 課題2\"\n    },\n    {\n      \"評価対象\": \"C：リーダーシップ/マネジメント\",\n      \"上長評価（グレード・ランク）\": \"G3 - Tech\",\n      \"上長コメント（フィードバック）\": \"コメント内容\",\n      \"次期課題\": \"- 課題1\\n- 課題2\"\n    }\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1424,
+        480
+      ],
+      "id": "a1b2c3d4-0006-4000-b000-000000000006",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiOutputs = $input.all();\nconst prepData = $('データ準備').all();\n\nconst results = [];\n\nfor (let i = 0; i < aiOutputs.length; i++) {\n  const output = aiOutputs[i].json.output;\n  if (!output || !output.evaluations) continue;\n\n  const prep = prepData[i].json;\n  let rowInfo;\n  try {\n    rowInfo = JSON.parse(prep._rowInfo);\n  } catch(e) {\n    continue;\n  }\n\n  for (const ev of output.evaluations) {\n    const match = rowInfo.find(r => r['評価対象'] === ev['評価対象']);\n    if (match) {\n      results.push({\n        json: {\n          'ID': match.ID,\n          '上長評価（グレード・ランク）': ev['上長評価（グレード・ランク）'],\n          '上長コメント（フィードバック）': ev['上長コメント（フィードバック）'],\n          '次期課題': ev['次期課題']\n        }\n      });\n    }\n  }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        256
+      ],
+      "id": "a1b2c3d4-0007-4000-b000-000000000007",
+      "name": "出力整形"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0",
+          "mode": "list",
+          "cachedResultName": "目標・評価管理シート",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 404530097,
+          "mode": "list",
+          "cachedResultName": "評価管理",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/124JGHYceu0NeAS_tvV9EiuaMLUU0bAcYjIynwNXcnm0/edit#gid=404530097"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "上長評価（グレード・ランク）": "={{ $json['上長評価（グレード・ランク）'] }}",
+            "上長コメント（フィードバック）": "={{ $json['上長コメント（フィードバック）'] }}",
+            "次期課題": "={{ $json['次期課題'] }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "社員番号",
+              "displayName": "社員番号",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "氏名",
+              "displayName": "氏名",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "対象年",
+              "displayName": "対象年",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "対象期",
+              "displayName": "対象期",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "評価対象",
+              "displayName": "評価対象",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "現状グレード・ランク",
+              "displayName": "現状グレード・ランク",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "現場入力済み",
+              "displayName": "現場入力済み",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "現場評価（単価・顧客FB）",
+              "displayName": "現場評価（単価・顧客FB）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "現場評価（公開・顧客FB）",
+              "displayName": "現場評価（公開・顧客FB）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "上長評価（グレード・ランク）（旧）",
+              "displayName": "上長評価（グレード・ランク）（旧）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "上長コメント（フィードバック）（旧）",
+              "displayName": "上長コメント（フィードバック）（旧）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "次期課題（旧）",
+              "displayName": "次期課題（旧）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "評価信頼度",
+              "displayName": "評価信頼度",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "列 1",
+              "displayName": "列 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": true
+            },
+            {
+              "id": "上長評価（グレード・ランク）",
+              "displayName": "上長評価（グレード・ランク）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "上長コメント（フィードバック）",
+              "displayName": "上長コメント（フィードバック）",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            },
+            {
+              "id": "次期課題",
+              "displayName": "次期課題",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "handlingExtraData": "ignoreIt"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1728,
+        256
+      ],
+      "id": "a1b2c3d4-0008-4000-b000-000000000008",
+      "name": "評価管理更新",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "9Roh2wafXPcJSAnQ",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-06T09:56:15.988Z",
+      "createdAt": "2026-03-06T09:56:15.988Z",
+      "role": "workflow:owner",
+      "workflowId": "GFzhbw1Ah99vjs6wfTnJC",
+      "projectId": "eh4qnmYYF0VsPwpi",
+      "project": {
+        "updatedAt": "2026-03-06T05:45:07.319Z",
+        "createdAt": "2026-03-06T05:44:42.783Z",
+        "id": "eh4qnmYYF0VsPwpi",
+        "name": "junpei gtamu.work@gmail.com <gtamu.work@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "daaf06ca-fe5f-4e31-bf59-c6b4acf9edfb",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-03-06T05:44:42.784Z",
+            "createdAt": "2026-03-06T05:44:42.784Z",
+            "userId": "daaf06ca-fe5f-4e31-bf59-c6b4acf9edfb",
+            "projectId": "eh4qnmYYF0VsPwpi",
+            "user": {
+              "updatedAt": "2026-03-06T06:32:20.039Z",
+              "createdAt": "2026-03-06T05:44:40.127Z",
+              "id": "daaf06ca-fe5f-4e31-bf59-c6b4acf9edfb",
+              "email": "gtamu.work@gmail.com",
+              "firstName": "junpei",
+              "lastName": "gtamu.work@gmail.com",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-03-06T05:45:16.350Z",
+                "personalization_survey_n8n_version": "2.4.4"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "W3hyCect5yIdzgPp",
+                "userActivatedAt": 1772778704361
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-06",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-06T11:34:12.332Z",
+  "versionCounter": 29,
+  "versionId": "44423c37-24be-441d-9675-9dbc596cf972"
+}
