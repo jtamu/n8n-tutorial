@@ -1,0 +1,444 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "YOKU評価シート取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YOKU評価シート取得": {
+      "main": [
+        [
+          {
+            "node": "データ統合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "データ統合": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "書き込み処理",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "書き込み処理": {
+      "main": [
+        [
+          {
+            "node": "フィードバック書き込み",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-09T07:16:06.407Z",
+  "description": null,
+  "id": "sc54nLnSIZhk-EqsiAQeh",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "【新制度】上長フィードバック",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "992ae2e8-9cbc-4e2b-bd26-09e897b79baa",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I",
+          "mode": "list",
+          "cachedResultName": "社員基本情報",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "シート1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        192,
+        0
+      ],
+      "id": "dee12780-2811-49de-aeb4-2efe3b84efa1",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7d36f3ce-493d-46db-a616-284704c239dd",
+              "leftValue": "={{ $json['社員番号'] }}",
+              "rightValue": "A018",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        32
+      ],
+      "id": "f29ada6e-e647-4126-9947-ab6a4600823d",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "YOKU評価シート",
+        "limit": 1,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json['人事フォルダID'] }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        624,
+        32
+      ],
+      "id": "267fefcb-870e-413e-b20a-364ec63f8a74",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "nSF092YIbEi8pS80",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "2026年上期",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        32
+      ],
+      "id": "874a06af-6d82-4df6-b69f-42d1b1dcdba0",
+      "name": "YOKU評価シート取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// YOKU評価シートの全データ\nconst allRows = $('YOKU評価シート取得').all();\n\n// 社員情報\nconst employee = $('Filter').first().json;\nconst employeeName = employee['氏名'] || '対象社員';\n\n// ファイルID\nconst fileId = $('Search files and folders').first().json.id;\n\n// 目標行を抽出（row_number 26, 27, 28）\nconst goalRows = allRows.filter(r => [26, 27, 28].includes(r.json.row_number));\n\n// 目標をMarkdown化\nconst goalsMd = goalRows.map((g) => {\n  const d = g.json;\n  return [\n    '### 目標' + d.col_3,\n    '- **ミッション**: ' + (d.col_4 || '(未設定)'),\n    '- **プロセス**: ' + (d.col_6 || '(未設定)'),\n    '- **ゴール**: ' + (d.col_8 || '(未設定)')\n  ].join('\\n');\n}).join('\\n\\n');\n\n// 振り返りデータを抽出\n// 中間: col_14(ゴール振り返り), col_16(プロセス振り返り)\n// 期末: col_18(ゴール振り返り), col_20(プロセス振り返り)\nconst midTermReviews = goalRows.map(g => {\n  const d = g.json;\n  const parts = [];\n  if (d.col_14 && d.col_14.trim()) parts.push('【目標' + d.col_3 + ' ゴール振り返り】\\n' + d.col_14);\n  if (d.col_16 && d.col_16.trim()) parts.push('【目標' + d.col_3 + ' プロセス振り返り】\\n' + d.col_16);\n  return parts.join('\\n\\n');\n}).filter(s => s.trim()).join('\\n\\n');\n\nconst endTermReviews = goalRows.map(g => {\n  const d = g.json;\n  const parts = [];\n  if (d.col_18 && d.col_18.trim()) parts.push('【目標' + d.col_3 + ' ゴール振り返り】\\n' + d.col_18);\n  if (d.col_20 && d.col_20.trim()) parts.push('【目標' + d.col_3 + ' プロセス振り返り】\\n' + d.col_20);\n  return parts.join('\\n\\n');\n}).filter(s => s.trim()).join('\\n\\n');\n\n// フィードバック対象を判定\nconst feedbackTypes = [];\nif (midTermReviews.trim()) feedbackTypes.push('中間');\nif (endTermReviews.trim()) feedbackTypes.push('期末');\n\nif (feedbackTypes.length === 0) {\n  throw new Error('中間振り返りも期末振り返りも記載されていません。処理を中断します。');\n}\n\n// プロンプト組み立て\nconst sections = [\n  '以下の情報を基に、' + employeeName + 'さんへの上長フィードバックを生成してください。',\n  '',\n  '## ' + employeeName + 'さんの目標',\n  '',\n  goalsMd,\n  ''\n];\n\nif (midTermReviews.trim()) {\n  sections.push('## 中間振り返り（本人記載）');\n  sections.push('');\n  sections.push(midTermReviews);\n  sections.push('');\n}\n\nif (endTermReviews.trim()) {\n  sections.push('## 期末振り返り（本人記載）');\n  sections.push('');\n  sections.push(endTermReviews);\n  sections.push('');\n}\n\nsections.push('## 生成対象: ' + feedbackTypes.join('、') + 'の上長フィードバック');\n\nconst chatInput = sections.join('\\n');\n\nreturn [{ json: { chatInput, _fileId: fileId, _feedbackTypes: feedbackTypes } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        32
+      ],
+      "id": "a1b20003-0003-4000-b000-000000000003",
+      "name": "データ統合"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "あなたはエンジニアの上長（マネージャー）として、部下へのフィードバックを作成するエキスパートです。\n部下が設定した目標と、その振り返り内容を基に、建設的で具体的な上長フィードバックを生成してください。\n\n## フィードバックの方針\n- 部下の振り返りに対して、具体的な評価とアドバイスを記載する\n- 良かった点を認め、改善点を建設的に指摘する\n- 目標に対する達成度や進捗を客観的に評価する\n- 次のアクションにつながる具体的な助言を含める\n- ですます調で記述する（「である」「だ」ではなく「です」「ます」を使う）\n- 各フィードバックは200〜400文字程度で簡潔にまとめる\n\n## フォーマット\n- 話題の切り替わりや視点の切り替わりで適切に改行を入れ、読みやすい文章にすること\n- 例：「良かった点の評価」→改行→「改善点の指摘」→改行→「今後のアドバイス」のように構成する\n- 改行は\\nで表現すること\n\n## 中間フィードバックの場合\n- 半期の折り返し時点での進捗評価を行う\n- 残り半期に向けた方向性の確認と具体的なアドバイスを記載する\n- 目標達成に向けて軌道修正が必要な点があれば指摘する\n\n## 期末フィードバックの場合\n- 半期全体の成果を総合的に評価する\n- 目標に対する達成度を客観的に評価する\n- 次期に向けた課題・期待を記載する\n\n## 注意事項\n- 振り返りが記載されている種類のフィードバックのみを生成すること\n- 振り返りが記載されていない種類のフィードバックはnullとすること"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        1296,
+        32
+      ],
+      "id": "a1b20004-0004-4000-b000-000000000004",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1296,
+        272
+      ],
+      "id": "a1b20005-0005-4000-b000-000000000005",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "XBOAe3Nw76IlKMVH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"中間上長フィードバック\": \"中間振り返りに対する上長フィードバック本文。振り返りが未記載の場合はnull\",\n  \"期末上長フィードバック\": \"期末振り返りに対する上長フィードバック本文。振り返りが未記載の場合はnull\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1520,
+        272
+      ],
+      "id": "a1b20006-0006-4000-b000-000000000006",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output;\nconst fileId = $('データ統合').first().json._fileId;\n\nconst items = [];\n\nconst midFB = output['中間上長フィードバック'];\nif (midFB && midFB !== 'null' && String(midFB).trim()) {\n  items.push({\n    json: {\n      _fileId: fileId,\n      _cellRange: 'E31',\n      feedback: String(midFB)\n    }\n  });\n}\n\nconst endFB = output['期末上長フィードバック'];\nif (endFB && endFB !== 'null' && String(endFB).trim()) {\n  items.push({\n    json: {\n      _fileId: fileId,\n      _cellRange: 'E33',\n      feedback: String(endFB)\n    }\n  });\n}\n\nif (items.length === 0) {\n  throw new Error('フィードバックが生成されませんでした。');\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        32
+      ],
+      "id": "a1b20007-0007-4000-b000-000000000007",
+      "name": "書き込み処理"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ \"https://sheets.googleapis.com/v4/spreadsheets/\" + $json._fileId + \"/values/%272026%E5%B9%B4%E4%B8%8A%E6%9C%9F%27!\" + $json._cellRange }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "valueInputOption",
+              "value": "USER_ENTERED"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ values: [[$json.feedback]] }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1808,
+        32
+      ],
+      "id": "a1b20008-0008-4000-b000-000000000008",
+      "name": "フィードバック書き込み",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-09T07:16:06.410Z",
+      "createdAt": "2026-03-09T07:16:06.410Z",
+      "role": "workflow:owner",
+      "workflowId": "sc54nLnSIZhk-EqsiAQeh",
+      "projectId": "mwID5OTVq3DrYryq",
+      "project": {
+        "updatedAt": "2025-11-13T14:51:48.267Z",
+        "createdAt": "2025-11-13T14:36:59.116Z",
+        "id": "mwID5OTVq3DrYryq",
+        "name": "Jumpei Tamura <gtamu.dip@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+        "projectRelations": [
+          {
+            "updatedAt": "2025-11-13T14:36:59.117Z",
+            "createdAt": "2025-11-13T14:36:59.117Z",
+            "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+            "projectId": "mwID5OTVq3DrYryq",
+            "user": {
+              "updatedAt": "2026-03-09T03:22:52.000Z",
+              "createdAt": "2025-11-13T14:36:48.586Z",
+              "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+              "email": "gtamu.dip@gmail.com",
+              "firstName": "Jumpei",
+              "lastName": "Tamura",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-11-13T14:51:58.989Z",
+                "personalization_survey_n8n_version": "1.98.1"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "nJ6NxHK18rgZXMP4",
+                "userActivatedAt": 1763558344486,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1772775475677
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-09",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-09T08:16:43.680Z",
+  "versionCounter": 30,
+  "versionId": "8d2d44f1-9f78-4102-9967-a346bb6a71d8"
+}
