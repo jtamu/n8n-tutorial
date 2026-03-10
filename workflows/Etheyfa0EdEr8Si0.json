@@ -1,0 +1,436 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "YOKU評価シート取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YOKU評価シート取得": {
+      "main": [
+        [
+          {
+            "node": "データ統合",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "データ統合": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "出力フォーマット",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "出力フォーマット": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-10T02:49:17.435Z",
+  "description": null,
+  "id": "Etheyfa0EdEr8Si0",
+  "isArchived": false,
+  "meta": null,
+  "name": "【新制度】目標設定（個別）",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "evaluationData",
+              "type": "array"
+            },
+            {
+              "name": "gradeTable",
+              "type": "array"
+            },
+            {
+              "name": "hrFolderId"
+            }
+          ]
+        }
+      },
+      "id": "trigger-001",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "YOKU評価シート",
+        "limit": 1,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.hrFolderId }}",
+            "mode": "id"
+          }
+        },
+        "options": {}
+      },
+      "id": "search-001",
+      "name": "Search files and folders",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        160
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "nSF092YIbEi8pS80",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "2026年上期",
+          "mode": "name"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "C4:K20"
+            }
+          }
+        }
+      },
+      "id": "sheet-001",
+      "name": "YOKU評価シート取得",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        160
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// サブワークフロー用：トリガーから受け取った引数を使用\nconst triggerData = $('Execute Workflow Trigger').first().json;\nconst evaluationData = triggerData.evaluationData;\nconst sampleSheet = $('YOKU評価シート取得').all();\nconst gradeTable = triggerData.gradeTable;\n\n// 出力先ファイルIDを取得\nconst fileId = $('Search files and folders').first().json.id;\n\nif (evaluationData.length === 0) {\n  throw new Error('対象社員の評価データが見つかりませんでした');\n}\n\nconst employeeName = evaluationData[0]['氏名'] || '対象社員';\nconst currentGrade = evaluationData[0]['現状グレード・ランク'] || '';\n\n// --- 評価データをMarkdown化 ---\nconst skillCategories = ['A：テクニカルスキル', 'B：ビジネススキル', 'C：リーダーシップ/マネジメント'];\nconst evalSections = [];\n\nfor (const d of evaluationData) {\n  const subject = d['評価対象'] || '';\n  if (!skillCategories.some(c => subject.includes(c))) continue;\n\n  const section = [\n    '### ' + subject,\n    '',\n    '| 項目 | 内容 |',\n    '|---|---|',\n  ];\n  const addRow = (label, val) => {\n    if (val !== undefined && val !== null && val !== '' && val !== '(上長記入)' && val !== '(現場側入力)') {\n      section.push('| ' + label + ' | ' + String(val).replace(/\\n/g, '<br>') + ' |');\n    }\n  };\n  addRow('現場評価', d['現場評価（単価・顧客FB）']);\n  addRow('上長評価', d['上長評価（グレード・ランク）']);\n  addRow('上長コメント', d['上長コメント（フィードバック）']);\n  addRow('次期課題', d['次期課題']);\n  addRow('評価信頼度', d['評価信頼度']);\n  evalSections.push(section.join('\\n'));\n}\n\n// 総合の次期課題\nconst totalRec = evaluationData.find(r => r['評価対象'] === '総合');\nlet totalNextIssue = '';\nif (totalRec && totalRec['次期課題'] && totalRec['次期課題'] !== '(上長記入)') {\n  totalNextIssue = '### 総合の次期課題\\n\\n' + totalRec['次期課題'];\n}\n\n// 現場評価（総合）\nlet totalSiteEval = '';\nif (totalRec) {\n  const siteEval = totalRec['現場評価（単価・顧客FB）'] || '';\n  if (siteEval && siteEval !== '(現場側入力)') {\n    totalSiteEval = '### 現場評価（総合）\\n\\n' + siteEval;\n  }\n}\n\n// --- グレードテーブルをMarkdownテーブル化 ---\nconst gtHeader = ['| グレード | スキルレベル | ロール | 単価目安 | リレーション | ビジネス | エンジニアリング |', '|---|---|---|---|---|---|---|'];\nconst gtRows = gradeTable\n  .filter(r => r['グレード'] && r['グレード'] !== '-')\n  .map(r => {\n    const cell = (v) => String(v || '').replace(/\\n/g, '<br>');\n    return '| ' + [\n      cell(r['グレード']),\n      cell(r['スキルレベル']),\n      cell(r['ロール(現場)']),\n      cell(r['最低想定単価']),\n      cell(r['リレーションスキル（ポータブル）']),\n      cell(r['ビジネススキル（ポータブル）']),\n      cell(r['エンジニアリングスキル（ポータブル）'])\n    ].join(' | ') + ' |';\n  });\nconst gradeTableMd = gtHeader.concat(gtRows).join('\\n');\n\n// --- 評価シート参考をMarkdown化 ---\nconst sheetLines = [];\nfor (const row of sampleSheet) {\n  const d = row.json;\n  const label = d['対象期間'] || '';\n  const val = d['col_3'] || d['col_2'] || '';\n  if (!label && !val) continue;\n  if (val) {\n    sheetLines.push('- **' + label + '**: ' + String(val).replace(/\\n/g, '<br>'));\n  }\n}\nconst sheetRefMd = sheetLines.join('\\n');\n\n// --- chatInput 組み立て ---\nconst chatInput = [\n  '以下の情報を基に、' + employeeName + 'さんの次期目標を設定してください。',\n  '',\n  '## ' + employeeName + 'さんの基本情報',\n  '',\n  '- **現在のグレード**: ' + currentGrade,\n  '',\n  '## 前回評価の結果と次期課題',\n  '',\n  totalSiteEval,\n  '',\n  totalNextIssue,\n  '',\n  evalSections.join('\\n\\n'),\n  '',\n  '## グレードテーブル（現在のグレードのスキル要件をミッションにそのまま転記すること）',\n  '',\n  gradeTableMd,\n  '',\n  '## 評価シート参考（キャリア・強み・課題・アクションプラン）',\n  '',\n  sheetRefMd,\n].join('\\n');\n\nreturn [{ json: { chatInput, _fileId: fileId } }];"
+      },
+      "id": "code-001",
+      "name": "データ統合",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "あなたはエンジニアの目標設定のエキスパートです。\n与えられたエンジニアの情報（現在のグレード、前回評価で合意された次期課題、前提条件）とグレードテーブル（現在のグレードで求められる要件）を基に、新制度のフォーマットに従って次期の目標設定を行ってください。\n\n## 新制度の目標カテゴリ（No.1〜3の固定）\n1. リレーション：対人関係・顧客折衝・チームワーク・コミュニケーションに関する目標\n2. ビジネス：業務遂行・要件定義・ドキュメンテーション・プロジェクト管理に関する目標\n3. エンジニアリング：技術力・設計・実装・アーキテクチャに関する目標\n\n## 各目標の構成要素\n- ミッション：グレードテーブルから現在のグレードに該当するスキル要件の記載をそのまま抜き出して記載すること。グレードテーブルのリレーションスキル・ビジネススキル・エンジニアリングスキルの各列の記載内容をそのまま転記する。独自の文章を作成したり、要約・言い換え・補足を加えてはならない。\n- プロセス：ミッション達成のための具体的な行動計画（箇条書き3〜5項目、「- 」で始める）\n- ゴール：今期の終わりに達成されているべき望ましい状態を記述する（箇条書き2〜3項目、「- 」で始める）。文末は「〜となっていること」のような表現で統一し、達成状態として記述すること。\n\n## 目標設定の方針\n- ミッションには、グレードテーブルの現在のグレードの該当スキル要件をそのまま記載する。それ以外の内容は一切含めない\n- プロセスとゴールは、前回評価で合意した次期課題を反映し、ミッション（スキル要件）の達成に向けた具体的な行動と基準を設定する\n- ゴールは測定可能・判定可能な達成状態を書く。「〜を行う」「〜に取り組む」のような行動の記述ではなく、「〜となっていること」「〜が実現されていること」「〜が達成されていること」のように、今期末にどうなっていれば目標達成かを状態として記述する\n- 具体的・定量的で、半期で達成可能な現実的な目標にする\n- である調で記述する\n- 旧制度のA(テクニカルスキル)/B(ビジネススキル)/C(リーダーシップ/マネジメント)の内容を、新制度のリレーション/ビジネス/エンジニアリングに適切にマッピングする"
+        }
+      },
+      "id": "agent-001",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        880,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "id": "llm-001",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        384
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "XBOAe3Nw76IlKMVH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"goals\": [\n    {\n      \"no\": 1,\n      \"category\": \"リレーション\",\n      \"mission\": \"ミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    },\n    {\n      \"no\": 2,\n      \"category\": \"ビジネス\",\n      \"mission\": \"ミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    },\n    {\n      \"no\": 3,\n      \"category\": \"エンジニアリング\",\n      \"mission\": \"ミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    }\n  ]\n}"
+      },
+      "id": "parser-001",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1104,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output;\nconst fileId = $input.first().json._fileId || $('データ統合').first().json._fileId;\nconst goals = output.goals;\n\nreturn goals.map(g => ({\n  json: {\n    'No.': g.no,\n    'ミッション': g.mission,\n    'プロセス': g.process,\n    'ゴール': g.goal,\n    '_fileId': fileId\n  }\n}));"
+      },
+      "id": "format-001",
+      "name": "出力フォーマット",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json._fileId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "2026年上期",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "No.": "={{ $json['No.'] }}",
+            "ミッション": "={{ $json['ミッション'] }}",
+            "プロセス": "={{ $json['プロセス'] }}",
+            "ゴール": "={{ $json['ゴール'] }}"
+          },
+          "matchingColumns": [
+            "No."
+          ],
+          "schema": [
+            {
+              "id": "No.",
+              "displayName": "No.",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ミッション",
+              "displayName": "ミッション",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "プロセス",
+              "displayName": "プロセス",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ゴール",
+              "displayName": "ゴール",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "locationDefine": {
+            "values": {
+              "headerRow": 23,
+              "firstDataRow": 26
+            }
+          },
+          "handlingExtraData": "ignoreIt"
+        }
+      },
+      "id": "write-001",
+      "name": "Append or update row in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1376,
+        160
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-10T02:49:17.438Z",
+      "createdAt": "2026-03-10T02:49:17.438Z",
+      "role": "workflow:owner",
+      "workflowId": "Etheyfa0EdEr8Si0",
+      "projectId": "mwID5OTVq3DrYryq",
+      "project": {
+        "updatedAt": "2025-11-13T14:51:48.267Z",
+        "createdAt": "2025-11-13T14:36:59.116Z",
+        "id": "mwID5OTVq3DrYryq",
+        "name": "Jumpei Tamura <gtamu.dip@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+        "projectRelations": [
+          {
+            "updatedAt": "2025-11-13T14:36:59.117Z",
+            "createdAt": "2025-11-13T14:36:59.117Z",
+            "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+            "projectId": "mwID5OTVq3DrYryq",
+            "user": {
+              "updatedAt": "2026-03-10T02:13:08.000Z",
+              "createdAt": "2025-11-13T14:36:48.586Z",
+              "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+              "email": "gtamu.dip@gmail.com",
+              "firstName": "Jumpei",
+              "lastName": "Tamura",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-11-13T14:51:58.989Z",
+                "personalization_survey_n8n_version": "1.98.1"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "nJ6NxHK18rgZXMP4",
+                "userActivatedAt": 1763558344486,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1772775475677
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-10",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-10T03:05:03.007Z",
+  "versionCounter": 5,
+  "versionId": "02ac943e-871a-44ce-bde3-b0e0bca6a4d2"
+}
