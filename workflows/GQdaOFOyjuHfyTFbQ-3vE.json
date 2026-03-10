@@ -3,43 +3,11 @@
   "activeVersion": null,
   "activeVersionId": null,
   "connections": {
-    "When clicking 'Execute workflow'": {
-      "main": [
-        [
-          {
-            "node": "評価管理取得",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "グレードテーブル取得",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Get row(s) in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get row(s) in sheet": {
       "main": [
         [
           {
             "node": "Filter",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "評価管理取得": {
-      "main": [
-        [
-          {
-            "node": "Merge",
             "type": "main",
             "index": 0
           }
@@ -100,6 +68,49 @@
           }
         ]
       ]
+    },
+    "フォーム入力": {
+      "main": [
+        [
+          {
+            "node": "評価管理取得",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "グレードテーブル取得",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "評価管理取得": {
+      "main": [
+        [
+          {
+            "node": "評価管理フィルタ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "評価管理フィルタ": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2026-03-05T10:15:47.411Z",
@@ -112,25 +123,6 @@
   "name": "【新制度】目標設定",
   "nodes": [
     {
-      "id": "bb432cc4-50b0-4239-bdae-1a777fae7481",
-      "name": "When clicking 'Execute workflow'",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -416,
-        32
-      ],
-      "parameters": {}
-    },
-    {
-      "id": "6296486e-f801-4248-9c44-67eb095b5374",
-      "name": "評価管理取得",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        16,
-        -208
-      ],
       "parameters": {
         "documentId": {
           "__rl": true,
@@ -148,6 +140,14 @@
         },
         "options": {}
       },
+      "id": "6296486e-f801-4248-9c44-67eb095b5374",
+      "name": "評価管理取得",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        -256
+      ],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "ZfwIn54p5eaFX5s0",
@@ -156,14 +156,6 @@
       }
     },
     {
-      "id": "48b6af51-eede-4cee-86f8-afd00eaf5a80",
-      "name": "Get row(s) in sheet",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -208,
-        32
-      ],
       "parameters": {
         "documentId": {
           "__rl": true,
@@ -181,6 +173,14 @@
         },
         "options": {}
       },
+      "id": "48b6af51-eede-4cee-86f8-afd00eaf5a80",
+      "name": "Get row(s) in sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -208,
+        32
+      ],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "ZfwIn54p5eaFX5s0",
@@ -189,14 +189,6 @@
       }
     },
     {
-      "id": "42b24cf4-3a74-4e5d-b1ec-daf4f89ade3e",
-      "name": "グレードテーブル取得",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        16,
-        304
-      ],
       "parameters": {
         "documentId": {
           "__rl": true,
@@ -214,6 +206,14 @@
         },
         "options": {}
       },
+      "id": "42b24cf4-3a74-4e5d-b1ec-daf4f89ade3e",
+      "name": "グレードテーブル取得",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        16,
+        304
+      ],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "ZfwIn54p5eaFX5s0",
@@ -222,14 +222,6 @@
       }
     },
     {
-      "id": "e049e385-5332-41d7-88af-6d29a138383d",
-      "name": "Filter",
-      "type": "n8n-nodes-base.filter",
-      "typeVersion": 2.3,
-      "position": [
-        16,
-        64
-      ],
       "parameters": {
         "conditions": {
           "options": {
@@ -252,9 +244,18 @@
           "combinator": "and"
         },
         "options": {}
-      }
+      },
+      "id": "e049e385-5332-41d7-88af-6d29a138383d",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        64
+      ]
     },
     {
+      "parameters": {},
       "id": "merge-sync-a",
       "name": "Merge",
       "type": "n8n-nodes-base.merge",
@@ -262,53 +263,132 @@
       "position": [
         272,
         -64
-      ],
-      "parameters": {
-        "mode": "append"
-      }
+      ]
     },
     {
+      "parameters": {},
       "id": "merge-sync-b",
       "name": "Merge1",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        500,
-        100
-      ],
-      "parameters": {
-        "mode": "append"
-      }
+        512,
+        112
+      ]
     },
     {
+      "parameters": {
+        "jsCode": "// 評価管理から対象社員のデータをフィルタリング\nconst allEvaluation = $('評価管理フィルタ').all();\nconst employees = $('Filter').all();\nconst gradeTable = $('グレードテーブル取得').all().map(r => r.json);\n\n// フォームから対象年・対象期を取得\nconst formData = $('フォーム入力').first().json;\nconst targetYear = formData['対象年'];\nconst targetPeriod = formData['対象期'];\n\nconst results = [];\nfor (const emp of employees) {\n  const empNo = emp.json['社員番号'];\n  const hrFolderId = emp.json['人事フォルダID'];\n\n  // この社員の評価データを社員番号でフィルタ（対象年・対象期は評価管理フィルタノードで済み）\n  const evalData = allEvaluation\n    .filter(r => r.json['社員番号'] === empNo)\n    .map(r => r.json);\n\n  results.push({\n    json: {\n      evaluationData: evalData,\n      gradeTable: gradeTable,\n      hrFolderId: hrFolderId,\n      targetYear: targetYear,\n      targetPeriod: targetPeriod\n    }\n  });\n}\n\nreturn results;"
+      },
       "id": "code-prep",
       "name": "入力データ準備",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         720,
-        100
-      ],
-      "parameters": {
-        "jsCode": "// 評価管理から対象社員のデータをフィルタリング\nconst allEvaluation = $('評価管理取得').all();\nconst employees = $('Filter').all();\nconst gradeTable = $('グレードテーブル取得').all().map(r => r.json);\n\nconst results = [];\nfor (const emp of employees) {\n  const empNo = emp.json['社員番号'];\n  const hrFolderId = emp.json['人事フォルダID'];\n\n  // この社員の評価データをフィルタ\n  const evalData = allEvaluation\n    .filter(r => r.json['社員番号'] === empNo)\n    .map(r => r.json);\n\n  results.push({\n    json: {\n      evaluationData: evalData,\n      gradeTable: gradeTable,\n      hrFolderId: hrFolderId\n    }\n  });\n}\n\nreturn results;"
-      }
+        112
+      ]
     },
     {
-      "id": "exec-sub",
-      "name": "サブワークフロー実行",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        940,
-        100
-      ],
       "parameters": {
         "workflowId": {
           "__rl": true,
           "value": "Etheyfa0EdEr8Si0",
           "mode": "id"
-        }
-      }
+        },
+        "options": {}
+      },
+      "id": "exec-sub",
+      "name": "サブワークフロー実行",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        944,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "formTitle": "【新制度】目標設定",
+        "formDescription": "目標設定の対象年と対象期を入力してください",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "対象年",
+              "fieldType": "number",
+              "placeholder": "2026",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "対象期",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "上期"
+                  },
+                  {
+                    "option": "下期"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "form-trigger-001",
+      "name": "フォーム入力",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -416,
+        32
+      ],
+      "webhookId": "1e28e2ad-1bca-4330-b8bd-523039673418"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cond-year",
+              "leftValue": "={{ $json['対象年'] }}",
+              "rightValue": "={{ $('フォーム入力').first().json['対象期'] === '上期' ? $('フォーム入力').first().json['対象年'] - 1 : $('フォーム入力').first().json['対象年'] }}",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "cond-period",
+              "leftValue": "={{ $json['対象期'] }}",
+              "rightValue": "={{ $('フォーム入力').first().json['対象期'] === '上期' ? '下期' : '上期' }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "eval-filter-01",
+      "name": "評価管理フィルタ",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        -192
+      ]
     }
   ],
   "pinData": {},
@@ -340,7 +420,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-10T02:13:08.000Z",
+              "updatedAt": "2026-03-10T03:12:13.000Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -375,7 +455,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-10T02:50:51.639Z",
-  "versionCounter": 17,
-  "versionId": "6555796e-e66a-47e8-9b45-c5b52cd6861b"
+  "updatedAt": "2026-03-10T04:06:02.945Z",
+  "versionCounter": 27,
+  "versionId": "1ce41796-5203-4d86-88b0-d02c4abb2fa2"
 }
