@@ -48,17 +48,6 @@
         []
       ]
     },
-    "YOKU評価シート取得": {
-      "main": [
-        [
-          {
-            "node": "データ統合",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "データ統合": {
       "main": [
         [
@@ -108,6 +97,28 @@
         [
           {
             "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YOKU評価シート取得": {
+      "main": [
+        [
+          {
+            "node": "インプットバリデーション",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "インプットバリデーション": {
+      "main": [
+        [
+          {
+            "node": "データ統合",
             "type": "main",
             "index": 0
           }
@@ -201,9 +212,7 @@
           "dataLocationOnSheet": {
             "values": {
               "rangeDefinition": "specifyRangeA1",
-              "range": "D23:K28",
-              "headerRow": 23,
-              "firstDataRow": 26
+              "range": "D23:K28"
             }
           }
         }
@@ -216,7 +225,7 @@
         448,
         160
       ],
-      "alwaysOutputData": false,
+      "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "ZfwIn54p5eaFX5s0",
@@ -283,8 +292,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        896,
-        160
+        848,
+        144
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -302,7 +311,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1120,
+        1232,
         160
       ]
     },
@@ -318,7 +327,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        1344,
+        1456,
         160
       ]
     },
@@ -337,7 +346,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        1344,
+        1456,
         384
       ],
       "credentials": {
@@ -356,7 +365,7 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        1568,
+        1680,
         384
       ]
     },
@@ -369,7 +378,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1632,
+        1744,
         160
       ]
     },
@@ -457,7 +466,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1840,
+        1952,
         160
       ],
       "credentials": {
@@ -466,6 +475,19 @@
           "name": "Google Sheets account 2"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "const sheetData = $('YOKU評価シート取得').all();\nconst triggerData = $('Execute Workflow Trigger').first().json;\nconst employeeNo = triggerData.evaluationData[0]['社員番号'] || '';\nconst employeeName = triggerData.evaluationData[0]['氏名'] || '';\n\nconst requiredFields = [\n  { sheetLabel: '実現したい\\nキャリア', displayName: '実現したいキャリア' },\n  { sheetLabel: '強み', displayName: '強み' },\n  { sheetLabel: '課題\\n成長ポイント', displayName: '課題・成長ポイント' },\n  { sheetLabel: 'アクション\\nプラン', displayName: 'アクションプラン' },\n];\n\nconst missingFields = [];\n\nfor (const field of requiredFields) {\n  const row = sheetData.find(item => item.json['対象期間'] === field.sheetLabel);\n  const value = row ? (row.json.col_3 || '').toString().trim() : '';\n  if (!value) {\n    missingFields.push(field.displayName);\n  }\n}\n\nif (missingFields.length > 0) {\n  const error = new Error(`評価シート未記載: ${employeeName}(${employeeNo}) - ${missingFields.join(', ')}`);\n  error.description = JSON.stringify({\n    employeeNo,\n    employeeName,\n    missingFields\n  });\n  throw error;\n}\n\nreturn $input.all();"
+      },
+      "id": "validate-001",
+      "name": "インプットバリデーション",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        160
+      ]
     }
   ],
   "pinData": {},
@@ -532,7 +554,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-10T11:46:27.389Z",
-  "versionCounter": 19,
-  "versionId": "c56f2b8e-02e2-45fb-afab-e824faf2bad8"
+  "updatedAt": "2026-03-10T12:12:42.103Z",
+  "versionCounter": 23,
+  "versionId": "a24102d8-22a7-445d-996a-abbbd610ae72"
 }
