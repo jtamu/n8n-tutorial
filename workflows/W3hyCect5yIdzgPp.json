@@ -114,17 +114,6 @@
       "main": [
         [
           {
-            "node": "Wait",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Wait": {
-      "main": [
-        [
-          {
             "node": "AI Agent",
             "type": "main",
             "index": 0
@@ -440,7 +429,7 @@
       "webhookId": "2afcf740-5ad6-4511-9063-0c36caf199f9",
       "credentials": {
         "githubOAuth2Api": {
-          "id": "mFmtL3q8plod71Bh",
+          "id": "KFKruTQZMnLLdgg4",
           "name": "GitHub account"
         }
       },
@@ -530,20 +519,6 @@
     },
     {
       "parameters": {
-        "amount": 30
-      },
-      "id": "abe26c91-a4fa-4825-b758-15efd5def639",
-      "name": "Wait",
-      "type": "n8n-nodes-base.wait",
-      "typeVersion": 1.1,
-      "position": [
-        2112,
-        528
-      ],
-      "webhookId": "1faba70c-330e-4848-9f8c-b2c5c2a71e18"
-    },
-    {
-      "parameters": {
         "promptType": "define",
         "text": "=あなたはn8nワークフローバックアップリポジトリのレビュワーです。\n以下のcommit対象コンテンツに、氏名などの個人情報が含まれていないか検証してください。\n問題がある場合は、その理由を示してください。\n注意点：\n- NGの判定基準は、あくまでも**プレーンテキストとして個人情報を含む場合**です。プレースホルダーとして「氏名」などの文字列が含まれている分には問題ありません。\n- typeがn8n-nodes-base.gmailに対するparameters.sendToなど、**通知アクションを実行する上で必要な通知先が含まれる場合は、例外的に個人情報が含まれていても問題ありません**。\n- 問題ない場合は、**\"ok\"とだけ出力し、それ以外の文字を含めないでください**。\n- コンテンツが与えられなかった場合は、ok扱いとしてください。\n<contents>\n{{ $json.n8n_data_for_check }}\n</contents>",
         "options": {}
@@ -581,7 +556,7 @@
       ],
       "credentials": {
         "openAiApi": {
-          "id": "0bhIfCXhsrbRbYXD",
+          "id": "XBOAe3Nw76IlKMVH",
           "name": "OpenAi account"
         }
       }
@@ -712,7 +687,7 @@
       "webhookId": "f5940f84-60d5-4344-aaaf-123c9dfeff05",
       "credentials": {
         "githubOAuth2Api": {
-          "id": "mFmtL3q8plod71Bh",
+          "id": "KFKruTQZMnLLdgg4",
           "name": "GitHub account"
         }
       }
@@ -746,7 +721,7 @@
       "webhookId": "16b050e8-5e6f-465b-974a-846050f05faf",
       "credentials": {
         "githubOAuth2Api": {
-          "id": "mFmtL3q8plod71Bh",
+          "id": "KFKruTQZMnLLdgg4",
           "name": "GitHub account"
         }
       }
@@ -793,7 +768,7 @@
       "webhookId": "f8696594-87b3-42bf-99c0-79d5203eaf5f",
       "credentials": {
         "gmailOAuth2": {
-          "id": "0HdKWVTZmAydoPdr",
+          "id": "RI1naauubKfP5tyM",
           "name": "Gmail account"
         }
       }
@@ -807,47 +782,52 @@
   },
   "shared": [
     {
-      "updatedAt": "2026-03-06T06:01:51.229Z",
-      "createdAt": "2026-03-06T06:01:51.229Z",
+      "updatedAt": "2026-03-09T08:21:21.398Z",
+      "createdAt": "2026-03-09T08:21:21.398Z",
       "role": "workflow:owner",
       "workflowId": "W3hyCect5yIdzgPp",
-      "projectId": "eh4qnmYYF0VsPwpi",
+      "projectId": "mwID5OTVq3DrYryq",
       "project": {
-        "updatedAt": "2026-03-06T05:45:07.319Z",
-        "createdAt": "2026-03-06T05:44:42.783Z",
-        "id": "eh4qnmYYF0VsPwpi",
-        "name": "junpei gtamu.work@gmail.com <gtamu.work@gmail.com>",
+        "updatedAt": "2025-11-13T14:51:48.267Z",
+        "createdAt": "2025-11-13T14:36:59.116Z",
+        "id": "mwID5OTVq3DrYryq",
+        "name": "Jumpei Tamura <gtamu.dip@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
-        "creatorId": "daaf06ca-fe5f-4e31-bf59-c6b4acf9edfb",
+        "creatorId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
         "projectRelations": [
           {
-            "updatedAt": "2026-03-06T05:44:42.784Z",
-            "createdAt": "2026-03-06T05:44:42.784Z",
-            "userId": "daaf06ca-fe5f-4e31-bf59-c6b4acf9edfb",
-            "projectId": "eh4qnmYYF0VsPwpi",
+            "updatedAt": "2025-11-13T14:36:59.117Z",
+            "createdAt": "2025-11-13T14:36:59.117Z",
+            "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+            "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-06T06:32:20.039Z",
-              "createdAt": "2026-03-06T05:44:40.127Z",
-              "id": "daaf06ca-fe5f-4e31-bf59-c6b4acf9edfb",
-              "email": "gtamu.work@gmail.com",
-              "firstName": "junpei",
-              "lastName": "gtamu.work@gmail.com",
+              "updatedAt": "2026-03-10T03:12:13.000Z",
+              "createdAt": "2025-11-13T14:36:48.586Z",
+              "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+              "email": "gtamu.dip@gmail.com",
+              "firstName": "Jumpei",
+              "lastName": "Tamura",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2026-03-06T05:45:16.350Z",
-                "personalization_survey_n8n_version": "2.4.4"
+                "personalization_survey_submitted_at": "2025-11-13T14:51:58.989Z",
+                "personalization_survey_n8n_version": "1.98.1"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "W3hyCect5yIdzgPp",
-                "userActivatedAt": 1772778704361
+                "firstSuccessfulWorkflowId": "nJ6NxHK18rgZXMP4",
+                "userActivatedAt": 1763558344486,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1772775475677
+                }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-03-06",
+              "lastActiveAt": "2026-03-10",
               "isPending": false
             }
           }
@@ -858,7 +838,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-06T07:04:18.906Z",
-  "versionCounter": 7,
-  "versionId": "6246afc7-5437-4dd7-9040-6ecc29f335cd"
+  "updatedAt": "2026-03-10T04:10:26.942Z",
+  "versionCounter": 10,
+  "versionId": "f0b5a146-44f1-4bf0-ac2c-602077f1aab8"
 }
