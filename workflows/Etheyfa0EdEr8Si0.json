@@ -113,6 +113,13 @@
             },
             {
               "name": "hrFolderId"
+            },
+            {
+              "name": "targetYear",
+              "type": "number"
+            },
+            {
+              "name": "targetPeriod"
             }
           ]
         }
@@ -164,7 +171,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "2026年上期",
+          "value": "={{ $('Execute Workflow Trigger').first().json.targetYear }}年{{ $('Execute Workflow Trigger').first().json.targetPeriod }}",
           "mode": "name"
         },
         "options": {
@@ -281,7 +288,7 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "2026年上期",
+          "value": "={{ $('Execute Workflow Trigger').first().json.targetYear }}年{{ $('Execute Workflow Trigger').first().json.targetPeriod }}",
           "mode": "name"
         },
         "columns": {
@@ -395,7 +402,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-10T02:13:08.000Z",
+              "updatedAt": "2026-03-10T03:12:13.000Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -430,7 +437,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-10T03:05:03.007Z",
-  "versionCounter": 5,
-  "versionId": "02ac943e-871a-44ce-bde3-b0e0bca6a4d2"
+  "updatedAt": "2026-03-10T04:05:44.936Z",
+  "versionCounter": 10,
+  "versionId": "77fc2b15-a4c9-447c-91fd-e81c2fb7b54a"
 }
