@@ -1,0 +1,539 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Employees",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Employees": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Set Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Fields": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Search Spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Spreadsheet Found?": {
+      "main": [
+        [
+          {
+            "node": "Get Sheet Info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sheet Info": {
+      "main": [
+        [
+          {
+            "node": "Copy Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Sheet": {
+      "main": [
+        [
+          {
+            "node": "Rename Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-10T08:48:57.778Z",
+  "description": null,
+  "id": "p1a8WEdMWztmRNEM",
+  "isArchived": false,
+  "meta": null,
+  "name": "スプレッドシート 各社員シートコピー",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "スプレッドシート シートコピー",
+        "formDescription": "各社員の人事フォルダ配下のスプレッドシート内でシートをコピーします",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "スプレッドシートファイル名",
+              "placeholder": "社員名prefixを除いたファイル名",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "コピー元シート名",
+              "placeholder": "コピー元のシート名",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "コピー先シート名",
+              "placeholder": "コピー先のシート名",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "form-trigger",
+      "name": "Form Trigger",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "1a1a2d78-a90a-4ab9-9b62-4bb7b636512a"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I",
+          "mode": "list",
+          "cachedResultName": "社員基本情報",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "シート1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "get-employees",
+      "name": "Get Employees",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-1",
+              "leftValue": "={{ $json['人事フォルダID'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "cond-2",
+              "leftValue": "={{ $json['退職日'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "assign-1",
+              "name": "targetFileName",
+              "value": "={{ $json['氏名'] }}_{{ $('Form Trigger').first().json['スプレッドシートファイル名'] }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-2",
+              "name": "folderId",
+              "value": "={{ $json['人事フォルダID'] }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-3",
+              "name": "sourceSheetName",
+              "value": "={{ $('Form Trigger').first().json['コピー元シート名'] }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-4",
+              "name": "destSheetName",
+              "value": "={{ $('Form Trigger').first().json['コピー先シート名'] }}",
+              "type": "string"
+            },
+            {
+              "id": "assign-5",
+              "name": "employeeName",
+              "value": "={{ $json['氏名'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-fields",
+      "name": "Set Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "loop",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        896,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "=name = '{{ $json.targetFileName }}' and '{{ $json.folderId }}' in parents and trashed = false and mimeType = 'application/vnd.google-apps.spreadsheet'"
+            },
+            {
+              "name": "supportsAllDrives",
+              "value": "true"
+            },
+            {
+              "name": "includeItemsFromAllDrives",
+              "value": "true"
+            },
+            {
+              "name": "corpora",
+              "value": "allDrives"
+            },
+            {
+              "name": "fields",
+              "value": "files(id,name)"
+            },
+            {
+              "name": "pageSize",
+              "value": "10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "search-spreadsheet",
+      "name": "Search Spreadsheet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        0
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "nSF092YIbEi8pS80",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-found-1",
+              "leftValue": "={{ $json.files.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-found",
+      "name": "Spreadsheet Found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1344,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{ $json.files[0].id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "spreadsheetId,sheets(properties(sheetId,title))"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-sheets",
+      "name": "Get Sheet Info",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1568,
+        -144
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{ $json.spreadsheetId }}/sheets/{{ $json.sheets.filter(s => s.properties.title === $('Loop Over Items').first().json.sourceSheetName)[0].properties.sheetId }}:copyTo",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ destinationSpreadsheetId: $json.spreadsheetId }) }}",
+        "options": {}
+      },
+      "id": "copy-sheet",
+      "name": "Copy Sheet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1792,
+        -144
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://sheets.googleapis.com/v4/spreadsheets/{{ $('Get Sheet Info').first().json.spreadsheetId }}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ requests: [{ updateSheetProperties: { properties: { sheetId: $json.sheetId, title: $('Loop Over Items').first().json.destSheetName }, fields: 'title' } }] }) }}",
+        "options": {}
+      },
+      "id": "rename-sheet",
+      "name": "Rename Sheet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2016,
+        -144
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-10T08:48:57.781Z",
+      "createdAt": "2026-03-10T08:48:57.781Z",
+      "role": "workflow:owner",
+      "workflowId": "p1a8WEdMWztmRNEM",
+      "projectId": "mwID5OTVq3DrYryq",
+      "project": {
+        "updatedAt": "2025-11-13T14:51:48.267Z",
+        "createdAt": "2025-11-13T14:36:59.116Z",
+        "id": "mwID5OTVq3DrYryq",
+        "name": "Jumpei Tamura <gtamu.dip@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+        "projectRelations": [
+          {
+            "updatedAt": "2025-11-13T14:36:59.117Z",
+            "createdAt": "2025-11-13T14:36:59.117Z",
+            "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+            "projectId": "mwID5OTVq3DrYryq",
+            "user": {
+              "updatedAt": "2026-03-10T03:12:13.000Z",
+              "createdAt": "2025-11-13T14:36:48.586Z",
+              "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+              "email": "gtamu.dip@gmail.com",
+              "firstName": "Jumpei",
+              "lastName": "Tamura",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-11-13T14:51:58.989Z",
+                "personalization_survey_n8n_version": "1.98.1"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "nJ6NxHK18rgZXMP4",
+                "userActivatedAt": 1763558344486,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1772775475677
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-10",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-10T08:59:23.107Z",
+  "versionCounter": 4,
+  "versionId": "a9c01114-3960-4457-b099-0adf051800d4"
+}
