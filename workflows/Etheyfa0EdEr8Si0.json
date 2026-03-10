@@ -18,11 +18,34 @@
       "main": [
         [
           {
-            "node": "YOKU評価シート取得",
+            "node": "目標出力済みチェック",
             "type": "main",
             "index": 0
           }
         ]
+      ]
+    },
+    "目標出力済みチェック": {
+      "main": [
+        [
+          {
+            "node": "出力済み判定",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "出力済み判定": {
+      "main": [
+        [
+          {
+            "node": "YOKU評価シート取得",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
       ]
     },
     "YOKU評価シート取得": {
@@ -178,6 +201,78 @@
           "dataLocationOnSheet": {
             "values": {
               "rangeDefinition": "specifyRangeA1",
+              "range": "D23:K28",
+              "headerRow": 23,
+              "firstDataRow": 26
+            }
+          }
+        }
+      },
+      "id": "check-001",
+      "name": "目標出力済みチェック",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        160
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-001",
+              "leftValue": "={{ $('目標出力済みチェック').all().filter(item => item.json['ミッション'] && item.json['ミッション'].toString().trim() !== '').length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-001",
+      "name": "出力済み判定",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('Search files and folders').first().json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('Execute Workflow Trigger').first().json.targetYear }}年{{ $('Execute Workflow Trigger').first().json.targetPeriod }}",
+          "mode": "name"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
               "range": "C4:K20"
             }
           }
@@ -188,7 +283,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        448,
+        896,
         160
       ],
       "credentials": {
@@ -207,7 +302,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        672,
+        1120,
         160
       ]
     },
@@ -215,7 +310,7 @@
       "parameters": {
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "あなたはエンジニアの目標設定のエキスパートです。\n与えられたエンジニアの情報（現在のグレード、前回評価で合意された次期課題、前提条件）とグレードテーブル（現在のグレードで求められる要件）を基に、新制度のフォーマットに従って次期の目標設定を行ってください。\n\n## 新制度の目標カテゴリ（No.1〜3の固定）\n1. リレーション：対人関係・顧客折衝・チームワーク・コミュニケーションに関する目標\n2. ビジネス：業務遂行・要件定義・ドキュメンテーション・プロジェクト管理に関する目標\n3. エンジニアリング：技術力・設計・実装・アーキテクチャに関する目標\n\n## 各目標の構成要素\n- ミッション：グレードテーブルから現在のグレードに該当するスキル要件の記載をそのまま抜き出して記載すること。グレードテーブルのリレーションスキル・ビジネススキル・エンジニアリングスキルの各列の記載内容をそのまま転記する。独自の文章を作成したり、要約・言い換え・補足を加えてはならない。\n- プロセス：ミッション達成のための具体的な行動計画（箇条書き3〜5項目、「- 」で始める）\n- ゴール：今期の終わりに達成されているべき望ましい状態を記述する（箇条書き2〜3項目、「- 」で始める）。文末は「〜となっていること」のような表現で統一し、達成状態として記述すること。\n\n## 目標設定の方針\n- ミッションには、グレードテーブルの現在のグレードの該当スキル要件をそのまま記載する。それ以外の内容は一切含めない\n- プロセスとゴールは、前回評価で合意した次期課題を反映し、ミッション（スキル要件）の達成に向けた具体的な行動と基準を設定する\n- ゴールは測定可能・判定可能な達成状態を書く。「〜を行う」「〜に取り組む」のような行動の記述ではなく、「〜となっていること」「〜が実現されていること」「〜が達成されていること」のように、今期末にどうなっていれば目標達成かを状態として記述する\n- 具体的・定量的で、半期で達成可能な現実的な目標にする\n- である調で記述する\n- 旧制度のA(テクニカルスキル)/B(ビジネススキル)/C(リーダーシップ/マネジメント)の内容を、新制度のリレーション/ビジネス/エンジニアリングに適切にマッピングする"
+          "systemMessage": "あなたはエンジニアの目標設定のエキスパートです。\n与えられたエンジニアの情報（現在のグレード、前回評価で合意された次期課題、前提条件）とグレードテーブル（現在のグレードで求められる要件）を基に、新制度のフォーマットに従って次期の目標設定を行ってください。\n\n## 新制度の目標カテゴリ（No.1〜3の固定）\n1. リレーション：対人関係・顧客折衝・チームワーク・コミュニケーションに関する目標\n2. ビジネス：業務遂行・要件定義・ドキュメンテーション・プロジェクト管理に関する目標\n3. エンジニアリング：技術力・設計・実装・アーキテクチャに関する目標\n\n## 各目標の構成要素\n- ミッション：先頭行に対応するスキル要素名を【】付きで記載し、改行してグレードテーブルの記載内容をそのまま転記する。具体的には、リレーション目標→先頭行に「【リレーションスキル】」、ビジネス目標→先頭行に「【ビジネススキル】」、エンジニアリング目標→先頭行に「【エンジニアリングスキル】」と記載してから改行し、グレードテーブルの該当列（リレーションスキル/ビジネススキル/エンジニアリングスキル）の内容をそのまま転記する。独自の文章を作成したり、要約・言い換え・補足を加えてはならない。\n- プロセス：ミッション達成のための具体的な行動計画（箇条書き3〜5項目、「- 」で始める）\n- ゴール：今期の終わりに達成されているべき望ましい状態を記述する（箇条書き2〜3項目、「- 」で始める）。文末は「〜となっていること」のような表現で統一し、達成状態として記述すること。\n\n## 目標設定の方針\n- ミッションには、先頭行のスキル要素名ラベルに続けて、グレードテーブルの現在のグレードの該当スキル要件をそのまま記載する。それ以外の内容は一切含めない\n- プロセスとゴールは、前回評価で合意した次期課題を反映し、ミッション（スキル要件）の達成に向けた具体的な行動と基準を設定する\n- ゴールは測定可能・判定可能な達成状態を書く。「〜を行う」「〜に取り組む」のような行動の記述ではなく、「〜となっていること」「〜が実現されていること」「〜が達成されていること」のように、今期末にどうなっていれば目標達成かを状態として記述する\n- 具体的・定量的で、半期で達成可能な現実的な目標にする\n- である調で記述する\n- 旧制度のA(テクニカルスキル)/B(ビジネススキル)/C(リーダーシップ/マネジメント)の内容を、新制度のリレーション/ビジネス/エンジニアリングに適切にマッピングする"
         }
       },
       "id": "agent-001",
@@ -223,7 +318,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        880,
+        1344,
         160
       ]
     },
@@ -242,7 +337,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        880,
+        1344,
         384
       ],
       "credentials": {
@@ -254,14 +349,14 @@
     },
     {
       "parameters": {
-        "jsonSchemaExample": "{\n  \"goals\": [\n    {\n      \"no\": 1,\n      \"category\": \"リレーション\",\n      \"mission\": \"ミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    },\n    {\n      \"no\": 2,\n      \"category\": \"ビジネス\",\n      \"mission\": \"ミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    },\n    {\n      \"no\": 3,\n      \"category\": \"エンジニアリング\",\n      \"mission\": \"ミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    }\n  ]\n}"
+        "jsonSchemaExample": "{\n  \"goals\": [\n    {\n      \"no\": 1,\n      \"category\": \"リレーション\",\n      \"mission\": \"【リレーションスキル】\\nミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    },\n    {\n      \"no\": 2,\n      \"category\": \"ビジネス\",\n      \"mission\": \"【ビジネススキル】\\nミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    },\n    {\n      \"no\": 3,\n      \"category\": \"エンジニアリング\",\n      \"mission\": \"【エンジニアリングスキル】\\nミッション内容\",\n      \"process\": \"- 行動計画1\\n- 行動計画2\\n- 行動計画3\",\n      \"goal\": \"- 達成基準1\\n- 達成基準2\"\n    }\n  ]\n}"
       },
       "id": "parser-001",
       "name": "Structured Output Parser",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
       "position": [
-        1104,
+        1568,
         384
       ]
     },
@@ -274,7 +369,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1168,
+        1632,
         160
       ]
     },
@@ -362,7 +457,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        1376,
+        1840,
         160
       ],
       "credentials": {
@@ -402,7 +497,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-10T03:12:13.000Z",
+              "updatedAt": "2026-03-10T09:09:02.000Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -437,7 +532,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-10T04:05:44.936Z",
-  "versionCounter": 10,
-  "versionId": "77fc2b15-a4c9-447c-91fd-e81c2fb7b54a"
+  "updatedAt": "2026-03-10T11:46:27.389Z",
+  "versionCounter": 19,
+  "versionId": "c56f2b8e-02e2-45fb-afab-e824faf2bad8"
 }
