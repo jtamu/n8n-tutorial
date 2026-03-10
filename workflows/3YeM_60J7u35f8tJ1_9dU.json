@@ -1,0 +1,408 @@
+{
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
+  "connections": {
+    "アンケートリマインドフォーム": {
+      "main": [
+        [
+          {
+            "node": "アンケート情報取得",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "社員基本情報取得",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "アンケート情報取得": {
+      "main": [
+        [
+          {
+            "node": "アンケート未回答者抽出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員基本情報取得": {
+      "main": [
+        [
+          {
+            "node": "アンケート未回答者抽出",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "必要項目のみ抽出": {
+      "main": [
+        [
+          {
+            "node": "社員エンジニアのみに絞り込み",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "社員エンジニアのみに絞り込み": {
+      "main": [
+        [
+          {
+            "node": "slackメンションリスト作成",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "slackメンションリスト作成": {
+      "main": [
+        [
+          {
+            "node": "送信メッセージ編集",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "アンケート未回答者抽出": {
+      "main": [
+        [
+          {
+            "node": "必要項目のみ抽出",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-10T09:09:36.002Z",
+  "description": null,
+  "id": "3YeM_60J7u35f8tJ1_9dU",
+  "isArchived": false,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "エンジニア向けアンケート未回答者リマインド",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "アンケートリマインドフォーム",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "スプレッドシートURL",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "送信メッセージ",
+              "fieldType": "textarea",
+              "defaultValue": "【リマインド】こちら明日までにご回答お願いします！",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b01b111d-f899-40a0-9a36-1568b204d309",
+      "name": "アンケートリマインドフォーム",
+      "webhookId": "3093aa55-a3f6-4405-99f9-d262e6687b86"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json[\"スプレッドシートURL\"] }}",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $json[\"スプレッドシートURL\"] }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "3d54783a-567f-4312-9c69-5692b0a799e8",
+      "name": "アンケート情報取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I",
+          "mode": "list",
+          "cachedResultName": "社員基本情報",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "シート1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OBqgWZDLYIFhrnCx37ixJorcAGuNSiwDV3wSMzPyP3I/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        176
+      ],
+      "id": "6426036e-a5c0-4082-b3fe-c617bf01d33c",
+      "name": "社員基本情報取得",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ZfwIn54p5eaFX5s0",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "017d22bf-74bd-401e-9b1e-c424cc2e7867",
+              "name": "社員番号",
+              "value": "={{ $json[\"社員番号\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "1d635bf4-2598-47a7-a8e5-c4efc8245e24",
+              "name": "氏名",
+              "value": "={{ $json[\"氏名\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "c0b7a094-9dc5-484d-a03a-9ba50ed0c398",
+              "name": "slackメンション",
+              "value": "={{ $json[\"slackメンション\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "dae017e9-469c-4868-9965-d986b7d52e97",
+              "name": "退職日",
+              "value": "={{ $json[\"退職日\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "d2fed8d5-566f-4d72-9489-ed31a5cf918d",
+              "name": "人事フォルダID",
+              "value": "={{ $json['人事フォルダID'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "0b506cf5-cf34-476b-9630-48bfd4d2683a",
+      "name": "必要項目のみ抽出"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7071c9a0-2732-4a28-80d7-e66a09401b1d",
+              "leftValue": "={{ $json[\"退職日\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b48cc2e5-d0e4-4f51-9b9b-ade6d3eb782d",
+              "leftValue": "={{ $json['人事フォルダID'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        0
+      ],
+      "id": "dd3ccbb8-68f5-49a5-9b54-99f32441bc78",
+      "name": "社員エンジニアのみに絞り込み"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "slackメンション"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        0
+      ],
+      "id": "515d4046-a89c-4bff-9df9-a86ca0c4d2bf",
+      "name": "slackメンションリスト作成"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "57d51e03-7687-498a-ba60-197a18c76b06",
+              "name": "message",
+              "value": "={{ $json[\"slackメンション\"].join(\" \") + \"\\n\" + $('アンケートリマインドフォーム').item.json[\"送信メッセージ\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1408,
+        0
+      ],
+      "id": "402fbe3b-d8df-4db3-bf8c-cac96e7768c9",
+      "name": "送信メッセージ編集"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "社員番号",
+        "joinMode": "keepNonMatches",
+        "outputDataFrom": "input2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "eb5c6441-4fe5-4e14-ac22-5dc8d2a8794c",
+      "name": "アンケート未回答者抽出"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-10T09:09:36.009Z",
+      "createdAt": "2026-03-10T09:09:36.009Z",
+      "role": "workflow:owner",
+      "workflowId": "3YeM_60J7u35f8tJ1_9dU",
+      "projectId": "mwID5OTVq3DrYryq",
+      "project": {
+        "updatedAt": "2025-11-13T14:51:48.267Z",
+        "createdAt": "2025-11-13T14:36:59.116Z",
+        "id": "mwID5OTVq3DrYryq",
+        "name": "Jumpei Tamura <gtamu.dip@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+        "projectRelations": [
+          {
+            "updatedAt": "2025-11-13T14:36:59.117Z",
+            "createdAt": "2025-11-13T14:36:59.117Z",
+            "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+            "projectId": "mwID5OTVq3DrYryq",
+            "user": {
+              "updatedAt": "2026-03-10T09:09:02.000Z",
+              "createdAt": "2025-11-13T14:36:48.586Z",
+              "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+              "email": "gtamu.dip@gmail.com",
+              "firstName": "Jumpei",
+              "lastName": "Tamura",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-11-13T14:51:58.989Z",
+                "personalization_survey_n8n_version": "1.98.1"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "nJ6NxHK18rgZXMP4",
+                "userActivatedAt": 1763558344486,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1772775475677
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-10",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-10T09:23:40.643Z",
+  "versionCounter": 21,
+  "versionId": "4bfb4377-7c84-4c12-9e9a-087d4944d4fa"
+}
