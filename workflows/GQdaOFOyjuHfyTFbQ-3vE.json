@@ -111,6 +111,40 @@
           }
         ]
       ]
+    },
+    "サブワークフロー実行": {
+      "main": [
+        [],
+        [
+          {
+            "node": "エラー判定",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "エラー判定": {
+      "main": [
+        [
+          {
+            "node": "未記載者まとめ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "未記載者まとめ": {
+      "main": [
+        [
+          {
+            "node": "メール通知",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "createdAt": "2026-03-05T10:15:47.411Z",
@@ -296,6 +330,14 @@
           "value": "Etheyfa0EdEr8Si0",
           "mode": "id"
         },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
         "options": {}
       },
       "id": "exec-sub",
@@ -305,7 +347,8 @@
       "position": [
         944,
         112
-      ]
+      ],
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -389,6 +432,55 @@
         0,
         -192
       ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const errorStr = (item.json.error || '').toString();\n  const evaluationData = item.json.evaluationData;\n\n  // evaluationDataが存在 = サブワークフローのバリデーションエラー\n  if (evaluationData && evaluationData.length > 0) {\n    const employeeNo = evaluationData[0]['社員番号'] || '';\n    const employeeName = evaluationData[0]['氏名'] || '';\n\n    // エラー文字列から未記載項目を抽出\n    // 形式: \"氏名(番号) - 項目1, 項目2 [line N]\"\n    let fieldsStr = errorStr;\n    fieldsStr = fieldsStr.replace(/^評価シート未記載:\\s*/, '');\n    const dashIdx = fieldsStr.indexOf(' - ');\n    if (dashIdx >= 0) {\n      fieldsStr = fieldsStr.substring(dashIdx + 3);\n    }\n    fieldsStr = fieldsStr.replace(/\\s*\\[line \\d+\\]$/, '');\n    const missingFields = fieldsStr.split(/[,、]\\s*/).filter(f => f.trim());\n\n    results.push({\n      json: {\n        employeeNo,\n        employeeName,\n        missingFields\n      }\n    });\n    continue;\n  }\n\n  // evaluationDataがない = 予期しないエラー\n  throw new Error(`予期しないエラー: ${errorStr}`);\n}\n\nreturn results;"
+      },
+      "id": "error-classify",
+      "name": "エラー判定",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nif (items.length === 0) return [];\n\nconst lines = items.map(item => {\n  const d = item.json;\n  const fields = Array.isArray(d.missingFields) ? d.missingFields.join('、') : String(d.missingFields);\n  return `・${d.employeeName}（${d.employeeNo}）: ${fields}`;\n});\n\nconst body = [\n  '【新制度】目標設定ワークフローにおいて、以下の社員のYOKU評価シートに未記載項目がありました。',\n  '該当社員の評価シートに記載後、再実行してください。',\n  '',\n  ...lines,\n  '',\n  `対象者数: ${items.length}名`\n].join('\\n');\n\nreturn [{\n  json: {\n    subject: '【要対応】目標設定 - 評価シート未記載者一覧',\n    body: body\n  }\n}];"
+      },
+      "id": "error-aggregate",
+      "name": "未記載者まとめ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "gtamu.dip@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.body }}",
+        "options": {}
+      },
+      "id": "email-notify",
+      "name": "メール通知",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1616,
+        288
+      ],
+      "webhookId": "79ef95a3-c11e-423f-8dfb-1b456c480cbb",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "B0RIeXUc6Wr3DHZX",
+          "name": "Gmail account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -420,7 +512,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-10T03:12:13.000Z",
+              "updatedAt": "2026-03-10T09:09:02.000Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -455,7 +547,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-10T04:06:02.945Z",
-  "versionCounter": 27,
-  "versionId": "1ce41796-5203-4d86-88b0-d02c4abb2fa2"
+  "updatedAt": "2026-03-10T12:27:57.599Z",
+  "versionCounter": 31,
+  "versionId": "333bdae3-6f66-4c98-880d-54c8779fac29"
 }
