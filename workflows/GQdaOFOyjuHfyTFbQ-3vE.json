@@ -7,17 +7,6 @@
       "main": [
         [
           {
-            "node": "Filter",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Filter": {
-      "main": [
-        [
-          {
             "node": "Merge",
             "type": "main",
             "index": 1
@@ -256,39 +245,6 @@
       }
     },
     {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "7d36f3ce-493d-46db-a616-284704c239dd",
-              "leftValue": "={{ $json['社員番号'] }}",
-              "rightValue": "A018",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "id": "e049e385-5332-41d7-88af-6d29a138383d",
-      "name": "Filter",
-      "type": "n8n-nodes-base.filter",
-      "typeVersion": 2.3,
-      "position": [
-        16,
-        64
-      ]
-    },
-    {
       "parameters": {},
       "id": "merge-sync-a",
       "name": "Merge",
@@ -312,7 +268,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 評価管理から対象社員のデータをフィルタリング\nconst allEvaluation = $('評価管理フィルタ').all();\nconst employees = $('Filter').all();\nconst gradeTable = $('グレードテーブル取得').all().map(r => r.json);\n\n// フォームから対象年・対象期を取得\nconst formData = $('フォーム入力').first().json;\nconst targetYear = formData['対象年'];\nconst targetPeriod = formData['対象期'];\n\nconst results = [];\nfor (const emp of employees) {\n  const empNo = emp.json['社員番号'];\n  const hrFolderId = emp.json['人事フォルダID'];\n\n  // この社員の評価データを社員番号でフィルタ（対象年・対象期は評価管理フィルタノードで済み）\n  const evalData = allEvaluation\n    .filter(r => r.json['社員番号'] === empNo)\n    .map(r => r.json);\n\n  results.push({\n    json: {\n      evaluationData: evalData,\n      gradeTable: gradeTable,\n      hrFolderId: hrFolderId,\n      targetYear: targetYear,\n      targetPeriod: targetPeriod\n    }\n  });\n}\n\nreturn results;"
+        "jsCode": "// 評価管理から対象社員のデータをフィルタリング\nconst allEvaluation = $('評価管理フィルタ').all();\nconst employees = $('Get row(s) in sheet').all();\nconst gradeTable = $('グレードテーブル取得').all().map(r => r.json);\n\n// フォームから対象年・対象期を取得\nconst formData = $('フォーム入力').first().json;\nconst targetYear = formData['対象年'];\nconst targetPeriod = formData['対象期'];\n\nconst results = [];\nfor (const emp of employees) {\n  const empNo = emp.json['社員番号'];\n  const hrFolderId = emp.json['人事フォルダID'];\n\n  // この社員の評価データを社員番号でフィルタ\n  const evalData = allEvaluation\n    .filter(r => r.json['社員番号'] === empNo)\n    .map(r => r.json);\n\n  // 評価データがない社員はスキップ（サブワークフローでエラーになるため）\n  if (evalData.length === 0) {\n    continue;\n  }\n\n  results.push({\n    json: {\n      evaluationData: evalData,\n      gradeTable: gradeTable,\n      hrFolderId: hrFolderId,\n      targetYear: targetYear,\n      targetPeriod: targetPeriod\n    }\n  });\n}\n\nreturn results;"
       },
       "id": "code-prep",
       "name": "入力データ準備",
@@ -435,7 +391,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const errorStr = (item.json.error || '').toString();\n  const evaluationData = item.json.evaluationData;\n\n  // evaluationDataが存在 = サブワークフローのバリデーションエラー\n  if (evaluationData && evaluationData.length > 0) {\n    const employeeNo = evaluationData[0]['社員番号'] || '';\n    const employeeName = evaluationData[0]['氏名'] || '';\n\n    // エラー文字列から未記載項目を抽出\n    // 形式: \"氏名(番号) - 項目1, 項目2 [line N]\"\n    let fieldsStr = errorStr;\n    fieldsStr = fieldsStr.replace(/^評価シート未記載:\\s*/, '');\n    const dashIdx = fieldsStr.indexOf(' - ');\n    if (dashIdx >= 0) {\n      fieldsStr = fieldsStr.substring(dashIdx + 3);\n    }\n    fieldsStr = fieldsStr.replace(/\\s*\\[line \\d+\\]$/, '');\n    const missingFields = fieldsStr.split(/[,、]\\s*/).filter(f => f.trim());\n\n    results.push({\n      json: {\n        employeeNo,\n        employeeName,\n        missingFields\n      }\n    });\n    continue;\n  }\n\n  // evaluationDataがない = 予期しないエラー\n  throw new Error(`予期しないエラー: ${errorStr}`);\n}\n\nreturn results;"
+        "jsCode": "const items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const errorStr = (item.json.error || '').toString();\n  const evaluationData = item.json.evaluationData;\n\n  // evaluationDataが存在し、中身がある = サブワークフローのバリデーションエラー\n  if (evaluationData && evaluationData.length > 0) {\n    const employeeNo = evaluationData[0]['社員番号'] || '';\n    const employeeName = evaluationData[0]['氏名'] || '';\n\n    // エラー文字列から未記載項目を抽出\n    let fieldsStr = errorStr;\n    fieldsStr = fieldsStr.replace(/^評価シート未記載:\\s*/, '');\n    const dashIdx = fieldsStr.indexOf(' - ');\n    if (dashIdx >= 0) {\n      fieldsStr = fieldsStr.substring(dashIdx + 3);\n    }\n    fieldsStr = fieldsStr.replace(/\\s*\\[line \\d+\\]$/, '');\n    const missingFields = fieldsStr.split(/[,、]\\s*/).filter(f => f.trim());\n\n    results.push({\n      json: {\n        employeeNo,\n        employeeName,\n        missingFields\n      }\n    });\n    continue;\n  }\n\n  // evaluationDataが空または未定義 = その他のエラー（スキップ）\n  results.push({\n    json: {\n      employeeNo: '',\n      employeeName: '不明',\n      missingFields: [errorStr || '不明なエラー']\n    }\n  });\n}\n\nreturn results;"
       },
       "id": "error-classify",
       "name": "エラー判定",
@@ -512,7 +468,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-10T09:09:02.000Z",
+              "updatedAt": "2026-03-11T01:22:34.000Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -536,7 +492,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-03-10",
+              "lastActiveAt": "2026-03-11",
               "isPending": false
             }
           }
@@ -547,7 +503,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-10T12:27:57.599Z",
-  "versionCounter": 31,
-  "versionId": "333bdae3-6f66-4c98-880d-54c8779fac29"
+  "updatedAt": "2026-03-11T03:56:31.948Z",
+  "versionCounter": 34,
+  "versionId": "560ee4f2-b0fd-4b5f-b41c-bcb52d60c952"
 }
