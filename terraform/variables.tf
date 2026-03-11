@@ -79,3 +79,9 @@ variable "n8n_encryption_key" {
   type        = string
   sensitive   = true
 }
+
+variable "allowed_ips" {
+  description = "アクセスを許可する IP アドレスのリスト (CIDR 形式, 例: [\"203.0.113.10/32\"])"
+  type        = list(string)
+  default     = []
+}

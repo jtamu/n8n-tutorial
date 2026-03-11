@@ -31,6 +31,10 @@ runcmd:
   - |
     cat > /opt/n8n/Caddyfile << 'CADDY'
     ${n8n_domain} {
+%{ if length(allowed_ips) > 0 ~}
+      @blocked not remote_ip ${join(" ", allowed_ips)}
+      respond @blocked 403
+%{ endif ~}
       reverse_proxy n8n:5678
     }
     CADDY

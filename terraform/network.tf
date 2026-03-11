@@ -58,36 +58,45 @@ resource "oci_core_security_list" "n8n_sl" {
     }
   }
 
-  # HTTP (Caddy リバースプロキシ)
-  ingress_security_rules {
-    protocol = "6"
-    source   = "0.0.0.0/0"
+  # HTTP (Caddy リバースプロキシ) - allowed_ips が空の場合は全開放
+  dynamic "ingress_security_rules" {
+    for_each = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
 
-    tcp_options {
-      min = 80
-      max = 80
+      tcp_options {
+        min = 80
+        max = 80
+      }
     }
   }
 
-  # HTTPS
-  ingress_security_rules {
-    protocol = "6"
-    source   = "0.0.0.0/0"
+  # HTTPS - allowed_ips が空の場合は全開放
+  dynamic "ingress_security_rules" {
+    for_each = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
 
-    tcp_options {
-      min = 443
-      max = 443
+      tcp_options {
+        min = 443
+        max = 443
+      }
     }
   }
 
-  # n8n 直接アクセス (ドメイン未設定時の確認用)
-  ingress_security_rules {
-    protocol = "6"
-    source   = "0.0.0.0/0"
+  # n8n 直接アクセス (ドメイン未設定時の確認用) - allowed_ips が空の場合は全開放
+  dynamic "ingress_security_rules" {
+    for_each = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
 
-    tcp_options {
-      min = 5678
-      max = 5678
+      tcp_options {
+        min = 5678
+        max = 5678
+      }
     }
   }
 
