@@ -6,6 +6,7 @@ packages:
   - docker
   - docker-compose
   - firewalld
+  - git
 
 runcmd:
   # Docker を有効化・起動
@@ -21,61 +22,40 @@ runcmd:
   - firewall-cmd --permanent --add-port=5678/tcp
   - firewall-cmd --reload
 
-  # n8n 用ディレクトリ作成
-  - mkdir -p /opt/n8n
-  - chown opc:opc /opt/n8n
+  # リポジトリをクローン
+  - git clone https://github.com/jtamu/n8n-tutorial.git /opt/n8n
+  - chown -R opc:opc /opt/n8n
 
-  # docker-compose.yml を生成
-  - |
-    cat > /opt/n8n/docker-compose.yml << 'COMPOSE'
-    services:
-      n8n:
-        image: n8nio/n8n:latest
-        container_name: n8n
-        restart: unless-stopped
-        ports:
-          - "5678:5678"
-        environment:
-          - N8N_HOST=${n8n_domain != "" ? n8n_domain : "0.0.0.0"}
-          - N8N_PORT=5678
-          - N8N_PROTOCOL=${n8n_domain != "" ? "https" : "http"}
-          - WEBHOOK_URL=${n8n_domain != "" ? "https://${n8n_domain}/" : ""}
-          - GENERIC_TIMEZONE=Asia/Tokyo
-          - TZ=Asia/Tokyo
-        volumes:
-          - n8n_data:/home/node/.n8n
-
-    %{ if n8n_domain != "" ~}
-      caddy:
-        image: caddy:2-alpine
-        container_name: caddy
-        restart: unless-stopped
-        ports:
-          - "80:80"
-          - "443:443"
-        volumes:
-          - /opt/n8n/Caddyfile:/etc/caddy/Caddyfile
-          - caddy_data:/data
-          - caddy_config:/config
-    %{ endif ~}
-
-    volumes:
-      n8n_data:
-    %{ if n8n_domain != "" ~}
-      caddy_data:
-      caddy_config:
-    %{ endif ~}
-    COMPOSE
-
-  # Caddy 設定 (ドメインが指定されている場合)
-  %{ if n8n_domain != "" ~}
+  # Caddyfile を配置 (ドメインが指定されている場合)
+%{ if n8n_domain != "" ~}
   - |
     cat > /opt/n8n/Caddyfile << 'CADDY'
     ${n8n_domain} {
       reverse_proxy n8n:5678
     }
     CADDY
-  %{ endif ~}
+%{ endif ~}
+
+  # 本番用 .env を配置
+  - |
+    cat > /opt/n8n/.env.prod << 'ENVFILE'
+    N8N_ENCRYPTION_KEY=${n8n_encryption_key}
+    GENERIC_TIMEZONE=Asia/Tokyo
+    TZ=Asia/Tokyo
+    NODE_FUNCTION_ALLOW_EXTERNAL=pdfmake
+%{ if n8n_domain != "" ~}
+    N8N_HOST=${n8n_domain}
+    N8N_PROTOCOL=https
+    WEBHOOK_URL=https://${n8n_domain}/
+%{ else ~}
+    N8N_HOST=0.0.0.0
+    N8N_PROTOCOL=http
+%{ endif ~}
+    ENVFILE
 
   # n8n を起動
+%{ if n8n_domain != "" ~}
+  - cd /opt/n8n && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+%{ else ~}
   - cd /opt/n8n && docker compose up -d
+%{ endif ~}

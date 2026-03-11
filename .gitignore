@@ -1,2 +1,7 @@
 .env
+.env.prod
 .mcp.json
+Caddyfile
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate*

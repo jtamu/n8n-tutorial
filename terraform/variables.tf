@@ -73,3 +73,9 @@ variable "n8n_domain" {
   type        = string
   default     = ""
 }
+
+variable "n8n_encryption_key" {
+  description = "n8n のワークフロー認証情報を暗号化するキー"
+  type        = string
+  sensitive   = true
+}

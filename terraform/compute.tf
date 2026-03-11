@@ -40,7 +40,8 @@ resource "oci_core_instance" "n8n_instance" {
   metadata = {
     ssh_authorized_keys = file(var.ssh_public_key_path)
     user_data           = base64encode(templatefile("${path.module}/cloud-init.yaml", {
-      n8n_domain = var.n8n_domain
+      n8n_domain          = var.n8n_domain
+      n8n_encryption_key  = var.n8n_encryption_key
     }))
   }
 }
