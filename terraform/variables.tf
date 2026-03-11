@@ -85,3 +85,17 @@ variable "allowed_ips" {
   type        = list(string)
   default     = []
 }
+
+# ============================================================
+# Cloudflare 設定
+# ============================================================
+variable "cloudflare_api_token" {
+  description = "Cloudflare API トークン (DNS 編集権限が必要)"
+  type        = string
+  sensitive   = true
+}
+
+variable "cloudflare_zone_id" {
+  description = "Cloudflare の jtamu.com ゾーン ID"
+  type        = string
+}

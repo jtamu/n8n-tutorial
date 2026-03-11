@@ -41,3 +41,12 @@ n8n_encryption_key = "CHANGE_ME"
 # ============================================================
 allowed_ips = []
 # allowed_ips = ["203.0.113.10/32", "198.51.100.0/24"]
+
+# ============================================================
+# Cloudflare 設定
+# Cloudflare ダッシュボード → jtamu.com → 概要 → ゾーン ID から取得
+# API トークン: Cloudflare ダッシュボード → プロファイル → API トークン
+#   権限: Zone - DNS - Edit
+# ============================================================
+cloudflare_api_token = "your-cloudflare-api-token"
+cloudflare_zone_id   = "your-zone-id"
