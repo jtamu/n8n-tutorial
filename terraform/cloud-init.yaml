@@ -1,0 +1,81 @@
+#cloud-config
+
+package_update: true
+
+packages:
+  - docker
+  - docker-compose
+  - firewalld
+
+runcmd:
+  # Docker を有効化・起動
+  - systemctl enable docker
+  - systemctl start docker
+
+  # opc ユーザーを docker グループに追加
+  - usermod -aG docker opc
+
+  # ファイアウォール設定
+  - firewall-cmd --permanent --add-port=80/tcp
+  - firewall-cmd --permanent --add-port=443/tcp
+  - firewall-cmd --permanent --add-port=5678/tcp
+  - firewall-cmd --reload
+
+  # n8n 用ディレクトリ作成
+  - mkdir -p /opt/n8n
+  - chown opc:opc /opt/n8n
+
+  # docker-compose.yml を生成
+  - |
+    cat > /opt/n8n/docker-compose.yml << 'COMPOSE'
+    services:
+      n8n:
+        image: n8nio/n8n:latest
+        container_name: n8n
+        restart: unless-stopped
+        ports:
+          - "5678:5678"
+        environment:
+          - N8N_HOST=${n8n_domain != "" ? n8n_domain : "0.0.0.0"}
+          - N8N_PORT=5678
+          - N8N_PROTOCOL=${n8n_domain != "" ? "https" : "http"}
+          - WEBHOOK_URL=${n8n_domain != "" ? "https://${n8n_domain}/" : ""}
+          - GENERIC_TIMEZONE=Asia/Tokyo
+          - TZ=Asia/Tokyo
+        volumes:
+          - n8n_data:/home/node/.n8n
+
+    %{ if n8n_domain != "" ~}
+      caddy:
+        image: caddy:2-alpine
+        container_name: caddy
+        restart: unless-stopped
+        ports:
+          - "80:80"
+          - "443:443"
+        volumes:
+          - /opt/n8n/Caddyfile:/etc/caddy/Caddyfile
+          - caddy_data:/data
+          - caddy_config:/config
+    %{ endif ~}
+
+    volumes:
+      n8n_data:
+    %{ if n8n_domain != "" ~}
+      caddy_data:
+      caddy_config:
+    %{ endif ~}
+    COMPOSE
+
+  # Caddy 設定 (ドメインが指定されている場合)
+  %{ if n8n_domain != "" ~}
+  - |
+    cat > /opt/n8n/Caddyfile << 'CADDY'
+    ${n8n_domain} {
+      reverse_proxy n8n:5678
+    }
+    CADDY
+  %{ endif ~}
+
+  # n8n を起動
+  - cd /opt/n8n && docker compose up -d
