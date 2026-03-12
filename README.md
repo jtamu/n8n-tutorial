@@ -1,6 +1,6 @@
 # n8n-tutorial
 
-n8n のローカル開発環境と Oracle Cloud (Always Free) へのデプロイ環境を提供します。
+n8n のローカル開発環境と Google Cloud (Always Free) へのデプロイ環境を提供します。
 
 ## ローカル起動
 
@@ -10,44 +10,41 @@ docker compose up -d
 
 http://localhost:5678 でアクセスできます。
 
-## Oracle Cloud へのデプロイ
+## Google Cloud へのデプロイ
 
 ### 前提条件
 
-- [Terraform](https://developer.hashicorp.com/terraform/install) (>= 1.5.0)
-- [Oracle Cloud](https://cloud.oracle.com) の Always Free アカウント
+- [Terraform](https://developer.hashicorp.com/terraform/install) (>= 1.0)
+- [gcloud CLI](https://cloud.google.com/sdk/docs/install)
+- [Google Cloud](https://cloud.google.com) アカウント
 - SSH キーペア (`~/.ssh/id_rsa.pub`)
 
-### 1. OCI API キーの作成
+### 1. GCP プロジェクトの準備
 
 ```bash
-mkdir -p ~/.oci
-openssl genrsa -out ~/.oci/oci_api_key.pem 2048
-openssl rsa -pubout -in ~/.oci/oci_api_key.pem -out ~/.oci/oci_api_key_public.pem
-chmod 600 ~/.oci/oci_api_key.pem
+# プロジェクトを作成 (既存のプロジェクトを使う場合はスキップ)
+gcloud projects create my-n8n-project
+
+# プロジェクトを設定
+gcloud config set project my-n8n-project
+
+# Compute Engine API を有効化
+gcloud services enable compute.googleapis.com
+
+# Terraform 用の認証
+gcloud auth application-default login
 ```
 
-OCI コンソール → **プロファイル** → **API キー** → **公開キーの追加** で `oci_api_key_public.pem` の内容を登録します。
-
-### 2. OCID の確認
-
-| 値 | 確認場所 |
-|---|---|
-| `tenancy_ocid` | OCI コンソール → プロファイル → テナンシー |
-| `user_ocid` | OCI コンソール → プロファイル → ユーザー設定 |
-| `fingerprint` | API キー追加時に表示 |
-| `compartment_ocid` | ルートコンパートメントなら `tenancy_ocid` と同じ |
-
-### 3. Terraform 設定
+### 2. Terraform 設定
 
 ```bash
 cd terraform
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-`terraform.tfvars` を自分の環境に合わせて編集します。
+`terraform.tfvars` を自分の環境に合わせて編集します。最低限 `gcp_project_id` の設定が必要です。
 
-### 4. デプロイ
+### 3. デプロイ
 
 ```bash
 terraform init
@@ -58,16 +55,16 @@ terraform apply
 完了すると以下が出力されます:
 
 ```
-instance_public_ip = "129.xx.xx.xx"
-n8n_url            = "http://129.xx.xx.xx:5678"
-ssh_command        = "ssh opc@129.xx.xx.xx"
+instance_public_ip = "34.xx.xx.xx"
+n8n_url            = "http://34.xx.xx.xx:5678"
+ssh_command        = "ssh n8n@34.xx.xx.xx"
 ```
 
-### 5. 動作確認
+### 4. 動作確認
 
 ```bash
 # cloud-init の完了を待つ (2〜3分)
-ssh opc@<IP>
+ssh n8n@<IP>
 sudo cloud-init status --wait
 
 # コンテナの確認
@@ -76,7 +73,7 @@ docker ps
 
 ブラウザで `http://<IP>:5678` にアクセスして n8n の初期設定画面が表示されれば完了です。
 
-### 6. (任意) ドメイン + HTTPS
+### 5. (任意) ドメイン + HTTPS
 
 ドメインを持っている場合、Caddy による自動 HTTPS を利用できます。
 
@@ -93,4 +90,6 @@ terraform destroy
 
 ### Always Free スペック
 
-デフォルトでは ARM 1 OCPU / 6GB RAM を使用しています。`terraform.tfvars` で最大 4 OCPU / 24GB RAM まで無料枠内で変更可能です。
+e2-micro インスタンス (0.25 vCPU / 1GB RAM / 30GB ディスク) を使用しています。メモリが少ないため、cloud-init で 1GB の swap を自動設定しています。
+
+Always Free 対象リージョン: `us-west1`, `us-central1`, `us-east1`

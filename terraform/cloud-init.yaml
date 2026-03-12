@@ -3,28 +3,29 @@
 package_update: true
 
 packages:
-  - docker
+  - docker.io
   - docker-compose
-  - firewalld
   - git
+
+# ============================================================
+# swap 設定 (e2-micro は 1GB RAM のため必須)
+# ============================================================
+swap:
+  filename: /swapfile
+  size: 1073741824  # 1GB
+  maxsize: 1073741824
 
 runcmd:
   # Docker を有効化・起動
   - systemctl enable docker
   - systemctl start docker
 
-  # opc ユーザーを docker グループに追加
-  - usermod -aG docker opc
-
-  # ファイアウォール設定
-  - firewall-cmd --permanent --add-port=80/tcp
-  - firewall-cmd --permanent --add-port=443/tcp
-  - firewall-cmd --permanent --add-port=5678/tcp
-  - firewall-cmd --reload
+  # n8n ユーザーを docker グループに追加
+  - usermod -aG docker n8n
 
   # リポジトリをクローン
   - git clone https://github.com/jtamu/n8n-tutorial.git /opt/n8n
-  - chown -R opc:opc /opt/n8n
+  - chown -R n8n:n8n /opt/n8n
 
   # Caddyfile を配置 (ドメインが指定されている場合)
 %{ if n8n_domain != "" ~}

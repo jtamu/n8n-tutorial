@@ -1,29 +1,20 @@
 # ============================================================
-# OCI 認証情報
-# OCI コンソール → プロファイル → API キー から取得
+# GCP 設定
+# GCP コンソール → プロジェクト設定 から取得
 # ============================================================
-tenancy_ocid     = "ocid1.tenancy.oc1..xxxxxxxxxxxx"
-user_ocid        = "ocid1.user.oc1..xxxxxxxxxxxx"
-fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
-private_key_path = "~/.oci/oci_api_key.pem"
-compartment_ocid = "ocid1.tenancy.oc1..xxxxxxxxxxxx"  # ルートコンパートメントの場合は tenancy_ocid と同じ
+gcp_project_id = "your-gcp-project-id"
 
 # ============================================================
-# リージョン
+# リージョン (Always Free 対象: us-west1, us-central1, us-east1)
 # ============================================================
-region = "ap-tokyo-1"  # 東京リージョン
+gcp_region = "us-west1"
+gcp_zone   = "us-west1-b"
 
 # ============================================================
 # SSH キー
 # ============================================================
 ssh_public_key_path = "~/.ssh/id_rsa.pub"
-
-# ============================================================
-# インスタンスサイズ (Always Free 範囲内)
-# ============================================================
-instance_ocpus          = 1   # 最大 4 OCPU
-instance_memory_in_gbs  = 6   # 最大 24 GB (OCPU x 6)
-boot_volume_size_in_gbs = 50  # 最大 200 GB (合計)
+ssh_user            = "n8n"
 
 # ============================================================
 # n8n ドメイン (空 = IP 直アクセス、設定すると Caddy で自動 HTTPS)

@@ -1,121 +1,61 @@
 # ============================================================
-# VCN (Virtual Cloud Network)
+# VPC ネットワーク
 # ============================================================
-resource "oci_core_vcn" "n8n_vcn" {
-  compartment_id = var.compartment_ocid
-  cidr_blocks    = ["10.0.0.0/16"]
-  display_name   = "n8n-vcn"
-  dns_label      = "n8nvcn"
+resource "google_compute_network" "n8n_vpc" {
+  name                    = "n8n-vpc"
+  auto_create_subnetworks = false
 }
 
 # ============================================================
-# Internet Gateway
+# サブネット
 # ============================================================
-resource "oci_core_internet_gateway" "n8n_igw" {
-  compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_vcn.n8n_vcn.id
-  display_name   = "n8n-igw"
-  enabled        = true
+resource "google_compute_subnetwork" "n8n_subnet" {
+  name          = "n8n-subnet"
+  ip_cidr_range = "10.0.1.0/24"
+  network       = google_compute_network.n8n_vpc.id
 }
 
 # ============================================================
-# Route Table
+# ファイアウォールルール
 # ============================================================
-resource "oci_core_route_table" "n8n_rt" {
-  compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_vcn.n8n_vcn.id
-  display_name   = "n8n-rt"
 
-  route_rules {
-    destination       = "0.0.0.0/0"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = oci_core_internet_gateway.n8n_igw.id
+# SSH
+resource "google_compute_firewall" "allow_ssh" {
+  name    = "n8n-allow-ssh"
+  network = google_compute_network.n8n_vpc.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
   }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["n8n-server"]
 }
 
-# ============================================================
-# Security List
-# ============================================================
-resource "oci_core_security_list" "n8n_sl" {
-  compartment_id = var.compartment_ocid
-  vcn_id         = oci_core_vcn.n8n_vcn.id
-  display_name   = "n8n-security-list"
+# HTTP/HTTPS/n8n - allowed_ips が空の場合は全開放
+resource "google_compute_firewall" "allow_web" {
+  name    = "n8n-allow-web"
+  network = google_compute_network.n8n_vpc.name
 
-  # Egress: すべて許可
-  egress_security_rules {
-    protocol    = "all"
-    destination = "0.0.0.0/0"
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "443", "5678"]
   }
 
-  # SSH
-  ingress_security_rules {
-    protocol = "6" # TCP
-    source   = "0.0.0.0/0"
-
-    tcp_options {
-      min = 22
-      max = 22
-    }
-  }
-
-  # HTTP (Caddy リバースプロキシ) - allowed_ips が空の場合は全開放
-  dynamic "ingress_security_rules" {
-    for_each = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
-    content {
-      protocol = "6"
-      source   = ingress_security_rules.value
-
-      tcp_options {
-        min = 80
-        max = 80
-      }
-    }
-  }
-
-  # HTTPS - allowed_ips が空の場合は全開放
-  dynamic "ingress_security_rules" {
-    for_each = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
-    content {
-      protocol = "6"
-      source   = ingress_security_rules.value
-
-      tcp_options {
-        min = 443
-        max = 443
-      }
-    }
-  }
-
-  # n8n 直接アクセス (ドメイン未設定時の確認用) - allowed_ips が空の場合は全開放
-  dynamic "ingress_security_rules" {
-    for_each = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
-    content {
-      protocol = "6"
-      source   = ingress_security_rules.value
-
-      tcp_options {
-        min = 5678
-        max = 5678
-      }
-    }
-  }
-
-  # ICMP
-  ingress_security_rules {
-    protocol = "1" # ICMP
-    source   = "0.0.0.0/0"
-  }
+  source_ranges = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
+  target_tags   = ["n8n-server"]
 }
 
-# ============================================================
-# Subnet
-# ============================================================
-resource "oci_core_subnet" "n8n_subnet" {
-  compartment_id    = var.compartment_ocid
-  vcn_id            = oci_core_vcn.n8n_vcn.id
-  cidr_block        = "10.0.1.0/24"
-  display_name      = "n8n-subnet"
-  dns_label         = "n8nsub"
-  route_table_id    = oci_core_route_table.n8n_rt.id
-  security_list_ids = [oci_core_security_list.n8n_sl.id]
+# ICMP
+resource "google_compute_firewall" "allow_icmp" {
+  name    = "n8n-allow-icmp"
+  network = google_compute_network.n8n_vpc.name
+
+  allow {
+    protocol = "icmp"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["n8n-server"]
 }
