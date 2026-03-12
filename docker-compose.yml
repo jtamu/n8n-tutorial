@@ -11,6 +11,11 @@ services:
       - n8n_data:/home/node/.n8n
       - ./workflows:/home/node/workflows
 
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: gotenberg_local
+    restart: unless-stopped
+
 volumes:
   n8n_data:
     # 外部ボリュームを使用する場合などは、ここに設定を追加

@@ -19,6 +19,11 @@ services:
       - caddy_data:/data
       - caddy_config:/config
 
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: gotenberg
+    restart: unless-stopped
+
 volumes:
   n8n_data:
   caddy_data:
