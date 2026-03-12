@@ -7,5 +7,5 @@ resource "cloudflare_record" "n8n" {
   content = google_compute_instance.n8n_instance.network_interface[0].access_config[0].nat_ip
   type    = "A"
   ttl     = 1 # Auto
-  proxied = false
+  proxied = true
 }

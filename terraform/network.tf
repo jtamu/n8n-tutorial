@@ -33,14 +33,28 @@ resource "google_compute_firewall" "allow_ssh" {
   target_tags   = ["n8n-server"]
 }
 
-# HTTP/HTTPS/n8n - allowed_ips が空の場合は全開放
-resource "google_compute_firewall" "allow_web" {
-  name    = "n8n-allow-web"
+# HTTP/HTTPS - ACME チャレンジのため全 IP 許可 (Caddy がアプリレベルで IP 制限)
+resource "google_compute_firewall" "allow_http" {
+  name    = "n8n-allow-http"
   network = google_compute_network.n8n_vpc.name
 
   allow {
     protocol = "tcp"
-    ports    = ["80", "443", "5678"]
+    ports    = ["80", "443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["n8n-server"]
+}
+
+# n8n 直アクセス - allowed_ips が空の場合は全開放
+resource "google_compute_firewall" "allow_n8n" {
+  name    = "n8n-allow-n8n"
+  network = google_compute_network.n8n_vpc.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["5678"]
   }
 
   source_ranges = length(var.allowed_ips) > 0 ? var.allowed_ips : ["0.0.0.0/0"]
