@@ -3,8 +3,9 @@
 package_update: true
 
 packages:
-  - docker.io
-  - docker-compose
+  - ca-certificates
+  - curl
+  - gnupg
   - git
 
 # ============================================================
@@ -16,6 +17,15 @@ swap:
   maxsize: 1073741824
 
 runcmd:
+  # Docker 公式リポジトリからインストール
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - |
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" > /etc/apt/sources.list.d/docker.list
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
   # Docker を有効化・起動
   - systemctl enable docker
   - systemctl start docker
@@ -41,22 +51,26 @@ runcmd:
     CADDY
 %{ endif ~}
 
-  # 本番用 .env を配置
+  # .env を配置 (docker-compose.yml が参照)
   - |
-    cat > /opt/n8n/.env.prod << 'ENVFILE'
+    cat > /opt/n8n/.env << 'ENVFILE'
     N8N_ENCRYPTION_KEY=${n8n_encryption_key}
     GENERIC_TIMEZONE=Asia/Tokyo
     TZ=Asia/Tokyo
     NODE_FUNCTION_ALLOW_EXTERNAL=pdfmake
+    N8N_HOST=0.0.0.0
+    N8N_PROTOCOL=http
+    ENVFILE
+
+  # .env.prod を配置 (docker-compose.prod.yml が参照、ドメインありの場合のみ)
 %{ if n8n_domain != "" ~}
+  - |
+    cat > /opt/n8n/.env.prod << 'ENVFILE'
     N8N_HOST=${n8n_domain}
     N8N_PROTOCOL=https
     WEBHOOK_URL=https://${n8n_domain}/
-%{ else ~}
-    N8N_HOST=0.0.0.0
-    N8N_PROTOCOL=http
-%{ endif ~}
     ENVFILE
+%{ endif ~}
 
   # n8n を起動
 %{ if n8n_domain != "" ~}
