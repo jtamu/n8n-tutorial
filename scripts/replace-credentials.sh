@@ -27,7 +27,8 @@ jq --argjson cred_map "$CRED_MAP" '
         else
           empty
         end
-      )
+      ) |
+      if .credentials == {} then del(.credentials) else . end
     else
       .
     end
