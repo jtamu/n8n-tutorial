@@ -29,4 +29,4 @@ jobs:
         run: |
           gcloud compute ssh n8n-server \
             --zone=${{ secrets.GCE_ZONE }} \
-            --command="cd /opt/n8n && sudo -u n8n git pull && sudo -u n8n docker compose exec -T n8n n8n import:workflow --separate --input=./workflows/"
+            --command="cd /opt/n8n && sudo -u n8n git pull && sudo -u n8n make backup-credentials import"
