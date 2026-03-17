@@ -81,6 +81,40 @@ docker ps
 2. `terraform.tfvars` で `n8n_domain = "n8n.example.com"` を設定
 3. `terraform apply` を再実行
 
+### 6. (任意) GitHub Actions 自動デプロイ
+
+`workflows/` ディレクトリの変更を main ブランチに push すると、自動で本番サーバーにデプロイされます。GCP Workload Identity Federation によるキーレス認証を使用しており、GitHub Secrets に機密情報を保存する必要はありません。
+
+#### 6-1. Terraform apply
+
+`terraform.tfvars` で `github_repo` を設定し、apply します。
+
+```bash
+cd terraform
+terraform apply
+```
+
+#### 6-2. Terraform output の確認
+
+```bash
+terraform output workload_identity_provider
+terraform output github_actions_service_account
+```
+
+#### 6-3. GitHub Secrets の登録
+
+リポジトリの Settings → Secrets and variables → Actions で以下を登録します。
+
+| Secret 名 | 値 |
+|---|---|
+| `WIF_PROVIDER` | `workload_identity_provider` の出力値 |
+| `WIF_SERVICE_ACCOUNT` | `github_actions_service_account` の出力値 |
+| `GCE_ZONE` | `us-west1-b` (terraform.tfvars の `gcp_zone` と同じ値) |
+
+#### 6-4. 動作確認
+
+`workflows/` 配下のファイルを変更して main に push するか、GitHub Actions 画面の「Run workflow」ボタンで手動実行します。
+
 ### インフラの削除
 
 ```bash

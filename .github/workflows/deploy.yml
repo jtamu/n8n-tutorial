@@ -1,0 +1,32 @@
+name: Deploy workflows
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "workflows/**"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to n8n server
+        run: |
+          gcloud compute ssh n8n-server \
+            --zone=${{ secrets.GCE_ZONE }} \
+            --command="cd /opt/n8n && sudo -u n8n git pull && sudo -u n8n docker compose exec -T n8n n8n import:workflow --separate --input=./workflows/"

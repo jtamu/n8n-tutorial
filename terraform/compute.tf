@@ -24,7 +24,8 @@ resource "google_compute_instance" "n8n_instance" {
   }
 
   metadata = {
-    ssh-keys = "${var.ssh_user}:${file(var.ssh_public_key_path)}"
+    ssh-keys       = "${var.ssh_user}:${file(var.ssh_public_key_path)}"
+    enable-oslogin = "TRUE"
     user-data = templatefile("${path.module}/cloud-init.yaml", {
       n8n_domain         = var.n8n_domain
       n8n_encryption_key = var.n8n_encryption_key
