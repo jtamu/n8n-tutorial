@@ -8,7 +8,7 @@ import:
 	for f in workflows/*.json; do \
 		./scripts/replace-credentials.sh credentials.json "$$f" > "/tmp/n8n-import/$$(basename $$f)"; \
 	done && \
-	docker cp /tmp/n8n-import n8n_local:/tmp/n8n-import && \
+	docker cp /tmp/n8n-import n8n:/tmp/n8n-import && \
 	docker compose exec n8n n8n import:workflow --separate --input=/tmp/n8n-import/ && \
 	rm -rf /tmp/n8n-import
 ssh:

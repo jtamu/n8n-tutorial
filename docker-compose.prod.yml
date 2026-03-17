@@ -1,7 +1,5 @@
 services:
   n8n:
-    container_name: n8n
-    restart: unless-stopped
     env_file:
       - .env.prod
     volumes:
@@ -19,12 +17,6 @@ services:
       - caddy_data:/data
       - caddy_config:/config
 
-  gotenberg:
-    image: gotenberg/gotenberg:8
-    container_name: gotenberg
-    restart: unless-stopped
-
 volumes:
-  n8n_data:
   caddy_data:
   caddy_config:

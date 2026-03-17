@@ -1,21 +1,20 @@
 services:
   n8n:
-    image: n8nio/n8n:latest # 最新版のn8nイメージを指定
-    container_name: n8n_local # コンテナ名を指定 (任意)
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
     ports:
-      - "5678:5678" # ホストOSの5678番ポートをコンテナの5678番ポートに接続
+      - "5678:5678"
     env_file:
       - .env
     volumes:
-      # n8nの設定データやワークフローデータを永続化するためのボリューム
       - n8n_data:/home/node/.n8n
       - ./workflows:/home/node/workflows
 
   gotenberg:
     image: gotenberg/gotenberg:8
-    container_name: gotenberg_local
+    container_name: gotenberg
     restart: unless-stopped
 
 volumes:
   n8n_data:
-    # 外部ボリュームを使用する場合などは、ここに設定を追加
