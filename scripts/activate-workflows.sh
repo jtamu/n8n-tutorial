@@ -15,7 +15,7 @@ fi
 failed=0
 for id in $ACTIVE_IDS; do
   echo "Activating workflow $id..."
-  if docker compose exec -T n8n n8n update:workflow --id="$id" --active=true 2>&1; then
+  if docker compose exec -T n8n n8n publish:workflow --id="$id" 2>&1; then
     echo "  OK"
   else
     echo "  FAILED to activate $id"
