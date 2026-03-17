@@ -54,3 +54,10 @@ resource "google_project_iam_member" "github_actions_sa_user" {
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.github_actions.email}"
 }
+
+# gcloud compute ssh がインスタンスメタデータに SSH 鍵を登録するために必要
+resource "google_project_iam_member" "github_actions_compute_admin" {
+  project = var.gcp_project_id
+  role    = "roles/compute.instanceAdmin.v1"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
