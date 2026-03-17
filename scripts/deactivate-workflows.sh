@@ -13,7 +13,11 @@ if [ -z "$N8N_API_KEY" ]; then
 fi
 
 # APIからactiveなワークフロー一覧を取得
-ACTIVE_IDS=$(curl -s -H "X-N8N-API-KEY: $N8N_API_KEY" "$N8N_URL/api/v1/workflows?active=true&limit=250" | jq -r '.data[].id')
+RESPONSE=$(curl -s -f -H "X-N8N-API-KEY: $N8N_API_KEY" "$N8N_URL/api/v1/workflows?active=true&limit=250") || {
+  echo "ERROR: Failed to fetch workflows from $N8N_URL"
+  exit 1
+}
+ACTIVE_IDS=$(echo "$RESPONSE" | jq -r '.data[].id')
 
 if [ -z "$ACTIVE_IDS" ]; then
   echo "No active workflows to deactivate."
