@@ -73,9 +73,17 @@ for f in workflows/*.json; do
   ' "$f")
 
   # 既存ワークフローの存在確認
-  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${API_HEADER[@]}" "$N8N_URL/api/v1/workflows/$WORKFLOW_ID")
+  EXISTING=$(curl -s -w "\n%{http_code}" "${API_HEADER[@]}" "$N8N_URL/api/v1/workflows/$WORKFLOW_ID")
+  HTTP_CODE=$(echo "$EXISTING" | tail -1)
 
   if [ "$HTTP_CODE" = "200" ]; then
+    # アーカイブ済みワークフローはスキップ
+    IS_ARCHIVED=$(echo "$EXISTING" | sed '$d' | jq -r '.isArchived // false')
+    if [ "$IS_ARCHIVED" = "true" ]; then
+      echo "  Skipping (archived): $WORKFLOW_NAME ($WORKFLOW_ID)"
+      continue
+    fi
+
     # 既存 → PUT で更新
     echo "  Updating: $WORKFLOW_NAME ($WORKFLOW_ID)..."
     RESULT=$(curl -s -w "\n%{http_code}" -X PUT "${API_HEADER[@]}" \
