@@ -110,6 +110,8 @@ terraform output github_actions_service_account
 | `WIF_PROVIDER` | `workload_identity_provider` の出力値 |
 | `WIF_SERVICE_ACCOUNT` | `github_actions_service_account` の出力値 |
 | `GCE_ZONE` | `us-west1-b` (terraform.tfvars の `gcp_zone` と同じ値) |
+| `N8N_URL` | n8n のURL (例: `https://n8n.example.com`) |
+| `N8N_API_KEY` | n8n の API キー (Settings → API で生成) |
 
 #### 6-4. 動作確認
 

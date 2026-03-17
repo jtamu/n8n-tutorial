@@ -29,4 +29,4 @@ jobs:
         run: |
           gcloud compute ssh n8n-server \
             --zone=${{ secrets.GCE_ZONE }} \
-            --command="cd /opt/n8n && sudo -u n8n git pull && sudo -u n8n make backup-credentials import"
+            --command="cd /opt/n8n && sudo -u n8n git pull && sudo -u n8n N8N_URL=${{ secrets.N8N_URL }} N8N_API_KEY=${{ secrets.N8N_API_KEY }} make backup-credentials import"
