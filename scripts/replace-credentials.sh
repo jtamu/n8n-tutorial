@@ -24,7 +24,7 @@ jq --argjson cred_map "$CRED_MAP" '
         if $cred_map[$lookup_key] then
           .value.id = $cred_map[$lookup_key]
         else
-          .
+          empty
         end
       )
     else
