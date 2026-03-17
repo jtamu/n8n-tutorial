@@ -5,7 +5,7 @@
 # 処理の流れ:
 #   1. 全activeワークフローをdeactivate
 #   2. 各ワークフローをPUT(既存)またはPOST(新規)でインポート
-#   3. 元々activeだったワークフローをactivate
+#   3. Step 1で無効化したワークフローを再度activate
 
 set -euo pipefail
 
@@ -30,10 +30,10 @@ RESPONSE=$(curl -s -f "${API_HEADER[@]}" "$N8N_URL/api/v1/workflows?active=true&
   echo "ERROR: Failed to fetch workflows from $N8N_URL"
   exit 1
 }
-ACTIVE_IDS=$(echo "$RESPONSE" | jq -r '.data[].id')
+DEACTIVATED_IDS=$(echo "$RESPONSE" | jq -r '.data[].id')
 
-if [ -n "$ACTIVE_IDS" ]; then
-  for id in $ACTIVE_IDS; do
+if [ -n "$DEACTIVATED_IDS" ]; then
+  for id in $DEACTIVATED_IDS; do
     echo "  Deactivating $id..."
     curl -s -X PATCH "${API_HEADER[@]}" \
       -d '{"active": false}' "$N8N_URL/api/v1/workflows/$id" > /dev/null
@@ -106,12 +106,11 @@ for f in workflows/*.json; do
   fi
 done
 
-# --- Step 3: Activate workflows ---
-echo "=== Step 3: Activating workflows ==="
-ACTIVATE_IDS=$(jq -r 'select(.active == true) | .id' workflows/*.json)
+# --- Step 3: Re-activate workflows that were active before import ---
+echo "=== Step 3: Re-activating previously active workflows ==="
 
-if [ -n "$ACTIVATE_IDS" ]; then
-  for id in $ACTIVATE_IDS; do
+if [ -n "$DEACTIVATED_IDS" ]; then
+  for id in $DEACTIVATED_IDS; do
     echo "  Activating $id..."
     if curl -s -X PATCH "${API_HEADER[@]}" \
       -d '{"active": true}' "$N8N_URL/api/v1/workflows/$id" > /dev/null; then
@@ -122,7 +121,7 @@ if [ -n "$ACTIVATE_IDS" ]; then
     fi
   done
 else
-  echo "  No workflows to activate."
+  echo "  No workflows to re-activate."
 fi
 
 if [ $failed -eq 1 ]; then
