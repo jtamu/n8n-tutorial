@@ -3,9 +3,7 @@
 # CLIのimport:workflowはactiveVersionIdのFK制約エラーを起こすため、APIを使う
 #
 # 処理の流れ:
-#   1. 全activeワークフローをdeactivate
-#   2. 各ワークフローをPUT(既存)またはPOST(新規)でインポート
-#   3. Step 1で無効化したワークフローを再度activate
+#   各ワークフローをPUT(既存)またはPOST(新規)でインポート
 
 set -euo pipefail
 
@@ -19,27 +17,8 @@ fi
 
 API_HEADER=(-H "X-N8N-API-KEY: $N8N_API_KEY" -H "Content-Type: application/json")
 
-# --- Step 1: Deactivate all active workflows ---
-echo "=== Step 1: Deactivating active workflows ==="
-RESPONSE=$(curl -s -f "${API_HEADER[@]}" "$N8N_URL/api/v1/workflows?active=true&limit=250") || {
-  echo "ERROR: Failed to fetch workflows from $N8N_URL"
-  exit 1
-}
-DEACTIVATED_IDS=$(echo "$RESPONSE" | jq -r '.data[].id')
-
-if [ -n "$DEACTIVATED_IDS" ]; then
-  for id in $DEACTIVATED_IDS; do
-    echo "  Deactivating $id..."
-    curl -s -X PATCH "${API_HEADER[@]}" \
-      -d '{"active": false}' "$N8N_URL/api/v1/workflows/$id" > /dev/null
-  done
-  echo "  Done."
-else
-  echo "  No active workflows."
-fi
-
-# --- Step 2: Import workflows via API ---
-echo "=== Step 2: Importing workflows ==="
+# --- Import workflows via API ---
+echo "=== Importing workflows ==="
 failed=0
 for f in workflows/*.json; do
   WORKFLOW_ID=$(jq -r '.id' "$f")
@@ -97,24 +76,6 @@ for f in workflows/*.json; do
     failed=1
   fi
 done
-
-# --- Step 3: Re-activate workflows that were active before import ---
-echo "=== Step 3: Re-activating previously active workflows ==="
-
-if [ -n "$DEACTIVATED_IDS" ]; then
-  for id in $DEACTIVATED_IDS; do
-    echo "  Activating $id..."
-    if curl -s -X PATCH "${API_HEADER[@]}" \
-      -d '{"active": true}' "$N8N_URL/api/v1/workflows/$id" > /dev/null; then
-      echo "    OK"
-    else
-      echo "    FAILED to activate $id"
-      failed=1
-    fi
-  done
-else
-  echo "  No workflows to re-activate."
-fi
 
 if [ $failed -eq 1 ]; then
   echo "WARNING: Some operations failed. Check the errors above."
