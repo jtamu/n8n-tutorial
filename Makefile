@@ -4,6 +4,7 @@ backup-credentials:
 
 import:
 	git pull && \
+	./scripts/deactivate-workflows.sh && \
 	mkdir -p /tmp/n8n-import && \
 	for f in workflows/*.json; do \
 		./scripts/replace-credentials.sh credentials.json "$$f" > "/tmp/n8n-import/$$(basename $$f)"; \
