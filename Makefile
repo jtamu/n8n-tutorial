@@ -10,7 +10,8 @@ import:
 	done && \
 	docker cp /tmp/n8n-import n8n:/tmp/n8n-import && \
 	docker compose exec -T n8n n8n import:workflow --separate --input=/tmp/n8n-import/ && \
-	rm -rf /tmp/n8n-import
+	rm -rf /tmp/n8n-import && \
+	./scripts/activate-workflows.sh
 
 ssh:
 	gcloud compute ssh n8n-server --zone=us-west1-b --project=my-n8n-project-jtamu
