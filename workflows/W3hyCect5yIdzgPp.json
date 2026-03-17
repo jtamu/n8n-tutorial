@@ -524,7 +524,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const orderJsonKeys = (jsonObj) => {\n  const ordered = {};\n  Object.keys(jsonObj).sort().forEach(key => {\n    ordered[key] = jsonObj[key];\n  });\n  return ordered;\n}\n\nconst stripOwnerInfo = (jsonStr) => {\n  const obj = JSON.parse(jsonStr);\n  delete obj.shared;\n  return JSON.stringify(obj, null, 2);\n};\n\n// Check if file returned with content\nif (Object.keys($input.all()[0].json).includes(\"content\")) {\n  // Decode base64 content and parse JSON\n  const origWorkflow = JSON.parse(Buffer.from($input.all()[0].json.content, 'base64').toString());\n  const n8nWorkflow = $input.all()[1].json;\n  \n  // Order JSON objects\n  const orderedOriginal = orderJsonKeys(origWorkflow);\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n\n  // Determine difference\n  if (JSON.stringify(orderedOriginal) === JSON.stringify(orderedActual)) {\n    $input.all()[0].json.github_status = \"same\";\n  } else {\n    $input.all()[0].json.github_status = \"different\";\n    $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n    $input.all()[0].json.n8n_data_for_check = stripOwnerInfo($input.all()[0].json.n8n_data_stringy);\n  }\n  $input.all()[0].json.content_decoded = orderedOriginal;\n// No file returned / new workflow\n} else if (Object.keys($input.all()[0].json).includes(\"data\")) {\n  const origWorkflow = JSON.parse($input.all()[0].json.data);\n  const n8nWorkflow = $input.all()[1].json;\n  \n  // Order JSON objects\n  const orderedOriginal = orderJsonKeys(origWorkflow);\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n\n  // Determine difference\n  if (JSON.stringify(orderedOriginal) === JSON.stringify(orderedActual)) {\n    $input.all()[0].json.github_status = \"same\";\n  } else {\n    $input.all()[0].json.github_status = \"different\";\n    $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n    $input.all()[0].json.n8n_data_for_check = stripOwnerInfo($input.all()[0].json.n8n_data_stringy);\n  }\n  $input.all()[0].json.content_decoded = orderedOriginal;\n\n} else {\n  // Order JSON object\n  const n8nWorkflow = $input.all()[1].json;\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n  \n  // Proper formatting\n  $input.all()[0].json.github_status = \"new\";\n  $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n  $input.all()[0].json.n8n_data_for_check = stripOwnerInfo($input.all()[0].json.n8n_data_stringy);\n}\n\n// Return only the first item (with github_status)\nreturn [$input.all()[0]];"
+        "jsCode": "const orderJsonKeys = (jsonObj) => {\n  const ordered = {};\n  Object.keys(jsonObj).sort().forEach(key => {\n    ordered[key] = jsonObj[key];\n  });\n  return ordered;\n}\n\nconst stripOwnerInfo = (jsonStr) => {\n  const obj = JSON.parse(jsonStr);\n  delete obj.shared;\n  delete obj.authors;\n  delete obj.createdBy;\n  delete obj.updatedBy;\n  return JSON.stringify(obj, null, 2);\n};\n\n// Check if file returned with content\nif (Object.keys($input.all()[0].json).includes(\"content\")) {\n  // Decode base64 content and parse JSON\n  const origWorkflow = JSON.parse(Buffer.from($input.all()[0].json.content, 'base64').toString());\n  const n8nWorkflow = $input.all()[1].json;\n  \n  // Order JSON objects\n  const orderedOriginal = orderJsonKeys(origWorkflow);\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n\n  // Determine difference\n  if (JSON.stringify(orderedOriginal) === JSON.stringify(orderedActual)) {\n    $input.all()[0].json.github_status = \"same\";\n  } else {\n    $input.all()[0].json.github_status = \"different\";\n    $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n    $input.all()[0].json.n8n_data_for_check = stripOwnerInfo($input.all()[0].json.n8n_data_stringy);\n  }\n  $input.all()[0].json.content_decoded = orderedOriginal;\n// No file returned / new workflow\n} else if (Object.keys($input.all()[0].json).includes(\"data\")) {\n  const origWorkflow = JSON.parse($input.all()[0].json.data);\n  const n8nWorkflow = $input.all()[1].json;\n  \n  // Order JSON objects\n  const orderedOriginal = orderJsonKeys(origWorkflow);\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n\n  // Determine difference\n  if (JSON.stringify(orderedOriginal) === JSON.stringify(orderedActual)) {\n    $input.all()[0].json.github_status = \"same\";\n  } else {\n    $input.all()[0].json.github_status = \"different\";\n    $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n    $input.all()[0].json.n8n_data_for_check = stripOwnerInfo($input.all()[0].json.n8n_data_stringy);\n  }\n  $input.all()[0].json.content_decoded = orderedOriginal;\n\n} else {\n  // Order JSON object\n  const n8nWorkflow = $input.all()[1].json;\n  const orderedActual = orderJsonKeys(n8nWorkflow);\n  \n  // Proper formatting\n  $input.all()[0].json.github_status = \"new\";\n  $input.all()[0].json.n8n_data_stringy = JSON.stringify(orderedActual, null, 2);\n  $input.all()[0].json.n8n_data_for_check = stripOwnerInfo($input.all()[0].json.n8n_data_stringy);\n}\n\n// Return only the first item (with github_status)\nreturn [$input.all()[0]];"
       },
       "id": "80c842c8-09eb-43c4-9bac-726a6b46bfbc",
       "name": "isDiffOrNew",
@@ -538,7 +538,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=あなたはn8nワークフローバックアップリポジトリのレビュワーです。\n以下のcommit対象コンテンツに、氏名などの個人情報が含まれていないか検証してください。\n問題がある場合は、その理由を示してください。\n注意点：\n- NGの判定基準は、あくまでも**プレーンテキストとして個人情報を含む場合**です。プレースホルダーとして「氏名」などの文字列が含まれている分には問題ありません。\n- typeがn8n-nodes-base.gmailに対するparameters.sendToなど、**通知アクションを実行する上で必要な通知先が含まれる場合は、例外的に個人情報が含まれていても問題ありません**。\n- 問題ない場合は、**\"ok\"とだけ出力し、それ以外の文字を含めないでください**。\n- **出力はプレーンテキストで返してください。Markdownのコードブロック（```）や装飾は絶対に使わないでください。**\n- **\"ok\"と出力する場合は、okの2文字のみを出力してください。改行、スペース、引用符、コードブロックなどを一切含めないでください。**\n- コンテンツが与えられなかった場合は、ok扱いとしてください。\n<contents>\n{{ $json.n8n_data_for_check }}\n</contents>",
+        "text": "あなたはn8nワークフローバックアップリポジトリのレビュワーです。\n以下のcommit対象コンテンツに、氏名などの個人情報が含まれていないか検証してください。\n問題がある場合は、その理由を示してください。\n注意点：\n- NGの判定基準は、あくまでも**プレーンテキストとして個人情報を含む場合**です。プレースホルダーとして「氏名」などの文字列が含まれている分には問題ありません。\n- typeがn8n-nodes-base.gmailに対するparameters.sendToなど、**通知アクションを実行する上で必要な通知先が含まれる場合は、例外的に個人情報が含まれていても問題ありません**。\n- **ワークフローの管理者情報（authors, createdBy, updatedBy, shared, project など）に含まれる氏名・メールアドレスはシステム管理上のメタデータであり、個人情報チェックの対象外とします。**\n- 問題ない場合は、**\"ok\"とだけ出力し、それ以外の文字を含めないでください**。\n- **出力はプレーンテキストで返してください。Markdownのコードブロック（```）や装飾は絶対に使わないでください。**\n- **\"ok\"と出力する場合は、okの2文字のみを出力してください。改行、スペース、引用符、コードブロックなどを一切含めないでください。**\n- コンテンツが与えられなかった場合は、ok扱いとしてください。\n<contents>\n{{ $json.n8n_data_for_check }}\n</contents>",
         "options": {}
       },
       "id": "ead3aff3-6049-420c-8164-2ba9ccdefb14",
@@ -854,7 +854,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-11T01:22:34.000Z",
+              "updatedAt": "2026-03-17T03:26:44.347Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -872,13 +872,13 @@
                 "userActivatedAt": 1763558344486,
                 "npsSurvey": {
                   "waitingForResponse": true,
-                  "ignoredCount": 1,
-                  "lastShownAt": 1772775475677
+                  "ignoredCount": 2,
+                  "lastShownAt": 1773718001539
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-03-11",
+              "lastActiveAt": "2026-03-16",
               "isPending": false
             }
           }
@@ -889,7 +889,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-11T03:20:51.920Z",
-  "versionCounter": 13,
-  "versionId": "39e5d588-99c8-452f-903d-98e79f818341"
+  "updatedAt": "2026-03-17T05:27:30.877Z",
+  "versionCounter": 14,
+  "versionId": "7eee74c5-fe12-4fe3-a551-fbd6773dbf99"
 }
