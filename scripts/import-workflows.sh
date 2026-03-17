@@ -59,13 +59,23 @@ for f in workflows/*.json; do
     fi
   fi
 
-  # PUTで許可されたフィールドのみ抽出（credentialsはサーバー側で管理するため含めない）
-  PAYLOAD=$(jq '
-    {name, nodes, connections, settings, staticData} |
-    .nodes |= map(del(.credentials))
-  ' "$f")
+  # PUTで許可されたフィールドのみ抽出
+  PAYLOAD=$(jq '{name, nodes, connections, settings, staticData}' "$f")
 
   if [ "$HTTP_CODE" = "200" ]; then
+    # 既存ワークフローのcredentialsをノードに反映（サーバー側が正）
+    PAYLOAD=$(echo "$PAYLOAD" | jq --argjson existing "$EXISTING_BODY" '
+      ($existing.nodes | map({key: .id, value: .credentials}) | from_entries) as $existing_creds |
+      .nodes |= map(
+        .id as $nid |
+        if $existing_creds[$nid] then
+          .credentials = $existing_creds[$nid]
+        else
+          del(.credentials)
+        end
+      )
+    ')
+
     # 既存 → PUT で更新
     echo "  Updating: $WORKFLOW_NAME ($WORKFLOW_ID)..."
     RESULT=$(curl -s -w "\n%{http_code}" -X PUT "${API_HEADER[@]}" \
