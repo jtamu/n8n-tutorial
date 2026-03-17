@@ -27,10 +27,9 @@ jobs:
 
       - name: Deploy to n8n server
         env:
-          N8N_URL: ${{ secrets.N8N_URL }}
           N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
           GCE_ZONE: ${{ secrets.GCE_ZONE }}
         run: |
           gcloud compute ssh n8n-server \
             --zone=$GCE_ZONE \
-            --command="cd /opt/n8n && sudo -u n8n git pull && sudo -u n8n env N8N_URL=$N8N_URL N8N_API_KEY=$N8N_API_KEY make backup-credentials import"
+            --command="cd /opt/n8n && sudo -u n8n git pull && sudo -u n8n env N8N_API_KEY=$N8N_API_KEY make backup-credentials import"
