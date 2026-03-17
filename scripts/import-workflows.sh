@@ -9,8 +9,6 @@
 
 set -euo pipefail
 
-CREDS_FILE="$1"
-
 N8N_URL="${N8N_URL:-http://localhost:5678}"
 N8N_API_KEY="${N8N_API_KEY:-}"
 
@@ -20,9 +18,6 @@ if [ -z "$N8N_API_KEY" ]; then
 fi
 
 API_HEADER=(-H "X-N8N-API-KEY: $N8N_API_KEY" -H "Content-Type: application/json")
-
-# credentialsのマッピングを作成
-CRED_MAP=$(jq -r '[.[] | {key: "\(.type):\(.name)", value: .id}] | from_entries' "$CREDS_FILE")
 
 # --- Step 1: Deactivate all active workflows ---
 echo "=== Step 1: Deactivating active workflows ==="
@@ -50,40 +45,27 @@ for f in workflows/*.json; do
   WORKFLOW_ID=$(jq -r '.id' "$f")
   WORKFLOW_NAME=$(jq -r '.name' "$f")
 
-  # credential差し替え＋PUTで許可されたフィールドのみ抽出
-  PAYLOAD=$(jq --argjson cred_map "$CRED_MAP" '
-    {name, nodes, connections, settings, staticData} |
-    .nodes |= map(
-      if .credentials then
-        .credentials |= with_entries(
-          .value as $cred |
-          ($cred.name // "") as $name |
-          (.key + ":" + $name) as $lookup_key |
-          if $cred_map[$lookup_key] then
-            .value.id = $cred_map[$lookup_key]
-          else
-            empty
-          end
-        ) |
-        if .credentials == {} then del(.credentials) else . end
-      else
-        .
-      end
-    )
-  ' "$f")
-
   # 既存ワークフローの存在確認
   EXISTING=$(curl -s -w "\n%{http_code}" "${API_HEADER[@]}" "$N8N_URL/api/v1/workflows/$WORKFLOW_ID")
   HTTP_CODE=$(echo "$EXISTING" | tail -1)
+  EXISTING_BODY=$(echo "$EXISTING" | sed '$d')
 
   if [ "$HTTP_CODE" = "200" ]; then
     # アーカイブ済みワークフローはスキップ
-    IS_ARCHIVED=$(echo "$EXISTING" | sed '$d' | jq -r '.isArchived // false')
+    IS_ARCHIVED=$(echo "$EXISTING_BODY" | jq -r '.isArchived // false')
     if [ "$IS_ARCHIVED" = "true" ]; then
       echo "  Skipping (archived): $WORKFLOW_NAME ($WORKFLOW_ID)"
       continue
     fi
+  fi
 
+  # PUTで許可されたフィールドのみ抽出（credentialsはサーバー側で管理するため含めない）
+  PAYLOAD=$(jq '
+    {name, nodes, connections, settings, staticData} |
+    .nodes |= map(del(.credentials))
+  ' "$f")
+
+  if [ "$HTTP_CODE" = "200" ]; then
     # 既存 → PUT で更新
     echo "  Updating: $WORKFLOW_NAME ($WORKFLOW_ID)..."
     RESULT=$(curl -s -w "\n%{http_code}" -X PUT "${API_HEADER[@]}" \
