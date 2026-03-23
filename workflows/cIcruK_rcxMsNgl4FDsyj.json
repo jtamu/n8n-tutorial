@@ -1,9 +1,9 @@
 {
   "active": true,
   "activeVersion": {
-    "updatedAt": "2026-03-17T05:13:25.509Z",
-    "createdAt": "2026-03-17T05:13:25.509Z",
-    "versionId": "a0f92569-b8b4-4fc2-bea3-310f1e334243",
+    "updatedAt": "2026-03-23T02:06:26.794Z",
+    "createdAt": "2026-03-23T02:06:26.794Z",
+    "versionId": "f296b769-2ec7-4d4b-9a05-3475fd2de626",
     "workflowId": "cIcruK_rcxMsNgl4FDsyj",
     "nodes": [
       {
@@ -21,26 +21,22 @@
               {
                 "fieldLabel": "案件概要2",
                 "fieldType": "textarea",
-                "placeholder": "2件目の案件（任意）",
-                "requiredField": false
+                "placeholder": "2件目の案件（任意）"
               },
               {
                 "fieldLabel": "案件概要3",
                 "fieldType": "textarea",
-                "placeholder": "3件目の案件（任意）",
-                "requiredField": false
+                "placeholder": "3件目の案件（任意）"
               },
               {
                 "fieldLabel": "案件概要4",
                 "fieldType": "textarea",
-                "placeholder": "4件目の案件（任意）",
-                "requiredField": false
+                "placeholder": "4件目の案件（任意）"
               },
               {
                 "fieldLabel": "案件概要5",
                 "fieldType": "textarea",
-                "placeholder": "5件目の案件（任意）",
-                "requiredField": false
+                "placeholder": "5件目の案件（任意）"
               },
               {
                 "fieldLabel": "Google DocsのURL",
@@ -142,7 +138,6 @@
       },
       {
         "parameters": {
-          "batchSize": 1,
           "options": {}
         },
         "type": "n8n-nodes-base.splitInBatches",
@@ -214,7 +209,7 @@
         "type": "n8n-nodes-base.googleDocs",
         "typeVersion": 2,
         "position": [
-          1520,
+          1584,
           0
         ],
         "id": "a1b2c3d4-0001-0001-0001-docs00000001",
@@ -230,7 +225,7 @@
         "parameters": {
           "operation": "completion",
           "completionTitle": "スキル要件判定が完了しました",
-          "completionMessage": "スキル要件判定が完了しました。Google Docsをご確認ください。",
+          "completionMessage": "スキル要件判定が完了しました。Google Docsをご確認ください。\n\n<a href=\"/form/4738b8df-9b67-4586-b197-9afd2b69e1d8\">別の案件を判定する場合はこちら</a>",
           "options": {}
         },
         "type": "n8n-nodes-base.form",
@@ -379,16 +374,16 @@
     "autosaved": false,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-03-17T05:13:25.979Z",
-        "id": 7,
+        "createdAt": "2026-03-23T02:06:27.109Z",
+        "id": 12,
         "workflowId": "cIcruK_rcxMsNgl4FDsyj",
-        "versionId": "a0f92569-b8b4-4fc2-bea3-310f1e334243",
+        "versionId": "f296b769-2ec7-4d4b-9a05-3475fd2de626",
         "event": "activated",
         "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20"
       }
     ]
   },
-  "activeVersionId": "a0f92569-b8b4-4fc2-bea3-310f1e334243",
+  "activeVersionId": "f296b769-2ec7-4d4b-9a05-3475fd2de626",
   "connections": {
     "スキル要件○×つけフォーム": {
       "main": [
@@ -730,7 +725,7 @@
       "parameters": {
         "operation": "completion",
         "completionTitle": "スキル要件判定が完了しました",
-        "completionMessage": "スキル要件判定が完了しました。Google Docsをご確認ください。",
+        "completionMessage": "スキル要件判定が完了しました。Google Docsをご確認ください。\n<br/>\n<br/>\n別の案件を判定する場合は<a href=\"/form/4738b8df-9b67-4586-b197-9afd2b69e1d8\">こちら</a>",
         "options": {}
       },
       "type": "n8n-nodes-base.form",
@@ -789,7 +784,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-17T03:26:44.347Z",
+              "updatedAt": "2026-03-23T01:58:07.000Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -813,7 +808,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-03-16",
+              "lastActiveAt": "2026-03-22",
               "isPending": false
             }
           }
@@ -824,7 +819,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 1,
-  "updatedAt": "2026-03-17T05:14:30.558Z",
-  "versionCounter": 92,
-  "versionId": "4d88991e-b2a5-4e1b-907d-0835a7e17d81"
+  "updatedAt": "2026-03-23T02:15:01.084Z",
+  "versionCounter": 114,
+  "versionId": "365adbe0-7967-46c4-8f10-fda44b83b9fe"
 }
