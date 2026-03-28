@@ -1,9 +1,8 @@
 #!/bin/bash
 # ワークフローをn8n REST API経由でインポートする
-# CLIのimport:workflowはactiveVersionIdのFK制約エラーを起こすため、APIを使う
-#
-# 処理の流れ:
-#   各ワークフローをPUT(既存)またはPOST(新規)でインポート
+# CLIのimport:workflowはactiveVersionIdのFK制約エラーを起こすため、
+# 既存ワークフローの更新にはAPIを使う
+# 新規ワークフローはCLIでインポートする（IDを保持するため）
 
 set -euo pipefail
 
@@ -38,11 +37,9 @@ for f in workflows/*.json; do
     fi
   fi
 
-  # PUTで許可されたフィールドのみ抽出
-  PAYLOAD=$(jq '{name, nodes, connections, settings, staticData}' "$f")
-
   if [ "$HTTP_CODE" = "200" ]; then
     # 既存ワークフローのcredentialsをノードに反映（サーバー側が正）
+    PAYLOAD=$(jq '{name, nodes, connections, settings, staticData}' "$f")
     PAYLOAD=$(echo "$PAYLOAD" | jq --argjson existing "$EXISTING_BODY" '
       ($existing.nodes | map({key: .id, value: .credentials}) | from_entries) as $existing_creds |
       .nodes |= map(
@@ -59,21 +56,24 @@ for f in workflows/*.json; do
     echo "  Updating: $WORKFLOW_NAME ($WORKFLOW_ID)..."
     RESULT=$(curl -s -w "\n%{http_code}" -X PUT "${API_HEADER[@]}" \
       -d "$PAYLOAD" "$N8N_URL/api/v1/workflows/$WORKFLOW_ID")
+    RESULT_CODE=$(echo "$RESULT" | tail -1)
+    if [ "$RESULT_CODE" = "200" ]; then
+      echo "    OK"
+    else
+      RESULT_BODY=$(echo "$RESULT" | sed '$d')
+      echo "    FAILED (HTTP $RESULT_CODE): $RESULT_BODY"
+      failed=1
+    fi
   else
-    # 新規 → POST で作成（IDを含める）
-    PAYLOAD_WITH_ID=$(echo "$PAYLOAD" | jq --arg id "$WORKFLOW_ID" '. + {id: $id}')
-    echo "  Creating: $WORKFLOW_NAME ($WORKFLOW_ID)..."
-    RESULT=$(curl -s -w "\n%{http_code}" -X POST "${API_HEADER[@]}" \
-      -d "$PAYLOAD_WITH_ID" "$N8N_URL/api/v1/workflows")
-  fi
-
-  RESULT_CODE=$(echo "$RESULT" | tail -1)
-  if [ "$RESULT_CODE" = "200" ] || [ "$RESULT_CODE" = "201" ]; then
-    echo "    OK"
-  else
-    RESULT_BODY=$(echo "$RESULT" | sed '$d')
-    echo "    FAILED (HTTP $RESULT_CODE): $RESULT_BODY"
-    failed=1
+    # 新規 → CLIでインポート（IDを保持するため）
+    CONTAINER_PATH="/home/node/workflows/$(basename "$f")"
+    echo "  Creating (CLI): $WORKFLOW_NAME ($WORKFLOW_ID)..."
+    if docker exec n8n n8n import:workflow --input="$CONTAINER_PATH" 2>&1; then
+      echo "    OK"
+    else
+      echo "    FAILED"
+      failed=1
+    fi
   fi
 done
 
