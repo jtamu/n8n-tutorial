@@ -1,0 +1,247 @@
+{
+  "active": true,
+  "activeVersion": {
+    "updatedAt": "2026-03-29T10:32:12.453Z",
+    "createdAt": "2026-03-29T10:32:12.453Z",
+    "versionId": "5d768cf2-4d5f-4ca6-acb4-793e71c19b39",
+    "workflowId": "uH0gBb6INaWzRGgX",
+    "nodes": [
+      {
+        "parameters": {},
+        "id": "error-trigger",
+        "name": "Error Trigger",
+        "type": "n8n-nodes-base.errorTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "jsCode": "const data = $input.first().json;\nconst execution = data.execution;\nconst error = execution.error || {};\nconst workflow = data.workflow || {};\n\nconst now = new Date();\nconst jstDate = new Date(now.getTime() + 9 * 60 * 60 * 1000);\nconst timestamp = jstDate.toISOString().replace('T', ' ').slice(0, 19);\n\nconst errorMessage = error.message || JSON.stringify(error);\nconst nodeName = (error.node && error.node.name) ? error.node.name : (execution.lastNodeExecuted || '不明');\nconst stack = error.stack || '';\n\nconst body = `<h2 style=\"color: #d32f2f;\">ワークフローでエラーが発生しました</h2>\n<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse:collapse;font-family:sans-serif;font-size:14px;\">\n  <tr><th style=\"background:#f0f0f0;\">発生日時</th><td>${timestamp} (JST)</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">ワークフロー</th><td>${workflow.name || '不明'} (ID: ${workflow.id || 'N/A'})</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">エラー内容</th><td>${errorMessage}</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">発生ノード</th><td>${nodeName}</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">実行ID</th><td>${execution.id || 'N/A'}</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">実行詳細</th><td><a href=\"${execution.url || '#'}\">確認する</a></td></tr>\n</table>\n<br>\n${stack ? '<details><summary>スタックトレース</summary><pre>' + stack + '</pre></details>' : ''}`;\n\nreturn [{ json: { emailBody: body, workflowName: workflow.name || '不明' } }];"
+        },
+        "id": "error-email-code",
+        "name": "エラーメール本文作成",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          240,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "sendTo": "gtamu.dip@gmail.com",
+          "subject": "=【n8n】{{ $json.workflowName }} エラー発生",
+          "message": "={{ $json.emailBody }}",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "id": "error-gmail-send",
+        "name": "エラーメール通知",
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          480,
+          0
+        ],
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "H3276ZIe5FLzaHRS",
+            "name": "Gmail account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Error Trigger": {
+        "main": [
+          [
+            {
+              "node": "エラーメール本文作成",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "エラーメール本文作成": {
+        "main": [
+          [
+            {
+              "node": "エラーメール通知",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "Jumpei Tamura",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-03-29T10:32:12.493Z",
+        "id": 4,
+        "workflowId": "uH0gBb6INaWzRGgX",
+        "versionId": "5d768cf2-4d5f-4ca6-acb4-793e71c19b39",
+        "event": "activated",
+        "userId": "149c9e0b-08ab-4279-9356-5aeea5385c5e"
+      }
+    ]
+  },
+  "activeVersionId": "5d768cf2-4d5f-4ca6-acb4-793e71c19b39",
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "エラーメール本文作成",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "エラーメール本文作成": {
+      "main": [
+        [
+          {
+            "node": "エラーメール通知",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-29T10:15:50.495Z",
+  "description": null,
+  "id": "uH0gBb6INaWzRGgX",
+  "isArchived": false,
+  "meta": null,
+  "name": "エラー通知",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "error-trigger",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst execution = data.execution;\nconst error = execution.error || {};\nconst workflow = data.workflow || {};\n\nconst now = new Date();\nconst jstDate = new Date(now.getTime() + 9 * 60 * 60 * 1000);\nconst timestamp = jstDate.toISOString().replace('T', ' ').slice(0, 19);\n\nconst errorMessage = error.message || JSON.stringify(error);\nconst nodeName = (error.node && error.node.name) ? error.node.name : (execution.lastNodeExecuted || '不明');\nconst stack = error.stack || '';\n\nconst body = `<h2 style=\"color: #d32f2f;\">ワークフローでエラーが発生しました</h2>\n<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse:collapse;font-family:sans-serif;font-size:14px;\">\n  <tr><th style=\"background:#f0f0f0;\">発生日時</th><td>${timestamp} (JST)</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">ワークフロー</th><td>${workflow.name || '不明'} (ID: ${workflow.id || 'N/A'})</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">エラー内容</th><td>${errorMessage}</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">発生ノード</th><td>${nodeName}</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">実行ID</th><td>${execution.id || 'N/A'}</td></tr>\n  <tr><th style=\"background:#f0f0f0;\">実行詳細</th><td><a href=\"${execution.url || '#'}\">確認する</a></td></tr>\n</table>\n<br>\n${stack ? '<details><summary>スタックトレース</summary><pre>' + stack + '</pre></details>' : ''}`;\n\nreturn [{ json: { emailBody: body, workflowName: workflow.name || '不明' } }];"
+      },
+      "id": "error-email-code",
+      "name": "エラーメール本文作成",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "gtamu.dip@gmail.com",
+        "subject": "=【n8n】{{ $json.workflowName }} エラー発生",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "error-gmail-send",
+      "name": "エラーメール通知",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        0
+      ],
+      "webhookId": "3469a26d-5784-4cf3-99e3-d0f3c5ad6f6f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "H3276ZIe5FLzaHRS",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Tokyo",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "shared": [
+    {
+      "updatedAt": "2026-03-29T10:15:50.498Z",
+      "createdAt": "2026-03-29T10:15:50.498Z",
+      "role": "workflow:owner",
+      "workflowId": "uH0gBb6INaWzRGgX",
+      "projectId": "HM43VJ1kdxEjn4Js",
+      "project": {
+        "updatedAt": "2026-02-22T05:30:55.872Z",
+        "createdAt": "2026-01-16T17:31:52.988Z",
+        "id": "HM43VJ1kdxEjn4Js",
+        "name": "Jumpei Tamura <tamura@yoku.co.jp>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "149c9e0b-08ab-4279-9356-5aeea5385c5e",
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-16T17:31:52.988Z",
+            "createdAt": "2026-01-16T17:31:52.988Z",
+            "userId": "149c9e0b-08ab-4279-9356-5aeea5385c5e",
+            "projectId": "HM43VJ1kdxEjn4Js",
+            "user": {
+              "updatedAt": "2026-03-29T09:56:23.889Z",
+              "createdAt": "2026-01-16T17:31:52.623Z",
+              "id": "149c9e0b-08ab-4279-9356-5aeea5385c5e",
+              "email": "tamura@yoku.co.jp",
+              "firstName": "Jumpei",
+              "lastName": "Tamura",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-16T17:32:28.892Z",
+                "personalization_survey_n8n_version": "2.3.6"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "teJGbp0mId-UYkQ9GvV6b",
+                "userActivatedAt": 1768643391642,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 2,
+                  "lastShownAt": 1774778181406
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-29",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2026-03-29T10:38:27.275Z",
+  "versionCounter": 8,
+  "versionId": "5184e40d-e475-4cd0-9d2f-1d0360e8cba0"
+}
