@@ -66,14 +66,21 @@ for f in workflows/*.json; do
     fi
   else
     # 新規 → CLIでインポート（IDを保持するため）
-    CONTAINER_PATH="/home/node/workflows/$(basename "$f")"
+    # FK制約エラーを避けるため、不要なフィールドを除去した一時ファイルを使う
+    CLEAN_TMP=$(mktemp)
+    jq 'del(.activeVersion, .activeVersionId, .shared, .versionCounter, .versionId, .triggerCount)
+        | .nodes |= map(del(.credentials))' "$f" > "$CLEAN_TMP"
+    CONTAINER_TMP="/home/node/workflows/.tmp_import.json"
+    docker cp "$CLEAN_TMP" "n8n:$CONTAINER_TMP"
+    rm -f "$CLEAN_TMP"
     echo "  Creating (CLI): $WORKFLOW_NAME ($WORKFLOW_ID)..."
-    if docker exec n8n n8n import:workflow --input="$CONTAINER_PATH" 2>&1; then
+    if docker exec n8n n8n import:workflow --input="$CONTAINER_TMP" 2>&1; then
       echo "    OK"
     else
       echo "    FAILED"
       failed=1
     fi
+    docker exec n8n rm -f "$CONTAINER_TMP"
   fi
 done
 
