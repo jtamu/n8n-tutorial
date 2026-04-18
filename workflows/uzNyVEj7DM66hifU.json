@@ -1,402 +1,7 @@
 {
-  "active": true,
-  "activeVersion": {
-    "updatedAt": "2026-03-29T10:39:04.000Z",
-    "createdAt": "2026-03-29T10:38:50.189Z",
-    "versionId": "35aa9bb9-82cf-4c7a-8349-4886d22a33f7",
-    "workflowId": "uzNyVEj7DM66hifU",
-    "nodes": [
-      {
-        "parameters": {
-          "rule": {
-            "interval": [
-              {
-                "triggerAtHour": 9
-              }
-            ]
-          }
-        },
-        "id": "schedule",
-        "name": "毎朝9時実行",
-        "type": "n8n-nodes-base.scheduleTrigger",
-        "typeVersion": 1.3,
-        "position": [
-          0,
-          0
-        ],
-        "notes": "毎日朝9:00 (JST) に実行。\nタイムゾーンはワークフロー設定で Asia/Tokyo に設定済み。"
-      },
-      {
-        "parameters": {
-          "documentId": {
-            "__rl": true,
-            "mode": "url",
-            "value": "https://docs.google.com/spreadsheets/d/1T4eIL7TvDnKImRGXnsk_BpAiquDT4e1jm5lLACYyaiM/edit?gid=0#gid=0"
-          },
-          "sheetName": {
-            "__rl": true,
-            "mode": "id",
-            "value": "0"
-          },
-          "options": {}
-        },
-        "id": "sheets-read",
-        "name": "既存データ読み込み",
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.7,
-        "position": [
-          240,
-          0
-        ],
-        "alwaysOutputData": true,
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "ZfwIn54p5eaFX5s0",
-            "name": "Google Sheets account 2"
-          }
-        },
-        "onError": "continueRegularOutput",
-        "notes": "スプレッドシートから既存データを読み込み、重複チェックに使用。\n\n【設定必須】\nGoogle Sheets のクレデンシャルを設定してください。\n\n【スプレッドシート準備】\n1行目に以下のヘッダーを設定:\n物件名 | 住所 | 駅徒歩 | 家賃合計 | 詳細ページURL | 作成日 | 閲覧済み | お気に入り\n\n「閲覧済み」「お気に入り」列には Google Sheets のデータ入力規則でチェックボックスを設定。\n\nシートが空でもエラーにならないよう onError: continueRegularOutput を設定済み。"
-      },
-      {
-        "parameters": {
-          "jsCode": "var existingItems = $input.all();\nvar existingUrls = new Set();\nfor (var i = 0; i < existingItems.length; i++) {\n  if (existingItems[i].json && existingItems[i].json['詳細ページURL']) {\n    existingUrls.add(existingItems[i].json['詳細ページURL']);\n  }\n}\n\nvar BASE_URL = 'https://web.canary-app.jp';\nvar SEARCH_PARAMS = 'cityIds=94211d9f-5fe7-436f-b615-fe9523c4d1e2&commuteConditions=%7B%22stationId%22%3A%225e658b4c-8b14-49a9-9fd8-d95be5a1389e%22%2C%22commuteTime%22%3A80%2C%22transferCount%22%3A-1%7D&prefectureAlias=tokyo&rentMax=140000&isTotalRent=false&optionIds=7299e4c3-ef89-4c8a-a58a-51f8c6ac3149&optionIds=3c628aae-7126-4eaf-978f-92fedcc5ae92&oldMax=30&duringMax=20&searchType=3&sortType=5';\nvar UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';\n\nfunction extractRoomsFromResponse(iser) {\n  var rooms = [];\n  if (!iser || !iser.estatesList) return rooms;\n  for (var bi = 0; bi < iser.estatesList.length; bi++) {\n    var building = iser.estatesList[bi];\n    var roomsList = building.roomsList || [];\n    for (var ri = 0; ri < roomsList.length; ri++) {\n      var r = roomsList[ri];\n      var station = '';\n      if (r.accessesList && r.accessesList.length > 0) {\n        var a = r.accessesList[0];\n        station = a.route + ' / ' + a.station + ' 徒歩' + a.during + '分';\n      }\n      rooms.push({\n        id: r.id,\n        物件名: r.name || building.name || '',\n        住所: r.address || '',\n        駅徒歩: station,\n        家賃合計: (r.rent || 0) + (r.adminFee || 0),\n        詳細ページURL: BASE_URL + '/chintai/rooms/' + r.id + '/',\n      });\n    }\n  }\n  return rooms;\n}\n\nvar results = [];\nvar allSeenIds = new Set();\n\n// Step 1: ページ1のHTMLを取得して__NEXT_DATA__を抽出\nvar page1;\ntry {\n  page1 = await this.helpers.httpRequest({\n    method: 'GET',\n    url: BASE_URL + '/chintai/tokyo/list/?' + SEARCH_PARAMS + '&page=1',\n    headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'ja' },\n  });\n} catch (e) {\n  return [{ json: { _empty: true, error: 'HTTP取得失敗: ' + e.message } }];\n}\n\nvar htmlStr = typeof page1 === 'string' ? page1 : String(page1);\nvar buildId = '';\nvar totalCount = 0;\n\nvar ndIdx = htmlStr.indexOf('\"__NEXT_DATA__\"');\nif (ndIdx === -1) {\n  return [{ json: { _empty: true, error: '__NEXT_DATA__が見つかりません' } }];\n}\n\nvar jsStart = htmlStr.indexOf('>', ndIdx) + 1;\nvar jsEnd = htmlStr.indexOf('</script>', jsStart);\nvar nd;\ntry {\n  nd = JSON.parse(htmlStr.substring(jsStart, jsEnd));\n} catch (e) {\n  return [{ json: { _empty: true, error: 'JSON解析失敗: ' + e.message } }];\n}\n\nbuildId = nd.buildId || '';\nvar pp = nd.props && nd.props.pageProps ? nd.props.pageProps : {};\nvar iser = pp.initialSearchEstatesResponse;\n\nif (!iser || !iser.estatesList) {\n  return [{ json: { _empty: true, error: 'initialSearchEstatesResponseが見つかりません', pagePropsKeys: Object.keys(pp).join(',') } }];\n}\n\ntotalCount = iser.totalCount || 0;\n\n// ページ1のルームを抽出\nvar page1Rooms = extractRoomsFromResponse(iser);\nfor (var i = 0; i < page1Rooms.length; i++) {\n  if (!allSeenIds.has(page1Rooms[i].id)) {\n    allSeenIds.add(page1Rooms[i].id);\n    results.push(page1Rooms[i]);\n  }\n}\n\n// Step 2: _next/dataで残りのページを取得\nif (buildId && results.length < totalCount) {\n  var perPage = results.length || 20;\n  var maxPage = Math.min(Math.ceil(totalCount / perPage), 20);\n  for (var page = 2; page <= maxPage; page++) {\n    try {\n      var dataResp = await this.helpers.httpRequest({\n        method: 'GET',\n        url: BASE_URL + '/_next/data/' + buildId + '/chintai/tokyo/list.json?' + SEARCH_PARAMS + '&page=' + page,\n        headers: { 'User-Agent': UA, 'Accept': 'application/json' },\n      });\n      var pageData = typeof dataResp === 'string' ? JSON.parse(dataResp) : dataResp;\n      var pageIser = pageData.pageProps && pageData.pageProps.initialSearchEstatesResponse;\n      if (!pageIser || !pageIser.estatesList || pageIser.estatesList.length === 0) break;\n      var pageRooms = extractRoomsFromResponse(pageIser);\n      var newCount = 0;\n      for (var i = 0; i < pageRooms.length; i++) {\n        if (!allSeenIds.has(pageRooms[i].id)) {\n          allSeenIds.add(pageRooms[i].id);\n          results.push(pageRooms[i]);\n          newCount++;\n        }\n      }\n      if (newCount === 0) break;\n    } catch (e) {\n      break;\n    }\n  }\n}\n\n// JST日付\nvar now = new Date();\nvar jstMs = now.getTime() + (9 * 60 + now.getTimezoneOffset()) * 60000;\nvar jstDate = new Date(jstMs);\nvar today = jstDate.getFullYear() + '-' + String(jstDate.getMonth() + 1).padStart(2, '0') + '-' + String(jstDate.getDate()).padStart(2, '0');\n\n// 既存物件を除外し新規のみ返す\nvar newItems = [];\nfor (var i = 0; i < results.length; i++) {\n  var r = results[i];\n  if (!existingUrls.has(r['詳細ページURL'])) {\n    newItems.push({ json: {\n      物件名: r['物件名'],\n      住所: r['住所'],\n      駅徒歩: r['駅徒歩'],\n      家賃合計: r['家賃合計'],\n      詳細ページURL: r['詳細ページURL'],\n      作成日: today,\n      閲覧済み: 'FALSE',\n      お気に入り: 'FALSE',\n    }});\n  }\n}\n\nreturn newItems.length > 0 ? newItems : [{ json: { _empty: true, found: results.length, filtered: existingUrls.size } }];"
-        },
-        "id": "code-scrape",
-        "name": "物件データ取得",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          480,
-          0
-        ],
-        "notes": "カナリー (web.canary-app.jp) から物件データをスクレイピング。\n\n【処理内容】\n1. 全ページを自動巡回（「検索結果XX件」から総数を取得）\n2. __NEXT_DATA__ JSON からデータ抽出を試行（戦略1）\n3. 失敗時は HTML を正規表現でパース（戦略2）\n4. 既存データの詳細ページURL と照合し重複を除外\n5. 新規物件のみ出力\n\n【取得カラム】\n物件名 / 住所 / 駅徒歩 / 家賃合計（賃料+管理費） / 詳細ページURL / 作成日 / 閲覧済み / お気に入り\n\n【検索条件】\n東京都 / 家賃上陀14万 / 築年30年以内 / 専有面積20㎡以上 / 通勤時間80分以内\n\n【注意】\nexec() 警告は RegExp.exec() メソッドによるものでセキュリティ上の問題なし。\nカナリーのHTML構造が変更された場合、正規表現の調整が必要になる可能性あり。"
-      },
-      {
-        "parameters": {
-          "conditions": {
-            "options": {
-              "caseSensitive": true,
-              "leftValue": "",
-              "typeValidation": "strict",
-              "version": 3
-            },
-            "conditions": [
-              {
-                "id": "cond1",
-                "leftValue": "={{ $json['詳細ページURL'] }}",
-                "rightValue": "",
-                "operator": {
-                  "type": "string",
-                  "operation": "notEmpty",
-                  "singleValue": true
-                }
-              }
-            ],
-            "combinator": "and"
-          },
-          "options": {}
-        },
-        "id": "if-check",
-        "name": "新規物件チェック",
-        "type": "n8n-nodes-base.if",
-        "typeVersion": 2.3,
-        "position": [
-          720,
-          0
-        ],
-        "notes": "新規物件があるか判定。\n詳細ページURL が存在する場合 → true（スプレッドシートに追加）\n存在しない場合 → false（新規物件なし、何もしない）"
-      },
-      {
-        "parameters": {
-          "operation": "append",
-          "documentId": {
-            "__rl": true,
-            "mode": "url",
-            "value": "https://docs.google.com/spreadsheets/d/1T4eIL7TvDnKImRGXnsk_BpAiquDT4e1jm5lLACYyaiM/edit?gid=0#gid=0"
-          },
-          "sheetName": {
-            "__rl": true,
-            "mode": "id",
-            "value": "0"
-          },
-          "columns": {
-            "mappingMode": "autoMapInputData",
-            "value": {},
-            "matchingColumns": [],
-            "schema": [
-              {
-                "id": "物件名",
-                "displayName": "物件名",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "住所",
-                "displayName": "住所",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "駅徒歩",
-                "displayName": "駅徒歩",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "家賃合計",
-                "displayName": "家賃合計",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "詳細ページURL",
-                "displayName": "詳細ページURL",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "作成日",
-                "displayName": "作成日",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "閲覧済み",
-                "displayName": "閲覧済み",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "お気に入り",
-                "displayName": "お気に入り",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              }
-            ],
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": false
-          },
-          "options": {}
-        },
-        "id": "sheets-append",
-        "name": "スプレッドシート追加",
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.7,
-        "position": [
-          960,
-          0
-        ],
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "ZfwIn54p5eaFX5s0",
-            "name": "Google Sheets account 2"
-          }
-        },
-        "notes": "新規物件をスプレッドシートに追加。\n入力データのカラム名がシートのヘッダーと自動マッピングされる。\n\n【設定必須】\nGoogle Sheets のクレデンシャルを設定してください。\n（「既存データ読み込み」ノードと同じクレデンシャルでOK）"
-      },
-      {
-        "parameters": {
-          "content": "## 初期設定ガイド\n\n### 1. Google Sheets クレデンシャル\n「既存データ読み込み」と「スプレッドシート追加」の両方にクレデンシャルを設定\n\n### 2. スプレッドシートのヘッダー行\n1行目に以下を設定:\n**物件名 | 住所 | 駅徒歩 | 家賃合計 | 詳細ページURL | 作成日 | 閲覧済み | お気に入り**\n\n### 3. チェックボックス\n「閲覧済み」「お気に入り」列にデータ入力規則でチェックボックスを設定\n（データ → データの入力規則 → チェックボックス）\n\n### 4. テスト\nまず手動実行で動作確認してから有効化",
-          "height": 468,
-          "width": 500,
-          "color": 4
-        },
-        "id": "sticky-setup",
-        "name": "初期設定ガイド",
-        "type": "n8n-nodes-base.stickyNote",
-        "typeVersion": 1,
-        "position": [
-          -272,
-          -528
-        ]
-      },
-      {
-        "parameters": {
-          "content": "## 物件検索スクレイピング（カナリー）\n\n毎朝9:00 (JST) にカナリーで物件を検索し、新規物件のみ Google スプレッドシートに追加。\n\n### 検索条件\n- エリア: 東京都\n- 家賃上限: 14万円\n- 築年数: 30年以内\n- 専有面積: 20㎡以上\n- 通勤時間: 80分以内\n\n### データ抽出方法\n1. **戦略1**: `__NEXT_DATA__` JSON から構造化データを抽出\n2. **戦略2**: HTMLを正規表現でパース（フォールバック）\n\n### 重複排除\n詳細ページURL で照合し、既存物件は追加しない。\n閲覧済み・お気に入りのチェック状態は保持される。\n\n### 注意事項\nカナリーのHTML構造が変更された場合、Codeノードの調整が必要。",
-          "height": 470,
-          "width": 560
-        },
-        "id": "sticky-overview",
-        "name": "ワークフロー説明",
-        "type": "n8n-nodes-base.stickyNote",
-        "typeVersion": 1,
-        "position": [
-          240,
-          -528
-        ]
-      },
-      {
-        "parameters": {
-          "jsCode": "const items = $input.all();\nlet rows = '';\nfor (const item of items) {\n  const j = item.json;\n  const rent = typeof j.家賃合計 === 'number' ? j.家賃合計.toLocaleString() : String(j.家賃合計);\n  rows += '<tr>';\n  rows += '<td>' + (j.物件名 || '') + '</td>';\n  rows += '<td>' + (j.住所 || '') + '</td>';\n  rows += '<td>' + (j.駅徒歩 || '') + '</td>';\n  rows += '<td>' + rent + '円</td>';\n  rows += '<td><a href=\"' + (j.詳細ページURL || '') + '\">詳細</a></td>';\n  rows += '</tr>';\n}\n\nconst body = '<h2>新規物件が ' + items.length + ' 件見つかりました</h2>'\n  + '<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\" style=\"border-collapse:collapse;font-family:sans-serif;font-size:14px;\">'\n  + '<tr style=\"background:#f0f0f0;\"><th>物件名</th><th>住所</th><th>駅徒歩</th><th>家賃合計</th><th>詳細</th></tr>'\n  + rows\n  + '</table>'\n  + '<br><p><a href=\"https://docs.google.com/spreadsheets/d/1T4eIL7TvDnKImRGXnsk_BpAiquDT4e1jm5lLACYyaiM/edit\">スプレッドシートを開く</a></p>';\n\nconst output = [{ json: { emailBody: body, count: items.length } }];\nreturn output;"
-        },
-        "id": "code-email",
-        "name": "メール本文作成",
-        "type": "n8n-nodes-base.code",
-        "typeVersion": 2,
-        "position": [
-          960,
-          208
-        ]
-      },
-      {
-        "parameters": {
-          "sendTo": "gtamu.dip@gmail.com",
-          "subject": "=【カナリー】新規物件 {{ $json.count }}件",
-          "message": "={{ $json.emailBody }}",
-          "options": {
-            "appendAttribution": false
-          }
-        },
-        "id": "gmail-send",
-        "name": "新規物件メール通知",
-        "type": "n8n-nodes-base.gmail",
-        "typeVersion": 2.2,
-        "position": [
-          1200,
-          208
-        ],
-        "webhookId": "969a215c-1b2e-4b7d-9aff-b0857e99345a",
-        "credentials": {
-          "gmailOAuth2": {
-            "id": "H3276ZIe5FLzaHRS",
-            "name": "Gmail account"
-          }
-        }
-      },
-      {
-        "parameters": {},
-        "type": "n8n-nodes-base.manualTrigger",
-        "typeVersion": 1,
-        "position": [
-          0,
-          192
-        ],
-        "id": "34750c9b-0f87-4338-a265-7c2ed33b3e3d",
-        "name": "When clicking ‘Execute workflow’"
-      }
-    ],
-    "connections": {
-      "毎朝9時実行": {
-        "main": [
-          [
-            {
-              "node": "既存データ読み込み",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "既存データ読み込み": {
-        "main": [
-          [
-            {
-              "node": "物件データ取得",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "物件データ取得": {
-        "main": [
-          [
-            {
-              "node": "新規物件チェック",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "新規物件チェック": {
-        "main": [
-          [
-            {
-              "node": "スプレッドシート追加",
-              "type": "main",
-              "index": 0
-            },
-            {
-              "node": "メール本文作成",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "メール本文作成": {
-        "main": [
-          [
-            {
-              "node": "新規物件メール通知",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "When clicking ‘Execute workflow’": {
-        "main": [
-          [
-            {
-              "node": "既存データ読み込み",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      }
-    },
-    "authors": "Jumpei Tamura",
-    "name": "Version 35aa9bb9",
-    "description": "",
-    "autosaved": false,
-    "workflowPublishHistory": [
-      {
-        "createdAt": "2026-03-29T10:39:04.854Z",
-        "id": 6,
-        "workflowId": "uzNyVEj7DM66hifU",
-        "versionId": "35aa9bb9-82cf-4c7a-8349-4886d22a33f7",
-        "event": "activated",
-        "userId": "149c9e0b-08ab-4279-9356-5aeea5385c5e"
-      }
-    ]
-  },
-  "activeVersionId": "35aa9bb9-82cf-4c7a-8349-4886d22a33f7",
+  "active": false,
+  "activeVersion": null,
+  "activeVersionId": null,
   "connections": {
     "毎朝9時実行": {
       "main": [
@@ -447,22 +52,22 @@
         ]
       ]
     },
-    "メール本文作成": {
+    "When clicking ‘Execute workflow’": {
       "main": [
         [
           {
-            "node": "新規物件メール通知",
+            "node": "既存データ読み込み",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "When clicking ‘Execute workflow’": {
+    "メール本文作成": {
       "main": [
         [
           {
-            "node": "既存データ読み込み",
+            "node": "新規物件メール通知",
             "type": "main",
             "index": 0
           }
@@ -501,6 +106,7 @@
     },
     {
       "parameters": {
+        "authentication": "serviceAccount",
         "documentId": {
           "__rl": true,
           "mode": "url",
@@ -523,9 +129,9 @@
       ],
       "alwaysOutputData": true,
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "ZfwIn54p5eaFX5s0",
-          "name": "Google Sheets account 2"
+        "googleApi": {
+          "id": "dZJKWhbaK8eDwouE",
+          "name": "Google Service Account account"
         }
       },
       "onError": "continueRegularOutput",
@@ -533,7 +139,7 @@
     },
     {
       "parameters": {
-        "jsCode": "var existingItems = $input.all();\nvar existingUrls = new Set();\nfor (var i = 0; i < existingItems.length; i++) {\n  if (existingItems[i].json && existingItems[i].json['詳細ページURL']) {\n    existingUrls.add(existingItems[i].json['詳細ページURL']);\n  }\n}\n\nvar BASE_URL = 'https://web.canary-app.jp';\nvar SEARCH_PARAMS = 'cityIds=94211d9f-5fe7-436f-b615-fe9523c4d1e2&commuteConditions=%7B%22stationId%22%3A%225e658b4c-8b14-49a9-9fd8-d95be5a1389e%22%2C%22commuteTime%22%3A80%2C%22transferCount%22%3A-1%7D&prefectureAlias=tokyo&rentMax=140000&isTotalRent=false&optionIds=7299e4c3-ef89-4c8a-a58a-51f8c6ac3149&optionIds=3c628aae-7126-4eaf-978f-92fedcc5ae92&oldMax=30&duringMax=20&searchType=3&sortType=5';\nvar UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';\n\nfunction extractRoomsFromResponse(iser) {\n  var rooms = [];\n  if (!iser || !iser.estatesList) return rooms;\n  for (var bi = 0; bi < iser.estatesList.length; bi++) {\n    var building = iser.estatesList[bi];\n    var roomsList = building.roomsList || [];\n    for (var ri = 0; ri < roomsList.length; ri++) {\n      var r = roomsList[ri];\n      var station = '';\n      if (r.accessesList && r.accessesList.length > 0) {\n        var a = r.accessesList[0];\n        station = a.route + ' / ' + a.station + ' 徒歩' + a.during + '分';\n      }\n      rooms.push({\n        id: r.id,\n        物件名: r.name || building.name || '',\n        住所: r.address || '',\n        駅徒歩: station,\n        家賃合計: (r.rent || 0) + (r.adminFee || 0),\n        詳細ページURL: BASE_URL + '/chintai/rooms/' + r.id + '/',\n      });\n    }\n  }\n  return rooms;\n}\n\nvar results = [];\nvar allSeenIds = new Set();\n\n// Step 1: ページ1のHTMLを取得して__NEXT_DATA__を抽出\nvar page1;\ntry {\n  page1 = await this.helpers.httpRequest({\n    method: 'GET',\n    url: BASE_URL + '/chintai/tokyo/list/?' + SEARCH_PARAMS + '&page=1',\n    headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'ja' },\n  });\n} catch (e) {\n  return [{ json: { _empty: true, error: 'HTTP取得失敗: ' + e.message } }];\n}\n\nvar htmlStr = typeof page1 === 'string' ? page1 : String(page1);\nvar buildId = '';\nvar totalCount = 0;\n\nvar ndIdx = htmlStr.indexOf('\"__NEXT_DATA__\"');\nif (ndIdx === -1) {\n  return [{ json: { _empty: true, error: '__NEXT_DATA__が見つかりません' } }];\n}\n\nvar jsStart = htmlStr.indexOf('>', ndIdx) + 1;\nvar jsEnd = htmlStr.indexOf('</script>', jsStart);\nvar nd;\ntry {\n  nd = JSON.parse(htmlStr.substring(jsStart, jsEnd));\n} catch (e) {\n  return [{ json: { _empty: true, error: 'JSON解析失敗: ' + e.message } }];\n}\n\nbuildId = nd.buildId || '';\nvar pp = nd.props && nd.props.pageProps ? nd.props.pageProps : {};\nvar iser = pp.initialSearchEstatesResponse;\n\nif (!iser || !iser.estatesList) {\n  return [{ json: { _empty: true, error: 'initialSearchEstatesResponseが見つかりません', pagePropsKeys: Object.keys(pp).join(',') } }];\n}\n\ntotalCount = iser.totalCount || 0;\n\n// ページ1のルームを抽出\nvar page1Rooms = extractRoomsFromResponse(iser);\nfor (var i = 0; i < page1Rooms.length; i++) {\n  if (!allSeenIds.has(page1Rooms[i].id)) {\n    allSeenIds.add(page1Rooms[i].id);\n    results.push(page1Rooms[i]);\n  }\n}\n\n// Step 2: _next/dataで残りのページを取得\nif (buildId && results.length < totalCount) {\n  var perPage = results.length || 20;\n  var maxPage = Math.min(Math.ceil(totalCount / perPage), 20);\n  for (var page = 2; page <= maxPage; page++) {\n    try {\n      var dataResp = await this.helpers.httpRequest({\n        method: 'GET',\n        url: BASE_URL + '/_next/data/' + buildId + '/chintai/tokyo/list.json?' + SEARCH_PARAMS + '&page=' + page,\n        headers: { 'User-Agent': UA, 'Accept': 'application/json' },\n      });\n      var pageData = typeof dataResp === 'string' ? JSON.parse(dataResp) : dataResp;\n      var pageIser = pageData.pageProps && pageData.pageProps.initialSearchEstatesResponse;\n      if (!pageIser || !pageIser.estatesList || pageIser.estatesList.length === 0) break;\n      var pageRooms = extractRoomsFromResponse(pageIser);\n      var newCount = 0;\n      for (var i = 0; i < pageRooms.length; i++) {\n        if (!allSeenIds.has(pageRooms[i].id)) {\n          allSeenIds.add(pageRooms[i].id);\n          results.push(pageRooms[i]);\n          newCount++;\n        }\n      }\n      if (newCount === 0) break;\n    } catch (e) {\n      break;\n    }\n  }\n}\n\n// JST日付\nvar now = new Date();\nvar jstMs = now.getTime() + (9 * 60 + now.getTimezoneOffset()) * 60000;\nvar jstDate = new Date(jstMs);\nvar today = jstDate.getFullYear() + '-' + String(jstDate.getMonth() + 1).padStart(2, '0') + '-' + String(jstDate.getDate()).padStart(2, '0');\n\n// 既存物件を除外し新規のみ返す\nvar newItems = [];\nfor (var i = 0; i < results.length; i++) {\n  var r = results[i];\n  if (!existingUrls.has(r['詳細ページURL'])) {\n    newItems.push({ json: {\n      物件名: r['物件名'],\n      住所: r['住所'],\n      駅徒歩: r['駅徒歩'],\n      家賃合計: r['家賃合計'],\n      詳細ページURL: r['詳細ページURL'],\n      作成日: today,\n      閲覧済み: 'FALSE',\n      お気に入り: 'FALSE',\n    }});\n  }\n}\n\nreturn newItems.length > 0 ? newItems : [{ json: { _empty: true, found: results.length, filtered: existingUrls.size } }];"
+        "jsCode": "var existingItems = $input.all();\nvar existingUrls = new Set();\nfor (var i = 0; i < existingItems.length; i++) {\n  if (existingItems[i].json && existingItems[i].json['詳細ページURL']) {\n    existingUrls.add(existingItems[i].json['詳細ページURL']);\n  }\n}\n\nvar BASE_URL = 'https://web.canary-app.jp';\nvar SEARCH_PARAMS = 'lineStationIds=8822e3d5-5a93-418d-9b19-3a02f53105c7_1dbbea50-46a0-42f1-80d1-1e1f8a5c64fe&lineStationIds=8822e3d5-5a93-418d-9b19-3a02f53105c7_46664ffe-e817-4be9-acea-3a5f0206e8c9&lineStationIds=8822e3d5-5a93-418d-9b19-3a02f53105c7_dcbf594b-e797-4814-9be6-7ad22fb51350&lineStationIds=8822e3d5-5a93-418d-9b19-3a02f53105c7_48ce6849-6478-40da-b5f5-53854b314d3a&lineStationIds=8822e3d5-5a93-418d-9b19-3a02f53105c7_38d2e321-b920-43a7-b0be-a168f0676a2a&prefectureAlias=tokyo&rentMax=140000&isTotalRent=false&optionIds=7299e4c3-ef89-4c8a-a58a-51f8c6ac3149&optionIds=ed465c2d-2d16-4fde-b3c3-43385b4c1250&oldMax=30&duringMax=20&searchType=2&sortType=5';\nvar UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';\n\nfunction extractRoomsFromResponse(iser) {\n  var rooms = [];\n  if (!iser || !iser.estatesList) return rooms;\n  for (var bi = 0; bi < iser.estatesList.length; bi++) {\n    var building = iser.estatesList[bi];\n    var roomsList = building.roomsList || [];\n    for (var ri = 0; ri < roomsList.length; ri++) {\n      var r = roomsList[ri];\n      var station = '';\n      if (r.accessesList && r.accessesList.length > 0) {\n        var a = r.accessesList[0];\n        station = a.route + ' / ' + a.station + ' 徒歩' + a.during + '分';\n      }\n      rooms.push({\n        id: r.id,\n        物件名: r.name || building.name || '',\n        住所: r.address || '',\n        駅徒歩: station,\n        家賃合計: (r.rent || 0) + (r.adminFee || 0),\n        詳細ページURL: BASE_URL + '/chintai/rooms/' + r.id + '/',\n      });\n    }\n  }\n  return rooms;\n}\n\nvar results = [];\nvar allSeenIds = new Set();\n\n// Step 1: ページ1のHTMLを取得して__NEXT_DATA__を抽出\nvar page1;\ntry {\n  page1 = await this.helpers.httpRequest({\n    method: 'GET',\n    url: BASE_URL + '/chintai/tokyo/list/?' + SEARCH_PARAMS + '&page=1',\n    headers: { 'User-Agent': UA, 'Accept': 'text/html', 'Accept-Language': 'ja' },\n  });\n} catch (e) {\n  return [{ json: { _empty: true, error: 'HTTP取得失敗: ' + e.message } }];\n}\n\nvar htmlStr = typeof page1 === 'string' ? page1 : String(page1);\nvar buildId = '';\nvar totalCount = 0;\n\nvar ndIdx = htmlStr.indexOf('\"__NEXT_DATA__\"');\nif (ndIdx === -1) {\n  return [{ json: { _empty: true, error: '__NEXT_DATA__が見つかりません' } }];\n}\n\nvar jsStart = htmlStr.indexOf('>', ndIdx) + 1;\nvar jsEnd = htmlStr.indexOf('</script>', jsStart);\nvar nd;\ntry {\n  nd = JSON.parse(htmlStr.substring(jsStart, jsEnd));\n} catch (e) {\n  return [{ json: { _empty: true, error: 'JSON解析失敗: ' + e.message } }];\n}\n\nbuildId = nd.buildId || '';\nvar pp = nd.props && nd.props.pageProps ? nd.props.pageProps : {};\nvar iser = pp.initialSearchEstatesResponse;\n\nif (!iser || !iser.estatesList) {\n  return [{ json: { _empty: true, error: 'initialSearchEstatesResponseが見つかりません', pagePropsKeys: Object.keys(pp).join(',') } }];\n}\n\ntotalCount = iser.totalCount || 0;\n\n// ページ1のルームを抽出\nvar page1Rooms = extractRoomsFromResponse(iser);\nfor (var i = 0; i < page1Rooms.length; i++) {\n  if (!allSeenIds.has(page1Rooms[i].id)) {\n    allSeenIds.add(page1Rooms[i].id);\n    results.push(page1Rooms[i]);\n  }\n}\n\n// Step 2: _next/dataで残りのページを取得\nif (buildId && results.length < totalCount) {\n  var perPage = results.length || 20;\n  var maxPage = Math.min(Math.ceil(totalCount / perPage), 20);\n  for (var page = 2; page <= maxPage; page++) {\n    try {\n      var dataResp = await this.helpers.httpRequest({\n        method: 'GET',\n        url: BASE_URL + '/_next/data/' + buildId + '/chintai/tokyo/list.json?' + SEARCH_PARAMS + '&page=' + page,\n        headers: { 'User-Agent': UA, 'Accept': 'application/json' },\n      });\n      var pageData = typeof dataResp === 'string' ? JSON.parse(dataResp) : dataResp;\n      var pageIser = pageData.pageProps && pageData.pageProps.initialSearchEstatesResponse;\n      if (!pageIser || !pageIser.estatesList || pageIser.estatesList.length === 0) break;\n      var pageRooms = extractRoomsFromResponse(pageIser);\n      var newCount = 0;\n      for (var i = 0; i < pageRooms.length; i++) {\n        if (!allSeenIds.has(pageRooms[i].id)) {\n          allSeenIds.add(pageRooms[i].id);\n          results.push(pageRooms[i]);\n          newCount++;\n        }\n      }\n      if (newCount === 0) break;\n    } catch (e) {\n      break;\n    }\n  }\n}\n\n// JST日付\nvar now = new Date();\nvar jstMs = now.getTime() + (9 * 60 + now.getTimezoneOffset()) * 60000;\nvar jstDate = new Date(jstMs);\nvar today = jstDate.getFullYear() + '-' + String(jstDate.getMonth() + 1).padStart(2, '0') + '-' + String(jstDate.getDate()).padStart(2, '0');\n\n// 既存物件を除外し新規のみ返す\nvar newItems = [];\nfor (var i = 0; i < results.length; i++) {\n  var r = results[i];\n  if (!existingUrls.has(r['詳細ページURL'])) {\n    newItems.push({ json: {\n      物件名: r['物件名'],\n      住所: r['住所'],\n      駅徒歩: r['駅徒歩'],\n      家賃合計: r['家賃合計'],\n      詳細ページURL: r['詳細ページURL'],\n      作成日: today,\n      閲覧済み: 'FALSE',\n      お気に入り: 'FALSE',\n    }});\n  }\n}\n\nreturn newItems.length > 0 ? newItems : [{ json: { _empty: true, found: results.length, filtered: existingUrls.size } }];"
       },
       "id": "code-scrape",
       "name": "物件データ取得",
@@ -543,7 +149,7 @@
         480,
         0
       ],
-      "notes": "カナリー (web.canary-app.jp) から物件データをスクレイピング。\n\n【処理内容】\n1. 全ページを自動巡回（「検索結果XX件」から総数を取得）\n2. __NEXT_DATA__ JSON からデータ抽出を試行（戦略1）\n3. 失敗時は HTML を正規表現でパース（戦略2）\n4. 既存データの詳細ページURL と照合し重複を除外\n5. 新規物件のみ出力\n\n【取得カラム】\n物件名 / 住所 / 駅徒歩 / 家賃合計（賃料+管理費） / 詳細ページURL / 作成日 / 閲覧済み / お気に入り\n\n【検索条件】\n東京都 / 家賃上陀14万 / 築年30年以内 / 専有面積20㎡以上 / 通勤時間80分以内\n\n【注意】\nexec() 警告は RegExp.exec() メソッドによるものでセキュリティ上の問題なし。\nカナリーのHTML構造が変更された場合、正規表現の調整が必要になる可能性あり。"
+      "notes": "カナリー (web.canary-app.jp) から物件データをスクレイピング。\n\n【処理内容】\n1. 全ページを自動巡回（「検索結果XX件」から総数を取得）\n2. __NEXT_DATA__ JSON からデータ抽出を試行（戦略1）\n3. 失敗時は HTML を正規表現でパース（戦略2）\n4. 既存データの詳細ページURL と照合し重複を除外\n5. 新規物件のみ出力\n\n【取得カラム】\n物件名 / 住所 / 駅徒歩 / 家賃合計（賃料+管理費） / 詳細ページURL / 作成日 / 閲覧済み / お気に入り\n\n【検索条件】\n東京都 / 家賃上限14万 / 築年30年以内 / 専有面積20㎡以上 / 対象駅：京王永山・京王多摩センター・京王堀之内・南大沢・多摩境（京王相模原線）\n\n【注意】\nexec() 警告は RegExp.exec() メソッドによるものでセキュリティ上の問題なし。\nカナリーのHTML構造が変更された場合、正規表現の調整が必要になる可能性あり。"
     },
     {
       "parameters": {
@@ -582,6 +188,7 @@
     },
     {
       "parameters": {
+        "authentication": "serviceAccount",
         "operation": "append",
         "documentId": {
           "__rl": true,
@@ -693,16 +300,16 @@
         0
       ],
       "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "ZfwIn54p5eaFX5s0",
-          "name": "Google Sheets account 2"
+        "googleApi": {
+          "id": "dZJKWhbaK8eDwouE",
+          "name": "Google Service Account account"
         }
       },
       "notes": "新規物件をスプレッドシートに追加。\n入力データのカラム名がシートのヘッダーと自動マッピングされる。\n\n【設定必須】\nGoogle Sheets のクレデンシャルを設定してください。\n（「既存データ読み込み」ノードと同じクレデンシャルでOK）"
     },
     {
       "parameters": {
-        "content": "## 初期設定ガイド\n\n### 1. Google Sheets クレデンシャル\n「既存データ読み込み」と「スプレッドシート追加」の両方にクレデンシャルを設定\n\n### 2. スプレッドシートのヘッダー行\n1行目に以下を設定:\n**物件名 | 住所 | 駅徒歩 | 家賃合計 | 詳細ページURL | 作成日 | 閲覧済み | お気に入り**\n\n### 3. チェックボックス\n「閲覧済み」「お気に入り」列にデータ入力規則でチェックボックスを設定\n（データ → データの入力規則 → チェックボックス）\n\n### 4. テスト\nまず手動実行で動作確認してから有効化",
+        "content": "## 初期設定ガイド\n\n### 1. Google Sheets クレデンシャル\n「既存データ読み込み」と「スプレッドシート追加」の両方にクレデンシャルを設定\n\n### 2. スプレッドシートのヘッダー行\n1行目に以下を設定:\n**物件名 | 住所 | 駅徒歩 | 家賃合計 | 詳細ページURL | 作成日 | 閲覧済み | お気に入り**\n\n### 3. チェックボックス\n「閲覧済み」「お気に入り」列にデータ入力規則でチェックボックスを設定\n（データ → データの入力規則 → チェックボックス）\n\n### 4. SMTPクレデンシャル（新規物件メール通知）\nGmail SMTP + アプリパスワードを設定:\n- Host: smtp.gmail.com / Port: 465 (SSL) or 587 (STARTTLS)\n- User: 送信元Gmailアドレス\n- Password: Googleアカウントのアプリパスワード（16文字）\n\n⚠！2段階認証を有効化した上で https://myaccount.google.com/apppasswords で発行\n\n### 5. テスト\nまず手動実行で動作確認してから有効化",
         "height": 468,
         "width": 500,
         "color": 4
@@ -718,7 +325,7 @@
     },
     {
       "parameters": {
-        "content": "## 物件検索スクレイピング（カナリー）\n\n毎朝9:00 (JST) にカナリーで物件を検索し、新規物件のみ Google スプレッドシートに追加。\n\n### 検索条件\n- エリア: 東京都\n- 家賃上限: 14万円\n- 築年数: 30年以内\n- 専有面積: 20㎡以上\n- 通勤時間: 80分以内\n\n### データ抽出方法\n1. **戦略1**: `__NEXT_DATA__` JSON から構造化データを抽出\n2. **戦略2**: HTMLを正規表現でパース（フォールバック）\n\n### 重複排除\n詳細ページURL で照合し、既存物件は追加しない。\n閲覧済み・お気に入りのチェック状態は保持される。\n\n### 注意事項\nカナリーのHTML構造が変更された場合、Codeノードの調整が必要。",
+        "content": "## 物件検索スクレイピング（カナリー）\n\n毎朝9:00 (JST) にカナリーで物件を検索し、新規物件のみ Google スプレッドシートに追加。\n\n### 検索条件\n- エリア: 東京都\n- 家賃上限: 14万円\n- 築年数: 30年以内\n- 専有面積: 20㎡以上\n- 対象駅: 京王永山 / 京王多摩センター / 京王堀之内 / 南大沢 / 多摩境（京王相模原線）\n\n### データ抽出方法\n1. **戦略1**: `__NEXT_DATA__` JSON から構造化データを抽出\n2. **戦略2**: HTMLを正規表現でパース（フォールバック）\n\n### 重複排除\n詳細ページURL で照合し、既存物件は追加しない。\n閲覧済み・お気に入りのチェック状態は保持される。\n\n### 注意事項\nカナリーのHTML構造が変更された場合、Codeノードの調整が必要。",
         "height": 470,
         "width": 560
       },
@@ -745,31 +352,6 @@
       ]
     },
     {
-      "parameters": {
-        "sendTo": "gtamu.dip@gmail.com",
-        "subject": "=【カナリー】新規物件 {{ $json.count }}件",
-        "message": "={{ $json.emailBody }}",
-        "options": {
-          "appendAttribution": false
-        }
-      },
-      "id": "gmail-send",
-      "name": "新規物件メール通知",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.2,
-      "position": [
-        1200,
-        208
-      ],
-      "webhookId": "969a215c-1b2e-4b7d-9aff-b0857e99345a",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "H3276ZIe5FLzaHRS",
-          "name": "Gmail account"
-        }
-      }
-    },
-    {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
@@ -779,6 +361,30 @@
       ],
       "id": "34750c9b-0f87-4338-a265-7c2ed33b3e3d",
       "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "fromEmail": "gtamu.dip@gmail.com",
+        "toEmail": "gtamu.dip@gmail.com",
+        "subject": "=【カナリー】新規物件 {{ $json.count }}件",
+        "html": "={{ $json.emailBody }}",
+        "options": {}
+      },
+      "id": "88230a37-da8d-4ad8-bde2-2ed0411f7a24",
+      "name": "新規物件メール通知",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        208
+      ],
+      "webhookId": "bc4e2c3c-9b2e-4b9a-b250-b141fc756632",
+      "credentials": {
+        "smtp": {
+          "id": "RuD79cuOFqZ2elfM",
+          "name": "SMTP account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -786,57 +392,55 @@
     "executionOrder": "v1",
     "timezone": "Asia/Tokyo",
     "callerPolicy": "workflowsFromSameOwner",
-    "availableInMCP": false,
-    "errorWorkflow": "uH0gBb6INaWzRGgX"
+    "availableInMCP": false
   },
   "shared": [
     {
-      "updatedAt": "2026-03-29T10:05:53.897Z",
-      "createdAt": "2026-03-29T10:05:53.897Z",
+      "updatedAt": "2026-03-28T15:46:56.294Z",
+      "createdAt": "2026-03-28T15:46:56.294Z",
       "role": "workflow:owner",
       "workflowId": "uzNyVEj7DM66hifU",
-      "projectId": "HM43VJ1kdxEjn4Js",
+      "projectId": "mwID5OTVq3DrYryq",
       "project": {
-        "updatedAt": "2026-02-22T05:30:55.872Z",
-        "createdAt": "2026-01-16T17:31:52.988Z",
-        "id": "HM43VJ1kdxEjn4Js",
-        "name": "Jumpei Tamura <tamura@yoku.co.jp>",
+        "updatedAt": "2025-11-13T14:51:48.267Z",
+        "createdAt": "2025-11-13T14:36:59.116Z",
+        "id": "mwID5OTVq3DrYryq",
+        "name": "Jumpei Tamura <gtamu.dip@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
-        "creatorId": "149c9e0b-08ab-4279-9356-5aeea5385c5e",
+        "creatorId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
         "projectRelations": [
           {
-            "updatedAt": "2026-01-16T17:31:52.988Z",
-            "createdAt": "2026-01-16T17:31:52.988Z",
-            "userId": "149c9e0b-08ab-4279-9356-5aeea5385c5e",
-            "projectId": "HM43VJ1kdxEjn4Js",
+            "updatedAt": "2025-11-13T14:36:59.117Z",
+            "createdAt": "2025-11-13T14:36:59.117Z",
+            "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+            "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-29T09:56:23.889Z",
-              "createdAt": "2026-01-16T17:31:52.623Z",
-              "id": "149c9e0b-08ab-4279-9356-5aeea5385c5e",
-              "email": "tamura@yoku.co.jp",
+              "updatedAt": "2026-04-18T13:55:15.000Z",
+              "createdAt": "2025-11-13T14:36:48.586Z",
+              "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
+              "email": "gtamu.dip@gmail.com",
               "firstName": "Jumpei",
               "lastName": "Tamura",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2026-01-16T17:32:28.892Z",
-                "personalization_survey_n8n_version": "2.3.6"
+                "personalization_survey_submitted_at": "2025-11-13T14:51:58.989Z",
+                "personalization_survey_n8n_version": "1.98.1"
               },
               "settings": {
                 "userActivated": true,
                 "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "teJGbp0mId-UYkQ9GvV6b",
-                "userActivatedAt": 1768643391642,
+                "firstSuccessfulWorkflowId": "nJ6NxHK18rgZXMP4",
+                "userActivatedAt": 1763558344486,
                 "npsSurvey": {
-                  "waitingForResponse": true,
-                  "ignoredCount": 2,
-                  "lastShownAt": 1774778181406
+                  "responded": true,
+                  "lastShownAt": 1774403628874
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-03-29",
+              "lastActiveAt": "2026-04-17",
               "isPending": false
             }
           }
@@ -844,14 +448,10 @@
       }
     }
   ],
-  "staticData": {
-    "node:毎朝9時実行": {
-      "recurrenceRules": []
-    }
-  },
+  "staticData": null,
   "tags": [],
-  "triggerCount": 1,
-  "updatedAt": "2026-03-29T10:38:50.187Z",
-  "versionCounter": 44,
-  "versionId": "35aa9bb9-82cf-4c7a-8349-4886d22a33f7"
+  "triggerCount": 0,
+  "updatedAt": "2026-04-18T14:19:32.039Z",
+  "versionCounter": 36,
+  "versionId": "1f8fef36-af39-44b2-91c1-f88b891ba862"
 }
