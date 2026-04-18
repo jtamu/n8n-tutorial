@@ -230,17 +230,6 @@
         ]
       ]
     },
-    "Send a message": {
-      "main": [
-        [
-          {
-            "node": "Return",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "isDiffOrNew": {
       "main": [
         [
@@ -264,6 +253,17 @@
         [
           {
             "node": "Same file - Do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Return",
             "type": "main",
             "index": 0
           }
@@ -769,38 +769,6 @@
     },
     {
       "parameters": {
-        "sendTo": "gtamu.dip@gmail.com",
-        "subject": "n8nワークフローのバックアップに失敗しました",
-        "emailType": "text",
-        "message": "=コンテンツに個人情報が含まれていました。\n以下のワークフローのPINを解除してください。\n{{ $('isDiffOrNew').item.json.name }}\n理由：\n{{ $('AI Agent').item.json.output }}",
-        "options": {}
-      },
-      "id": "a7644f2e-9d10-4c14-b9fb-f75fa2a3fee5",
-      "name": "Send a message",
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        2880,
-        880
-      ],
-      "webhookId": "f8696594-87b3-42bf-99c0-79d5203eaf5f",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "B0RIeXUc6Wr3DHZX",
-          "name": "Gmail account"
-        }
-      }
-    },
-    {
-      "id": "43f501eb-8cad-418f-a0aa-8e7015f25c19",
-      "name": "Need AI Check?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        2080,
-        528
-      ],
-      "parameters": {
         "conditions": {
           "options": {
             "version": 2,
@@ -822,6 +790,39 @@
           "combinator": "and"
         },
         "options": {}
+      },
+      "id": "43f501eb-8cad-418f-a0aa-8e7015f25c19",
+      "name": "Need AI Check?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2080,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "gtamu.dip@gmail.com",
+        "toEmail": "gtamu.dip@gmail.com",
+        "subject": "n8nワークフローのバックアップに失敗しました",
+        "emailFormat": "text",
+        "text": "=コンテンツに個人情報が含まれていました。\n以下のワークフローのPINを解除してください。\n{{ $('isDiffOrNew').item.json.name }}\n理由：\n{{ $('AI Agent').item.json.output }}",
+        "options": {}
+      },
+      "id": "0d98ca9d-b31b-4d9f-952c-dbe214c4d7d2",
+      "name": "Send a message",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2880,
+        880
+      ],
+      "webhookId": "6dfaa624-0fe0-4c67-a442-3b87d3f4ce6e",
+      "credentials": {
+        "smtp": {
+          "id": "RuD79cuOFqZ2elfM",
+          "name": "SMTP account"
+        }
       }
     }
   ],
@@ -854,7 +855,7 @@
             "userId": "36fefead-da4e-48c0-99da-60cc0ed98b20",
             "projectId": "mwID5OTVq3DrYryq",
             "user": {
-              "updatedAt": "2026-03-17T03:26:44.347Z",
+              "updatedAt": "2026-04-18T13:55:15.000Z",
               "createdAt": "2025-11-13T14:36:48.586Z",
               "id": "36fefead-da4e-48c0-99da-60cc0ed98b20",
               "email": "gtamu.dip@gmail.com",
@@ -871,14 +872,13 @@
                 "firstSuccessfulWorkflowId": "nJ6NxHK18rgZXMP4",
                 "userActivatedAt": 1763558344486,
                 "npsSurvey": {
-                  "waitingForResponse": true,
-                  "ignoredCount": 2,
-                  "lastShownAt": 1773718001539
+                  "responded": true,
+                  "lastShownAt": 1774403628874
                 }
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2026-03-16",
+              "lastActiveAt": "2026-04-17",
               "isPending": false
             }
           }
@@ -889,7 +889,7 @@
   "staticData": null,
   "tags": [],
   "triggerCount": 0,
-  "updatedAt": "2026-03-17T05:27:30.877Z",
-  "versionCounter": 14,
-  "versionId": "7eee74c5-fe12-4fe3-a551-fbd6773dbf99"
+  "updatedAt": "2026-04-18T14:27:19.920Z",
+  "versionCounter": 22,
+  "versionId": "d46d9861-3ad8-4ea1-b201-04be84066b55"
 }
